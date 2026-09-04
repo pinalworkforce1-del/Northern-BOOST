@@ -7,7 +7,6 @@ Supabase correctly flags the two anonymous journey save/load RPCs because they a
 The underlying `boost_journeys` table is not directly available to anonymous or authenticated browser clients. Row Level Security is enabled, and the browser does not receive a Supabase service-role key.
 
 Access to an individual journey requires both:
-
 - a random journey UUID, and
 - a separate 64-character secret resume token.
 

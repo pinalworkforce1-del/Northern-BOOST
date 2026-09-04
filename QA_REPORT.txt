@@ -1,0 +1,28 @@
+Northern BOOST Supabase/GitHub Beta v1 — QA
+
+PASS Northern_BOOST_Healthcare_Connected_Test_v0.2.html — cloud-adapter
+PASS Northern_BOOST_Healthcare_Connected_Test_v0.2.html — config
+PASS Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html — cloud-adapter
+PASS Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html — config
+PASS index.html — cloud-adapter
+PASS index.html — config
+PASS Northern_BOOST_Module4_Connected_Test_v0.6.html — cloud-adapter
+PASS Northern_BOOST_Module4_Connected_Test_v0.6.html — config
+PASS Northern_BOOST_Module1_Connected_Test_v2.8.html — cloud-adapter
+PASS Northern_BOOST_Module1_Connected_Test_v2.8.html — config
+PASS Northern_BOOST_Customer_Service_Transferable_Skills_Connected_Test_v0.2.html — cloud-adapter
+PASS Northern_BOOST_Customer_Service_Transferable_Skills_Connected_Test_v0.2.html — config
+PASS Northern_BOOST_Module3_Connected_Test_v0.8.html — cloud-adapter
+PASS Northern_BOOST_Module3_Connected_Test_v0.8.html — config
+PASS Northern_BOOST_IT_Connected_Test_v0.2.html — cloud-adapter
+PASS Northern_BOOST_IT_Connected_Test_v0.2.html — config
+PASS Northern_BOOST_Module2_Connected_Test_v1.3.html — cloud-adapter
+PASS Northern_BOOST_Module2_Connected_Test_v1.3.html — config
+PASS Northern_BOOST_CDL_Connected_Test_v0.2.html — cloud-adapter
+PASS Northern_BOOST_CDL_Connected_Test_v0.2.html — config
+PASS Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html — cloud-adapter
+PASS Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html — config
+
+Internal HTML references: 10
+Missing referenced HTML files: NONE
+Node syntax check boost-cloud.js: PASS
