@@ -76,7 +76,6 @@
     const fromHash=parseResumeHash();
     const localRaw=localStorage.getItem(JOURNEY_KEY);
     const cred=fromHash||credentials();
-    // A resume hash deliberately wins over unrelated local state.
     if(fromHash){
       document.documentElement.style.visibility="hidden";
       saveLocalCredentials(fromHash);
@@ -85,7 +84,6 @@
       document.documentElement.style.visibility="";
       return;
     }
-    // If browser storage was cleared but cloud credentials remain, restore automatically.
     if(!localRaw && cred.id && cred.token){
       document.documentElement.style.visibility="hidden";
       const j=await remoteLoad(cred);
@@ -105,7 +103,6 @@
     try{await remoteSave(JSON.parse(raw));}catch(e){}
   }
 
-  // Mirror every existing module save to Supabase without changing module business logic.
   Storage.prototype.setItem=function(key,value){
     originalSetItem.call(this,key,value);
     if(this===localStorage && key===JOURNEY_KEY){
@@ -113,7 +110,38 @@
     }
   };
 
+  function mapContext(){
+    const f=decodeURIComponent((location.pathname.split('/').pop()||'').toLowerCase());
+    if(!f || f==='index.html') return null;
+    if(f.includes('module1_')) return ['module1','Step 1 of 6 • Discover'];
+    if(f.includes('module2_')) return ['module2','Step 2 of 6 • Reality Check'];
+    if(f.includes('module3_')) return ['module3','Step 3 of 6 • Career Mobility'];
+    if(f.includes('module4_')) return ['module4','Step 4 of 6 • Decide'];
+    if(f.includes('skilled_trades')) return ['skilled_trades','Step 5 of 6 • Skilled Trades'];
+    if(f.includes('advanced_manufacturing')) return ['advanced_manufacturing','Step 5 of 6 • Advanced Manufacturing'];
+    if(f.includes('cdl_')) return ['cdl','Step 5 of 6 • CDL / Transportation'];
+    if(f.includes('healthcare')) return ['healthcare','Step 5 of 6 • Health Care'];
+    if(f.includes('customer_service')) return ['customer_service','Step 5 of 6 • Customer Service / Transferable Skills'];
+    if(f.includes('it_connected')) return ['it','Step 5 of 6 • Information Technology'];
+    return null;
+  }
+  function injectJourneyMapButton(){
+    if(document.querySelector('.boostJourneyMapFab')) return;
+    const ctx=mapContext(); if(!ctx) return;
+    const style=document.createElement('style');
+    style.textContent='.boostJourneyMapFab{position:fixed;right:16px;bottom:16px;z-index:2147483000;display:flex;flex-direction:column;gap:2px;min-width:205px;padding:11px 14px;border-radius:16px;background:#0d2741;color:#fff!important;text-decoration:none!important;box-shadow:0 14px 30px rgba(0,0,0,.24);border:2px solid rgba(255,255,255,.22);font-family:Arial,sans-serif}.boostJourneyMapFab strong{font-size:13px;letter-spacing:.05em;text-transform:uppercase}.boostJourneyMapFab span{font-size:12px;line-height:1.25;color:#d7e6ef}.boostJourneyMapFab:hover,.boostJourneyMapFab:focus-visible{outline:3px solid #f0c35e;outline-offset:2px;background:#154067}@media(max-width:700px){.boostJourneyMapFab{right:10px;left:10px;bottom:10px;min-width:auto}}';
+    document.head.appendChild(style);
+    const a=document.createElement('a');
+    a.className='boostJourneyMapFab';
+    a.href='index.html#step='+ctx[0];
+    a.setAttribute('aria-label','Open My Northern BOOST Journey map');
+    a.innerHTML='<strong>My Journey Map</strong><span>'+ctx[1]+'</span>';
+    document.body.appendChild(a);
+  }
+
   window.BOOSTCloud={configured,queueSave,flush,resumeLink,remoteLoad,ensureCredentials};
   bootstrapRemoteIfNeeded();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',injectJourneyMapButton);
+  else injectJourneyMapButton();
   window.addEventListener("pagehide",()=>{try{flush()}catch(e){}});
 })();
