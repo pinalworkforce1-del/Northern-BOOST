@@ -48,6 +48,15 @@
   }
   async function remoteSave(journey){
     const c=getClient(); if(!c||!journey) return {ok:false,reason:"not-configured"};
+    const {data:{session}}=await c.auth.getSession();
+    if(session?.user){
+      const region=cfg.region||"Northern Arizona";
+      const {data,error}=await c.rpc("boost_save_my_journey_for_region",{p_region:region,p_journey:journey});
+      if(error){console.warn("BOOST authenticated cloud save failed",error.message);return {ok:false,error};}
+      if(data) originalSetItem.call(localStorage,CLOUD_ID_KEY,String(data));
+      window.dispatchEvent(new CustomEvent("boost-cloud-status",{detail:{state:"saved",at:new Date().toISOString()}}));
+      return {ok:true,data};
+    }
     const cred=ensureCredentials();
     const {data,error}=await c.rpc("boost_save_journey",{p_journey_id:cred.id,p_access_token:cred.token,p_journey:journey});
     if(error){console.warn("BOOST cloud save failed",error.message);return {ok:false,error};}
