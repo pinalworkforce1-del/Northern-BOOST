@@ -75,7 +75,8 @@
   }
   async function loadAuthenticatedJourney(){
     const c=getClient(); if(!c) return null;
-    const {data,error}=await c.rpc("boost_load_my_journey");
+    const region=cfg.region||"Northern Arizona";
+    const {data,error}=await c.rpc("boost_load_my_journey_for_region",{p_region:region});
     if(error){console.warn("BOOST authenticated journey load failed",error.message);return null;}
     return data||null;
   }
