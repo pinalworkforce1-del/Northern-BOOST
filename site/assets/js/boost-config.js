@@ -37,3 +37,27 @@ window.BOOST_CONFIG = {
   };
   if(!wire()) document.addEventListener('DOMContentLoaded',wire,{once:true});
 })();
+
+// The legacy connected Module 2 page originally sent participants directly to
+// the old Northern Module 3 v0.8 file. Preserve its save behavior, then route
+// forward to the new gold-master Module 3 activity shell instead.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(file!=='northern_boost_module2_connected_test_v1.3.html') return;
+  window.addEventListener('load',()=>{
+    if(typeof window.completeModule2AndContinue!=='function') return;
+    window.completeModule2AndContinue=function(){
+      try{ if(typeof window.persistModule2Structured==='function') window.persistModule2Structured(); }catch(e){ console.warn('Northern Module 2 structured save unavailable',e); }
+      try{
+        const key='boost_naz_journey_v1';
+        const j=JSON.parse(localStorage.getItem(key)||'{}')||{};
+        j.region='Northern Arizona';
+        j.progress=j.progress||{};
+        j.progress.module2='complete';
+        j.updatedAt=new Date().toISOString();
+        localStorage.setItem(key,JSON.stringify(j));
+      }catch(e){ console.warn('Northern Module 2 completion marker unavailable',e); }
+      window.location.href='activity.html?m=module3&boost_return=index.html&boost_module=module3';
+    };
+  },{once:true});
+})();
