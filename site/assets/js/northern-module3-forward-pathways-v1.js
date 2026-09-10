@@ -22,7 +22,7 @@ function derived(soc){
  const rows=RELS.filter(r=>norm(r.sourceSoc)===norm(soc)&&(r.destinations||[]).length);
  if(!rows.length)return null;
  const first=rows[0],names=[];
- rows.forEach(r=>(r.destinations||[]).forEach(d=>{const n=d?.title||d?.name||d?.label||d?.soc;if(n&&!names.includes(n))names.push(n)}));
+ rows.forEach(r=>(r.destinations||[]).forEach(d=>{const n=typeof d==='string'?d:(d?.title||d?.name||d?.label||d?.soc);if(n&&!names.includes(n))names.push(n)}));
  return{pathway:first.pathway||'Career pathway',position:first.position||'Starting point',bridge:names.slice(0,2),dest:names.slice(2,4),why:first.relationship||first.why||''};
 }
 function pathway(soc){return FALLBACK[norm(soc)]||derived(soc)}
