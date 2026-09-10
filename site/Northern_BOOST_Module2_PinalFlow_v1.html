@@ -39,10 +39,27 @@
     <p class="sub">BOOST keeps the same occupation record so your interest evidence, Northern Arizona opportunity evidence, employer research, and later mobility evidence stay connected to the career you actually selected.</p>
   </section>
 
+  <section class="panel" id="wageBaselinePanel">
+    <div class="step">Your Wage Baseline • Required</div>
+    <h2>What are you earning now, or what did you earn in your most recent job?</h2>
+    <p class="sub">Use your current or most recent hourly wage. BOOST uses this baseline to show whether a career's likely point-of-entry wage represents an immediate increase, a decrease, or roughly level earnings. A lower entry wage does not automatically make a career a poor choice—it becomes part of the informed decision.</p>
+    <div class="responseGrid">
+      <div>
+        <label for="currentHourlyWage">Current / most recent hourly wage</label>
+        <input id="currentHourlyWage" type="number" min="1" max="250" step="0.01" inputmode="decimal" placeholder="e.g., 21.50" required>
+      </div>
+      <div style="align-self:end;padding:10px 12px;border-radius:11px;background:#eef7fb;border:1px solid #c9dde8">
+        <b id="wageBaselineAnnual">Enter the hourly wage from your current or most recent job.</b>
+        <div class="note">Annualized comparisons use 2,080 paid hours and do not include overtime, benefits, taxes, or unpaid time.</div>
+      </div>
+    </div>
+    <div id="wageBaselineMessage" class="saveMessage" style="display:none;margin-top:10px"></div>
+  </section>
+
   <section id="careers"></section>
 
   <div class="bar" id="bar">
-    <div><b>Save my Career Reality Check</b><br><small>Complete the six evidence judgments for each career. Your results will carry into Career Mobility and Decide.</small><div id="saveMessage" class="saveMessage"></div></div>
+    <div><b>Save my Career Reality Check</b><br><small>Complete your wage baseline and the six evidence judgments for each career. Your results will carry into Career Mobility and Decide.</small><div id="saveMessage" class="saveMessage"></div></div>
     <button id="saveBtn" type="button">SAVE MODULE 2 EVIDENCE →</button>
   </div>
 
@@ -55,6 +72,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/boost-config.js?v=20260909a"></script>
 <script src="assets/js/boost-cloud.js?v=20260909a"></script>
-<script src="assets/js/northern-module2-pinalflow-v1.js?v=20260910b"></script>
+<script src="assets/js/northern-module2-pinalflow-v1.js?v=20260910c"></script>
+<script src="assets/js/northern-module2-wage-baseline-v1.js?v=20260910c"></script>
 </body>
 </html>
