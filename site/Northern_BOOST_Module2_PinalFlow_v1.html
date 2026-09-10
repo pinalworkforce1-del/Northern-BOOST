@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Northern BOOST — Module 2 Reality Check</title>
+<link rel="stylesheet" href="assets/css/northern-module2-pinalflow-v1.css?v=20260909a">
+</head>
+<body>
+<nav class="moduleNav" aria-label="Northern BOOST module navigation">
+  <a href="index.html">← Back to BOOST Map</a>
+  <strong>Module 2 — Reality Check</strong>
+  <span aria-hidden="true"></span>
+</nav>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">NORTHERN ARIZONA BOOST • MODULE 2 — REALITY CHECK</div>
+  <h1>Does This Career Work in the Real World?</h1>
+  <p>Interest got the career onto your list. Now test the same career against jobs, wages, preparation, employer-supported options, your life, and future fit before deciding what deserves to move forward.</p>
+  <span class="pill">Research it. Record the evidence. Keep what holds up.</span>
+</div></header>
+<div class="journey"><div class="journeyTrack"><strong>Your BOOST Journey</strong><span class="done">Discover ✓</span><span class="active">Reality Check</span><span>Career Mobility</span><span>Decide</span></div></div>
+<main><div class="wrap">
+  <section class="panel opening">
+    <img src="assets/images/rosie-master.webp" alt="Rosie, the Northern BOOST guide">
+    <div class="openingBody">
+      <div class="step">Reality Check • Validate</div>
+      <h2>Interest opened the door. Evidence decides what moves forward.</h2>
+      <p class="sub">The careers you saved in Discover arrive here automatically. You are not starting over, and Northern Arizona labor-market evidence stays attached to each career.</p>
+      <div class="audioRow"><button class="primary" id="audioBtn" type="button">▶ Listen to Rosie</button><span class="note">Optional Northern BOOST narration</span></div>
+      <audio id="introAudio" preload="none" src="assets/audio/rosie-map-module2.mp3"></audio>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="step">Carry Forward</div>
+    <h2>Your careers arrived with you</h2>
+    <div id="carryStatus" class="carried">Reading your saved career exploration…</div>
+    <div id="interestCarry"></div>
+    <p class="sub">BOOST keeps the same occupation record so your interest evidence, Northern Arizona opportunity evidence, employer research, and later mobility evidence stay connected to the career you actually selected.</p>
+  </section>
+
+  <section id="careers"></section>
+
+  <div class="bar" id="bar">
+    <div><b>Save my Career Reality Check</b><br><small>Complete the six evidence judgments for each career. Your results will carry into Career Mobility and Decide.</small><div id="saveMessage" class="saveMessage"></div></div>
+    <button id="saveBtn" type="button">SAVE MODULE 2 EVIDENCE →</button>
+  </div>
+
+  <div class="completion" id="completion">
+    <h3>Module 2 Complete</h3>
+    <p>Your Reality Check evidence is saved with the same careers you selected in Discover. Northern BOOST now has the evidence needed for the Career Mobility conversion.</p>
+    <a id="returnMap" href="index.html#step=module2">RETURN TO NORTHERN BOOST MAP →</a>
+  </div>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/boost-config.js?v=20260909a"></script>
+<script src="assets/js/boost-cloud.js?v=20260909a"></script>
+<script src="assets/js/northern-module2-pinalflow-v1.js?v=20260909a"></script>
+</body>
+</html>
