@@ -4,11 +4,55 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Northern BOOST — Module 4</title>
-<meta http-equiv="refresh" content="0; url=module4-v3.html">
 <link rel="canonical" href="module4-v3.html">
-<script>location.replace('module4-v3.html'+location.search+location.hash);</script>
+<script>
+(()=>{
+'use strict';
+const JKEY='boost_naz_journey_v1',SKEY='northern_boost_career_exploration_v1';
+const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(_){return{}}};
+const present=v=>!(v===undefined||v===null||v==='');
+const soc=v=>String(v||'');
+function merge(a,b){
+ const out=(a&&typeof a==='object'&&!Array.isArray(a))?{...a}:{};
+ if(!b||typeof b!=='object'||Array.isArray(b))return present(b)?b:out;
+ for(const [k,v] of Object.entries(b)){
+  if(Array.isArray(v)){if(v.length)out[k]=v;continue}
+  if(v&&typeof v==='object'){out[k]=merge(out[k]&&typeof out[k]==='object'?out[k]:{},v);continue}
+  if(present(v))out[k]=v;
+ }
+ return out;
+}
+function mergeList(a,b){
+ const m=new Map();
+ for(const x of [...(a||[]),...(b||[])]){
+  if(!x?.soc)continue;
+  const k=soc(x.soc);m.set(k,merge(m.get(k)||{},x));
+ }
+ return [...m.values()];
+}
+function mergeModule(a,b){
+ const out=merge(a||{},b||{});
+ const va=a?.validationBySoc||{},vb=b?.validationBySoc||{};
+ out.validationBySoc={...va};
+ for(const [k,v] of Object.entries(vb))out.validationBySoc[k]=merge(out.validationBySoc[k]||{},v);
+ out.careers=mergeList(a?.careers,b?.careers);
+ if(a?.selected||b?.selected)out.selected=mergeList(a?.selected,b?.selected);
+ return out;
+}
+const j=read(JKEY),s=read(SKEY);
+for(const n of ['module1','module2','module3']){
+ const merged=mergeModule(j[n]||{},s[n]||{});
+ if(Object.keys(merged).length){j[n]=merged;s[n]=merged}
+}
+if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}
+const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;
+localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));
+const target='module4-v3.html?handoff=20260910m4merge1'+(location.hash||'');
+location.replace(target);
+})();
+</script>
 </head>
 <body>
-<p>Opening Northern BOOST Module 4… <a href="module4-v3.html">Continue</a></p>
+<p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v3.html?handoff=20260910m4merge1">Continue</a></p>
 </body>
 </html>
