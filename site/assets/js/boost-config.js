@@ -125,3 +125,17 @@ window.BOOST_CONFIG = {
   s.dataset.boostM4InterestPrep='1';
   document.head.appendChild(s);
 })();
+
+// Module 4 -> Applied Career Experience handoff and map cleanup. Module 4 writes
+// the recommended industry from the active career; the map surfaces its existing
+// RECOMMENDED badge. The obsolete YOU ARE HERE/current marker is suppressed.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  if(file!=='index.html'&&!file.includes('module4_')) return;
+  if(document.querySelector('script[data-boost-m4-industry-map]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-module4-industry-map-v1.js?v=20260910industry1';
+  s.defer=true;
+  s.dataset.boostM4IndustryMap='1';
+  document.head.appendChild(s);
+})();
