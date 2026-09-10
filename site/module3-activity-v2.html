@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 3 — Career Mobility Exploration | Northern BOOST</title>
+<link rel="stylesheet" href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/css/portal.css">
+<style>
+.progress-fill{width:75%}
+.boostM3LabModal{position:fixed;inset:0;z-index:2147483000;background:#061522e8;display:none;flex-direction:column;padding:12px}.boostM3LabModal.open{display:flex}.boostM3LabBar{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 14px;background:#0d2741;color:#fff;border-radius:12px 12px 0 0;border-bottom:3px solid #f0b323}.boostM3LabBar b{font-size:.95rem}.boostM3LabClose{border:1px solid #ffffff66;background:#ffffff18;color:#fff;border-radius:999px;padding:7px 11px;font-weight:900;cursor:pointer}.boostM3LabFrame{width:100%;height:calc(100vh - 76px);border:0;background:#fff;border-radius:0 0 12px 12px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/boost-config.js?v=20260909m3pinalhud2"></script>
+<script src="assets/js/boost-cloud.js?v=20260909m3pinalhud2"></script>
+</head>
+<body>
+<main class="activity-shell">
+<header class="boost-nav">
+  <div class="nav-left"><a class="map-link" href="index.html">← Back to BOOST Map</a></div>
+  <div class="nav-center">
+    <div class="nav-title">Module 3 — Career Mobility Exploration</div>
+    <div class="progress-row"><div class="progress-track"><div class="progress-fill"></div></div><span class="progress-count">Module 3 of 4</span></div>
+    <div class="module-note">Your validated careers carry forward so you can compare what you already bring and what may need development.</div>
+  </div>
+  <div class="nav-right activity-actions">
+    <a class="external-btn" href="Northern_BOOST_Module3_Connected_Test_v0.8.html" target="_blank" rel="noopener">Open in New Tab ↗</a>
+    <button class="finish-btn" id="finishBtn">✓ Save Results &amp; Return to BOOST</button>
+  </div>
+</header>
+<iframe class="activity-frame" id="activityFrame" title="Northern BOOST Module 3 Career Mobility" src="Northern_BOOST_Module3_Connected_Test_v0.8.html" allow="fullscreen; clipboard-read; clipboard-write"></iframe>
+</main>
+<div class="boostM3LabModal" id="boostM3LabModal" role="dialog" aria-modal="true" aria-label="BOOST Workplace Skills Lab">
+  <div class="boostM3LabBar"><b>BOOST Workplace Skills Lab • Optional Module 3 Evidence</b><button class="boostM3LabClose" id="boostM3LabClose" type="button">Close Lab</button></div>
+  <iframe id="boostM3LabFrame" class="boostM3LabFrame" title="BOOST Pizza Workplace Skills Lab"></iframe>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+'use strict';
+const KEY='boost_naz_journey_v1';
+const LAB_URL='https://pinalworkforce1-del.github.io/BOOST-Job_Mobility/?boost_embed=module3';
+const LAB_MESSAGE='BOOST_NAZ_M3_SKILL_LAB_RESULT';
+const frame=document.getElementById('activityFrame');
+const modal=document.getElementById('boostM3LabModal');
+const labFrame=document.getElementById('boostM3LabFrame');
+const finishBtn=document.getElementById('finishBtn');
+let activeLab=null;
+const NAMES={R:'Realistic',I:'Investigative',A:'Artistic',S:'Social',E:'Enterprising',C:'Conventional'};
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function readJourney(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return{}}}
+function writeJourney(j){j=j||{};j.region='Northern Arizona';j.updatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(j));return j}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+function topCodes(){const j=readJourney(),m=j.module1||{};let a=(m.topInterests||[]).map(x=>typeof x==='string'?x:x?.code).filter(x=>NAMES[x]);if(a.length>=3)return a.slice(0,3);const scores=m.interestScores||m.scores||{};return Object.entries(scores).sort((a,b)=>Number(b[1])-Number(a[1])).map(([k])=>k).filter(k=>NAMES[k]).slice(0,3)}
+function mergeLabIntoJourney(payload){if(!payload)return;const j=readJourney();j.module3=j.module3||{};j.module3.skillLab=payload;j.module3.workPreferences=payload.workPreferences||[];j.module3.skillEvidence=payload.strengthsToCarry||[];j.module3.skillLabUpdatedAt=new Date().toISOString();writeJourney(j)}
+function labSummaryHtml(lab){if(!lab)return'';const prefs=(lab.workPreferences||[]).slice(0,4);return '<b>Workplace Lab evidence added to Module 3 ✓</b><br>Your strongest workplace preference signals are now part of your Northern BOOST mobility evidence.'+(prefs.length?'<div class="boostNazM3Pills">'+prefs.map(x=>'<span>'+esc(x.name)+' • '+esc(x.preferenceLabel)+'</span>').join('')+'</div>':'')}
+function injectModuleEnhancements(){
+  try{
+    const d=frame.contentDocument,w=frame.contentWindow;if(!d?.body)return;
+    const fab=d.querySelector('.boostJourneyMapFab');if(fab)fab.style.display='none';
+    if(!d.getElementById('boostNazM3LabCSS')){
+      const s=d.createElement('style');s.id='boostNazM3LabCSS';s.textContent=`#boostNazM3Lab{border:2px solid #d7c16c!important;background:linear-gradient(135deg,#fffaf0,#fff)!important}.boostNazM3LabGrid{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;align-items:center}.boostNazM3Lab h2{margin:.2rem 0}.boostNazM3Lab p{line-height:1.55;color:#425b70}.boostNazM3Call{padding:13px;border-radius:12px;background:#fff7db;border-left:5px solid #d9a73c}.boostNazM3Actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.boostNazM3Btn{border:0;border-radius:10px;padding:12px 15px;background:#0b3158;color:#fff;font-weight:900;cursor:pointer}.boostNazM3Btn.alt{background:#eaf0f5;color:#17324d}.boostNazM3Summary{margin-top:13px;padding:13px;border-radius:12px;background:#eef8f6;border:1px solid #c9e6df}.boostNazM3Summary b{color:#176e69}.boostNazM3Pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.boostNazM3Pills span{padding:5px 8px;border-radius:999px;background:#fff;border:1px solid #cbdbe3;font-size:.75rem;font-weight:800;color:#315166}.boostNazM3Facts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.boostNazM3Facts div{background:#fff;border:1px solid #e0e7ec;border-radius:10px;padding:10px}.boostNazM3Facts span{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:#708397;font-weight:900}.boostNazM3Facts b{display:block;margin-top:3px;color:#17324d;font-size:.85rem}@media(max-width:800px){.boostNazM3LabGrid,.boostNazM3Facts{grid-template-columns:1fr}}`;
+      d.head.appendChild(s);
+    }
+    if(!d.getElementById('boostNazM3Lab')){
+      const j=readJourney();activeLab=j?.module3?.skillLab||null;
+      const panel=d.createElement('section');panel.id='boostNazM3Lab';panel.className='panel boostNazM3Lab';
+      panel.innerHTML=`<div class="boostNazM3LabGrid"><div><div class="step">Optional Evidence Check • Workplace Skills Lab</div><h2>Not sure which strengths you want to use more?</h2><p>Your self-assessment tells BOOST how often you have used these skills. The Pizza Workplace Lab adds a different kind of evidence: how you respond to realistic workplace situations and whether you actually <b>want more work that feels like that</b>.</p><div class="boostNazM3Call"><b>This is not a test of occupational competence.</b><br>The lab adds evidence about workplace judgment and preference. It helps you notice patterns—it does not decide what career you should choose.</div><div class="boostNazM3Actions"><button class="boostNazM3Btn" id="boostNazM3OpenLab" type="button">TRY THE WORKPLACE SKILLS LAB →</button><button class="boostNazM3Btn alt" id="boostNazM3SkipLab" type="button">SKIP FOR NOW</button></div><div class="boostNazM3Summary" id="boostNazM3Summary" ${activeLab?'':'style="display:none"'}>${labSummaryHtml(activeLab)}</div></div><div class="boostNazM3Facts"><div><span>Input</span><b>Your O*NET interests</b></div><div><span>Evidence</span><b>Workplace choices</b></div><div><span>Reflection</span><b>Want more / maybe / less</b></div><div><span>Output</span><b>Preferences + skill signals</b></div></div></div>`;
+      const panels=[...d.querySelectorAll('section.panel')];
+      const skillPanel=d.getElementById('skills')||d.getElementById('skillsPanel')||panels.find(x=>/What Do You Already Bring|skills you already bring|experience toolkit/i.test(x.textContent));
+      const decision=d.getElementById('decision')||panels.find(x=>/How do you want to look at your options|Explore Further/i.test(x.textContent));
+      if(skillPanel?.parentNode)skillPanel.insertAdjacentElement('afterend',panel);else if(decision?.parentNode)decision.parentNode.insertBefore(panel,decision);else (d.querySelector('main')||d.body).appendChild(panel);
+      d.getElementById('boostNazM3OpenLab')?.addEventListener('click',openLab);
+      d.getElementById('boostNazM3SkipLab')?.addEventListener('click',()=>decision?.scrollIntoView({behavior:'smooth',block:'start'}));
+    }
+    if(!w.__boostNazM3PersistPatched&&typeof w.persistModule3==='function'){
+      const orig=w.persistModule3;w.__boostNazM3PersistPatched=true;
+      w.persistModule3=function(status){const result=orig.call(w,status);mergeLabIntoJourney(activeLab||readJourney()?.module3?.skillLab);return result};
+    }
+    if(!w.__boostNazM3CompletePatched&&typeof w.completeModule3==='function'){
+      w.__boostNazM3CompletePatched=true;
+      w.completeModule3=function(){if(typeof w.persistModule3==='function')w.persistModule3('complete');mergeLabIntoJourney(activeLab||readJourney()?.module3?.skillLab);window.top.location.href='Northern_BOOST_Module4_Connected_Test_v0.6.html'};
+    }
+  }catch(e){console.warn('Northern Module 3 shell enhancement unavailable',e)}
+}
+function refreshLabSummary(){try{const d=frame.contentDocument,box=d?.getElementById('boostNazM3Summary');if(!box||!activeLab)return;box.style.display='block';box.innerHTML=labSummaryHtml(activeLab)}catch(_){}}
+function openLab(){modal.classList.add('open');if(!labFrame.src)labFrame.src=LAB_URL;else prepareLab()}
+document.getElementById('boostM3LabClose').addEventListener('click',()=>modal.classList.remove('open'));
+labFrame.addEventListener('load',()=>setTimeout(prepareLab,120));
+function prepareLab(){
+ try{
+  const d=labFrame.contentDocument;if(!d?.body)return;const codes=topCodes();
+  ['top1','top2','top3'].forEach((id,i)=>{const el=d.getElementById(id);if(el&&codes[i]){el.value=codes[i];el.dispatchEvent(new Event('change',{bubbles:true}))}});
+  if(!d.getElementById('boostNazM3LabCarry')){const b=d.createElement('div');b.id='boostNazM3LabCarry';b.style.cssText='padding:10px 14px;background:#e8f4f2;color:#123b48;border-bottom:3px solid #d9a73c;font:800 13px/1.45 Arial,sans-serif';b.innerHTML='<b>Carried from Northern BOOST Discover:</b> '+(codes.length?codes.map(c=>c+' — '+NAMES[c]).join(' • '):'Your O*NET interest pattern remains part of this activity.')+'<br><span style="font-weight:500">The Pizza Lab is optional evidence inside Module 3. It does not change Northern Arizona Regional Opportunity or the Northern recommendation gate.</span>';d.body.insertBefore(b,d.body.firstChild)}
+  if(!d.getElementById('boostNazM3LabBridge')){const s=d.createElement('script');s.id='boostNazM3LabBridge';s.textContent=`(function(){let sent=false;function snapshot(){try{const skills=SKILLS.filter(s=>skillEvidence[s]&&skillEvidence[s].count).map(s=>{const e=skillEvidence[s],p=skillPreference[s]||{sum:0,count:0};const ev=e.count?e.sum/e.count:0,pref=p.count?p.sum/p.count:0;return{name:s,evidenceScore:Number(ev.toFixed(2)),evidenceLabel:capFor(s),preferenceScore:Number(pref.toFixed(2)),preferenceLabel:pref>=1.25?'Want more of this':pref>=.6?'Still exploring':'Lower preference'}}).sort((a,b)=>b.preferenceScore-a.preferenceScore||b.evidenceScore-a.evidenceScore);const fam=F.map(code=>{const p=familyPreference[code]||{sum:0,count:0},avg=p.count?p.sum/p.count:0;return{code,label:LABELS[code],preferenceScore:Number(avg.toFixed(2)),preferenceLabel:avg>=1.5?'Generally liked':avg>=.75?'Mixed / more exposure':'Generally preferred less'}});window.parent.postMessage({type:'${LAB_MESSAGE}',payload:{source:'pizza_workplace_lab',completedAt:new Date().toISOString(),scenarioCount:route.length,topInterests:[document.getElementById('top1')?.value,document.getElementById('top2')?.value,document.getElementById('top3')?.value].filter(Boolean),strengthsToCarry:skills.filter(x=>x.evidenceScore>=2).slice(0,5),workPreferences:skills.slice(0,5),familyPreferences:fam}},location.origin);sent=true}catch(e){console.warn('Northern BOOST Module 3 lab snapshot unavailable',e)}}const stage=document.getElementById('resultsStage');if(stage){new MutationObserver(()=>{if(stage.classList.contains('active')&&!sent)setTimeout(snapshot,60)}).observe(stage,{attributes:true,attributeFilter:['class']});if(stage.classList.contains('active'))snapshot()}})();`;d.body.appendChild(s)}
+ }catch(e){console.warn('Northern Pizza Lab preparation unavailable',e)}
+}
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!==LAB_MESSAGE||!e.data.payload)return;activeLab=e.data.payload;mergeLabIntoJourney(activeLab);modal.classList.remove('open');refreshLabSummary();toast('Pizza Lab evidence added to Module 3 ✓')});
+frame.addEventListener('load',()=>setTimeout(injectModuleEnhancements,350));
+finishBtn.addEventListener('click',async()=>{
+ try{
+  const d=frame.contentDocument,w=frame.contentWindow,j=readJourney();
+  const report=d?.getElementById('reportPanel')||d?.getElementById('reportSection');
+  const reportReady=!!(report&&(!report.classList.contains('hidden'))&&getComputedStyle(report).display!=='none');
+  if(!reportReady&&j?.progress?.module3!=='complete'){toast('Create your Module 3 mobility report before saving completion.');return}
+  finishBtn.disabled=true;finishBtn.textContent='Saving your BOOST journey…';
+  if(typeof w.persistModule3==='function')w.persistModule3('complete');mergeLabIntoJourney(activeLab||readJourney()?.module3?.skillLab);
+  try{await window.PinalBOOSTCloud?.saveNow?.()}catch(_){ }
+  finishBtn.textContent='✓ Saved — returning to BOOST…';setTimeout(()=>location.assign('index.html#step=module3'),350);
+ }catch(e){console.warn(e);finishBtn.disabled=false;finishBtn.textContent='✓ Save Results & Return to BOOST';toast('Finish the Module 3 activity before saving completion.')}
+});
+})();
+</script>
+</body>
+</html>
