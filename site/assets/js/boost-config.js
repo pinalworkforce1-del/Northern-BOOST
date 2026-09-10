@@ -20,6 +20,18 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Completed core modules are always reviewable/reopenable from the map.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(file && file!=='index.html') return;
+  if(document.querySelector('script[data-boost-reentry-fix]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-map-reentry-fix-v1.js?v=20260910reentry1';
+  s.defer=true;
+  s.dataset.boostReentryFix='1';
+  document.head.appendChild(s);
+})();
+
 // Module 1 + Module 2 conversion: keep the pathway map pointed at the clean
 // Northern builds that were assembled from the current Pinal gold-master flow.
 // The legacy Connected_Test files remain in the repo for reference only.
@@ -96,7 +108,20 @@ window.BOOST_CONFIG = {
   if(!file.includes('module4_')) return;
   if(document.querySelector('script[data-boost-m4-carry]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-module4-carry-v1.js?v=20260910evidence3';
+  s.src='assets/js/northern-module4-carry-v1.js?v=20260910evidence4';
   s.dataset.boostM4Carry='1';
+  document.head.appendChild(s);
+})();
+
+// Targeted Module 4 repair: recover numeric interest alignment from the saved
+// Module 1 career (or recompute it from the same RIASEC formula) and pull the
+// SOC-keyed preparation evidence from Module 2.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(!file.includes('module4_')) return;
+  if(document.querySelector('script[data-boost-m4-interest-prep]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-module4-interest-prep-fix-v1.js?v=20260910ip1';
+  s.dataset.boostM4InterestPrep='1';
   document.head.appendChild(s);
 })();
