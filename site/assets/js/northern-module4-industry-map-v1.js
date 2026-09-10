@@ -21,17 +21,11 @@ function explicitDone(j,s,id){
   if(id==='module1')return !!(j?.module1?.completedAt||s?.module1?.completedAt);
   if(id==='module2')return !!(j?.module2?.completedAt||s?.module2?.completedAt);
   if(id==='module3')return !!(j?.module3?.finalizedAt||s?.module3?.finalizedAt||j?.module3?.completionReady||s?.module3?.completionReady);
-  if(id==='module4'){const m=module4(j,s);return !!(m?.completedAt||m?.completedAt||((m?.careerTarget||m?.targetCareer||m?.career)&&m?.participantDirection&&m?.answers));}
+  if(id==='module4'){const m=module4(j,s);return !!(m?.completedAt||((m?.careerTarget||m?.targetCareer||m?.career)&&m?.participantDirection&&m?.answers));}
   return false;
 }
 function reconciledCompletion(j,s){
-  const d={
-    module4:explicitDone(j,s,'module4'),
-    module3:explicitDone(j,s,'module3'),
-    module2:explicitDone(j,s,'module2'),
-    module1:explicitDone(j,s,'module1')
-  };
-  // A later completed core module proves the earlier core steps were completed.
+  const d={module4:explicitDone(j,s,'module4'),module3:explicitDone(j,s,'module3'),module2:explicitDone(j,s,'module2'),module1:explicitDone(j,s,'module1')};
   if(d.module4){d.module3=true;d.module2=true;d.module1=true}
   else if(d.module3){d.module2=true;d.module1=true}
   else if(d.module2){d.module1=true}
@@ -59,9 +53,7 @@ function keyFor(ref,j,s){
   if(/customer service|retail|sales|hospitality|food service/.test(text)||['41','43'].includes(major))return'customer_service';
   return null;
 }
-function targetFromModule4(m4){
-  return m4?.careerTarget||m4?.targetCareer||m4?.career||m4?.boostSignal?.careerTarget||m4?.selection?.career||null;
-}
+function targetFromModule4(m4){return m4?.careerTarget||m4?.targetCareer||m4?.career||m4?.boostSignal?.careerTarget||m4?.selection?.career||null}
 function recommendation(){
   const {j,s,d}=syncCompletion();if(!d.module4)return null;
   const m4=module4(j,s),existing=m4?.appliedExperienceSelected||m4?.appliedExperienceRecommendation||null;
@@ -81,7 +73,14 @@ function persistRecommendation(){
 function ensureMapStyle(){
   if(document.getElementById('boostNazMapCompletionRecStyle'))return;
   const st=document.createElement('style');st.id='boostNazMapCompletionRecStyle';
-  st.textContent='.hot.current{outline-color:transparent!important;box-shadow:none!important}.hot.current:after{content:none!important;display:none!important}.hot[data-applied].rec{outline:4px solid #ffd65e!important;box-shadow:0 0 0 6px rgba(255,214,94,.28),0 8px 28px rgba(0,0,0,.34)!important;background:rgba(255,227,139,.10)!important}.hot[data-applied].rec .rec{display:block!important;background:#e4a72b!important;color:#17324d!important;border:2px solid #fff!important;font-size:11px!important;padding:5px 8px!important;box-shadow:0 3px 10px rgba(0,0,0,.32)!important}';
+  st.textContent=`
+    .hot.current{outline-color:transparent!important;box-shadow:none!important}.hot.current:after{content:none!important;display:none!important}
+    .hot[data-applied].rec{outline:4px solid #ffd65e!important;box-shadow:0 0 0 6px rgba(255,214,94,.28),0 8px 28px rgba(0,0,0,.34)!important;background:rgba(255,227,139,.10)!important;pointer-events:auto!important;cursor:pointer!important;z-index:8!important}
+    .hot[data-applied].rec .rec{display:none!important}
+    .hot[data-applied].rec .boostSeqInfo{display:none!important}
+    .boostIndustryArrow{position:absolute;left:0;top:50%;transform:translate(-38%,-50%);z-index:30;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#e4a72b;color:#10243a;border:3px solid #fff;box-shadow:0 5px 16px rgba(0,0,0,.38);font:1000 31px/1 Arial,sans-serif;pointer-events:none}
+    @media(max-width:760px){.boostIndustryArrow{width:40px;height:40px;font-size:25px;border-width:2px}}
+  `;
   document.head.appendChild(st);
 }
 function applyMap(){
@@ -89,21 +88,38 @@ function applyMap(){
   document.querySelectorAll('.hot.current').forEach(el=>el.classList.remove('current'));
   document.querySelectorAll('[data-core]').forEach(el=>{const id=el.dataset.core;if(d[id])el.classList.add('done')});
   document.querySelectorAll('[data-applied]').forEach(el=>{
-    const on=!!rec&&el.dataset.applied===rec.key;el.classList.toggle('rec',on);
-    const badge=el.querySelector('.rec');if(on&&badge)badge.textContent='RECOMMENDED';
-    if(on){el.setAttribute('aria-label',`${rec.label} — recommended applied career experience after Module 4`);const tip=el.querySelector('.tip');if(tip)tip.textContent=`${rec.label} — Recommended after Module 4`}
+    const on=!!rec&&el.dataset.applied===rec.key;
+    el.classList.toggle('rec',on);
+    el.classList.toggle('boostSeqLocked',!on&&el.classList.contains('boostSeqLocked'));
+    el.querySelectorAll('.boostIndustryArrow').forEach(a=>a.remove());
+    if(on){
+      el.classList.remove('boostSeqLocked');
+      el.removeAttribute('aria-disabled');
+      el.style.pointerEvents='auto';
+      const arrow=document.createElement('span');arrow.className='boostIndustryArrow';arrow.textContent='→';arrow.setAttribute('aria-hidden','true');el.appendChild(arrow);
+      el.setAttribute('aria-label',`${rec.label} — recommended next applied career experience`);
+      const tip=el.querySelector('.tip');if(tip)tip.textContent=`Open ${rec.label} — Recommended after Module 4`;
+    }
   });
   const choice=document.querySelector('[data-industry-choice] .tip');if(choice)choice.textContent=rec?`Recommended next: ${rec.label}`:'Choose Your Applied Career Experience';
   window.__BOOST_NAZ_MAP_RECONCILED={completion:d,recommendation:rec};
 }
 function installModule4(){
   const saveRec=()=>setTimeout(()=>{const r=persistRecommendation();if(r){try{window.BOOSTCloud?.flush?.()}catch(_){}}},0);
-  const wire=()=>{['decide','nativeFinish','finishFromModule'].forEach(id=>{const b=document.getElementById(id);if(b&&!b.dataset.industryRecV2){b.dataset.industryRecV2='1';b.addEventListener('click',saveRec,true)}})};
+  const wire=()=>{['decide','nativeFinish','finishFromModule'].forEach(id=>{const b=document.getElementById(id);if(b&&!b.dataset.industryRecV3){b.dataset.industryRecV3='1';b.addEventListener('click',saveRec,true)}})};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire,{once:true});else wire();setTimeout(wire,500);setTimeout(saveRec,800);
 }
 function installMap(){
   const run=()=>{applyMap();setTimeout(applyMap,80)};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  // Pinal-parity safeguard: the recommended industry is immediately open after Decide.
+  window.addEventListener('click',e=>{
+    const el=e.target?.closest?.('[data-applied].rec');if(!el)return;
+    const href=el.getAttribute('href');if(!href)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    localStorage.setItem('boost_naz_pathway_v1','career');
+    location.assign(href);
+  },true);
   window.addEventListener('pageshow',()=>setTimeout(run,0));window.addEventListener('storage',run);window.addEventListener('boost-cloud-status',()=>setTimeout(run,80));
   setTimeout(run,350);setTimeout(run,1100);setTimeout(run,2200);
 }
