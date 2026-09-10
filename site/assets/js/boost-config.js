@@ -20,19 +20,19 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
-// Module 3 conversion: route the Northern home-map hotspot through the standard
-// BOOST activity HUD wrapper. The wrapper preserves the Northern Module 3 v0.8
-// LMI/logic and adds the optional Pizza Workplace Skills Lab evidence experience.
+// Module 3 conversion: the participant-facing source of truth is the current
+// assembled Pinal activity experience. Northern uses that same HUD/flow while
+// reading Northern Modules 1–2, Northern regional LMI, and Northern cloud state.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
   if(file && file!=='index.html') return;
   const wire=()=>{
     const hot=document.querySelector('[data-core="module3"]');
     if(!hot) return false;
-    hot.href='module3-activity-v2.html';
+    hot.href='activity.html?m=module3&boost_return=index.html&boost_module=module3';
     hot.removeAttribute('target');
     const tip=hot.querySelector('.tip');
-    if(tip) tip.textContent='Module 3 • Career Mobility + Workplace Skills Lab';
+    if(tip) tip.textContent='Module 3 • Where Can My Experience Take Me?';
     return true;
   };
   if(!wire()) document.addEventListener('DOMContentLoaded',wire,{once:true});
