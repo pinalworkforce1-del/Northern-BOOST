@@ -20,6 +20,33 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Module 1 + Module 2 conversion: keep the pathway map pointed at the clean
+// Northern builds that were assembled from the current Pinal gold-master flow.
+// The legacy Connected_Test files remain in the repo for reference only.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(file && file!=='index.html') return;
+  const wire=()=>{
+    const m1=document.querySelector('[data-core="module1"]');
+    const m2=document.querySelector('[data-core="module2"]');
+    if(!m1&&!m2) return false;
+    if(m1){
+      m1.href='Northern_BOOST_Module1_PinalFlow_v1.html';
+      m1.removeAttribute('target');
+      const tip=m1.querySelector('.tip');
+      if(tip) tip.textContent='Module 1 • Discover';
+    }
+    if(m2){
+      m2.href='Northern_BOOST_Module2_PinalFlow_v1.html';
+      m2.removeAttribute('target');
+      const tip=m2.querySelector('.tip');
+      if(tip) tip.textContent='Module 2 • Reality Check';
+    }
+    return true;
+  };
+  if(!wire()) document.addEventListener('DOMContentLoaded',wire,{once:true});
+})();
+
 // Module 3 conversion: the participant-facing source of truth is the current
 // assembled Pinal activity experience. Northern uses that same HUD/flow while
 // reading Northern Modules 1–2, Northern regional LMI, and Northern cloud state.
