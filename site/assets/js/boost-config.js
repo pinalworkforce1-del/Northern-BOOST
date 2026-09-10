@@ -14,7 +14,7 @@ window.BOOST_CONFIG = {
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-sequence-guide]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/sequence-guide.js';
+  s.src='assets/js/sequence-guide.js?v=20260910industry3';
   s.defer=true;
   s.dataset.boostSequenceGuide='1';
   document.head.appendChild(s);
@@ -127,14 +127,14 @@ window.BOOST_CONFIG = {
 })();
 
 // Reconcile Northern completion across the journey + shared evidence stores,
-// write the Module 4 industry recommendation, highlight the matching applied
-// career experience, and keep the obsolete YOU ARE HERE marker suppressed.
+// write the Module 4 industry recommendation, show the Pinal-style arrow marker,
+// and make the recommended industry immediately selectable after Decide.
 (() => {
   const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   if(file!=='index.html'&&!file.includes('module4_')) return;
   if(document.querySelector('script[data-boost-m4-industry-map]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-module4-industry-map-v1.js?v=20260910industry2';
+  s.src='assets/js/northern-module4-industry-map-v1.js?v=20260910industry3';
   s.defer=true;
   s.dataset.boostM4IndustryMap='1';
   document.head.appendChild(s);
