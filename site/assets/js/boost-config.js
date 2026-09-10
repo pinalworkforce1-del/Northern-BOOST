@@ -26,7 +26,7 @@ window.BOOST_CONFIG = {
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-reentry-fix]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-map-reentry-fix-v1.js?v=20260910reentry1';
+  s.src='assets/js/northern-map-reentry-fix-v1.js?v=20260910reentry2';
   s.defer=true;
   s.dataset.boostReentryFix='1';
   document.head.appendChild(s);
@@ -113,15 +113,15 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
-// Targeted Module 4 repair: recover numeric interest alignment from the saved
-// Module 1 career (or recompute it from the same RIASEC formula) and pull the
-// SOC-keyed preparation evidence from Module 2.
+// Pinal-parity repair for Northern Module 4. Participant-facing Decide uses the
+// same evidence structure as the current Pinal gold master; no numeric interest
+// alignment is displayed in Module 4. Northern regional data remain Northern.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
   if(!file.includes('module4_')) return;
   if(document.querySelector('script[data-boost-m4-interest-prep]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-module4-interest-prep-fix-v1.js?v=20260910ip1';
+  s.src='assets/js/northern-module4-interest-prep-fix-v1.js?v=20260910pinalparity2';
   s.dataset.boostM4InterestPrep='1';
   document.head.appendChild(s);
 })();
