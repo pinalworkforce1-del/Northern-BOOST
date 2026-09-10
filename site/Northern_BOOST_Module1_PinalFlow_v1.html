@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Northern BOOST — Module 1 Discover</title>
+<link rel="stylesheet" href="assets/css/northern-module1-pinalflow-v1.css?v=20260909a">
+</head>
+<body>
+<nav class="moduleNav" aria-label="Northern BOOST module navigation">
+  <a href="index.html">← Back to BOOST Map</a>
+  <strong>Module 1 — Discover</strong>
+  <span aria-hidden="true"></span>
+</nav>
+<header class="hero">
+  <div class="wrap heroGrid">
+    <div>
+      <div class="eyebrow">NORTHERN ARIZONA BOOST • MODULE 1 — DISCOVER</div>
+      <h1>What Kind of Work Could Fit You?</h1>
+      <p>Start with the kinds of work that interest you, then see how those interests connect with real career opportunities across Northern Arizona. Your interests are a preference signal — not a test of what you can or cannot do.</p>
+      <div class="heroNote">Regional labor-market context: Apache, Coconino, Gila &amp; Navajo Counties.</div>
+    </div>
+    <div class="heroVisual"><img src="assets/images/rosie-master.webp" alt="Rosie, the Northern BOOST guide"></div>
+  </div>
+</header>
+<div class="rail"><div class="railInner"><span class="on">DISCOVER</span><span>REALITY CHECK</span><span>CAREER MOBILITY</span><span>DECIDE</span></div></div>
+<main><div class="wrap">
+  <section class="panel">
+    <div class="stepTag">Step 1</div>
+    <h2>Take the O*NET Interest Profiler</h2>
+    <p class="sub">If you have not already completed it, start with the official O*NET Interest Profiler. It helps identify the kinds of work activities and environments you may enjoy. BOOST uses those results as one piece of career evidence.</p>
+    <div class="onetBox">
+      <div>
+        <b>Use the official O*NET Interest Profiler</b>
+        <div class="howGrid">
+          <div class="how"><b>1. Open the profiler</b>It opens in a new tab so you can keep BOOST open.</div>
+          <div class="how"><b>2. Complete the questions</b>Answer based on whether you would like doing the activity — not whether you already know how.</div>
+          <div class="how"><b>3. Bring back your six scores</b>Record Realistic, Investigative, Artistic, Social, Enterprising, and Conventional below.</div>
+        </div>
+      </div>
+      <a href="https://www.mynextmove.org/explore/ip" target="_blank" rel="noopener">TAKE THE O*NET INTEREST PROFILER ↗</a>
+    </div>
+  </section>
+
+  <section class="panel" id="scoresPanel">
+    <div class="stepTag">Step 2</div>
+    <h2>Record your O*NET Interest Profiler scores</h2>
+    <p class="sub">Enter the six scores shown on your results page. BOOST compares the overall pattern with occupations, then adds Northern Arizona labor-market evidence. Interest does not measure readiness, qualification, or training need.</p>
+    <div class="scoreGrid">
+      <div class="score"><label for="R">R</label><b>Realistic</b><input id="R" type="number" min="0" max="60" inputmode="decimal"></div>
+      <div class="score"><label for="I">I</label><b>Investigative</b><input id="I" type="number" min="0" max="60" inputmode="decimal"></div>
+      <div class="score"><label for="A">A</label><b>Artistic</b><input id="A" type="number" min="0" max="60" inputmode="decimal"></div>
+      <div class="score"><label for="S">S</label><b>Social</b><input id="S" type="number" min="0" max="60" inputmode="decimal"></div>
+      <div class="score"><label for="E">E</label><b>Enterprising</b><input id="E" type="number" min="0" max="60" inputmode="decimal"></div>
+      <div class="score"><label for="C">C</label><b>Conventional</b><input id="C" type="number" min="0" max="60" inputmode="decimal"></div>
+    </div>
+    <div class="actionRow"><button class="primary" id="surfaceBtn" type="button">SEE CAREERS THAT CONNECT →</button><span class="note">BOOST will only proactively surface careers with enough Northern Arizona opportunity evidence. Search remains open to every occupation.</span></div>
+    <div class="error" id="scoreError">Enter all six O*NET scores before continuing.</div>
+    <div class="interestSummary" id="interestSummary"></div>
+  </section>
+
+  <section class="panel" id="recommendations">
+    <div class="stepTag">Step 3</div>
+    <div class="resultsHead">
+      <div>
+        <h2>See careers that connect your interests with regional opportunity</h2>
+        <p class="sub">BOOST combines your interest pattern with Northern Arizona employment, annual openings, projected growth, and wages. The recommendation gate controls what BOOST surfaces automatically — it never blocks a career you want to explore.</p>
+      </div>
+      <div class="filters" aria-label="Career filters">
+        <button class="filterBtn active" data-filter="all" type="button">View All</button>
+        <button class="filterBtn" data-filter="priority" type="button">Priority Sectors</button>
+        <button class="filterBtn" data-filter="strong" type="button">Strong / Established Opportunity</button>
+      </div>
+    </div>
+    <div class="cards" id="cards"><div class="load">Loading Northern Arizona career evidence…</div></div>
+    <div class="showMore"><button class="secondary" id="moreBtn" type="button" style="display:none">SHOW MORE CAREERS</button></div>
+  </section>
+
+  <section class="panel">
+    <div class="stepTag">Explore beyond recommendations</div>
+    <h2>Want to explore a career BOOST did not surface?</h2>
+    <p class="sub">Search any occupation by title or SOC code. Careers below the automatic recommendation threshold remain fully available. BOOST will show the Northern Arizona evidence and explain what it means rather than blocking the career.</p>
+    <div class="searchWrap">
+      <input class="searchInput" id="searchInput" type="search" autocomplete="off" placeholder="Try CNA, electrician, software developer, welder, CDL, or a SOC code…">
+      <div class="searchResults" id="searchResults"></div>
+    </div>
+    <div class="searchDetail" id="searchDetail"></div>
+  </section>
+
+  <section class="selectionBox">
+    <div class="stepTag">My Career Exploration</div>
+    <h2>Choose the careers you want to carry forward</h2>
+    <p class="sub">Save up to three careers for Reality Check. They can come from BOOST recommendations, your own search, or a combination of both.</p>
+    <div class="chosen" id="chosen"></div>
+    <div class="participantRow">
+      <label>Your name<input id="participantName" autocomplete="name" placeholder="Name"></label>
+      <label>Email <span style="font-weight:500">(optional if not signed in)</span><input id="participantEmail" type="email" autocomplete="email" placeholder="you@example.com"></label>
+    </div>
+    <div class="selectionActions"><button class="secondary" id="saveBtn" type="button">SAVE CAREER EXPLORATION FOR REALITY CHECK →</button></div>
+    <div class="status" id="saveStatus">Your selections are saved as you work. Use the button when you are ready to complete Discover.</div>
+    <div class="completion" id="completion"><h3>Module 1 Complete</h3><p>Your interests and career exploration are saved in your Northern BOOST journey. This candidate build is ready for the Module 2 conversion.</p><a href="index.html">Return to Northern BOOST Map</a></div>
+  </section>
+
+  <div class="sourceNote">Northern BOOST uses O*NET interest evidence with Northern Arizona labor-market information. Automatic recommendations require the existing Northern regional opportunity gate; careers outside that gate remain available through participant-directed exploration. No single score determines eligibility, training need, or a career decision.</div>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/boost-config.js?v=20260909a"></script>
+<script src="assets/js/boost-cloud.js?v=20260909a"></script>
+<script src="assets/js/northern-module1-pinalflow-v1.js?v=20260909a"></script>
+</body>
+</html>
