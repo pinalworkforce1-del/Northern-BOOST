@@ -34,6 +34,11 @@
       if(/\bH3\b/.test(node.nodeValue||''))node.nodeValue=node.nodeValue.replace(/\bH3\b/g,'Northern Arizona Regional Opportunity');
     }
   }
-  const init=()=>{if(document.querySelector('.nbHud'))return;renderHud();addRegionalBanner();alignExperienceLanguage();guardRegionalLanguage()};
+  function loadModule1Conversion(){
+    const base=new URL('./',document.currentScript?.src||location.href);
+    if(!document.querySelector('link[data-northern-module1-v3]')){const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('../css/northern-module1-v3.css?v=20260910a',base);css.dataset.northernModule1V3='';document.head.appendChild(css)}
+    if(!document.querySelector('script[data-northern-module1-v3]')){const js=document.createElement('script');js.src=new URL('northern-module1-v3.js?v=20260910a',base);js.dataset.northernModule1V3='';document.head.appendChild(js)}
+  }
+  const init=()=>{if(moduleNumber===1){loadModule1Conversion();return}if(document.querySelector('.nbHud'))return;renderHud();addRegionalBanner();alignExperienceLanguage();guardRegionalLanguage()};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
