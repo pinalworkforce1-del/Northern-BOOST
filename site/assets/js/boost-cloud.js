@@ -231,3 +231,17 @@
   (async()=>{await bootstrapRemoteIfNeeded();await finishAuthReturn();if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{injectJourneyMapButton();showAuthGate();});}else{injectJourneyMapButton();showAuthGate();}})();
   window.addEventListener("pagehide",()=>{try{flush()}catch(e){}});
 })();
+
+// Shared Northern BOOST experience layer. Loaded here so the connected modules
+// receive one consistent HUD without duplicating their embedded regional data.
+(() => {
+  const name=(location.pathname.split('/').pop()||'');
+  if(!/^Northern_BOOST_Module[1-4]_Connected_Test_/i.test(name))return;
+  const base=new URL('./',document.currentScript?.src||location.href);
+  if(!document.querySelector('link[data-northern-experience-v2]')){
+    const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('../css/northern-boost-experience-v2.css?v=20260910a',base);css.dataset.northernExperienceV2='';document.head.appendChild(css);
+  }
+  if(!document.querySelector('script[data-northern-experience-v2]')){
+    const js=document.createElement('script');js.src=new URL('northern-boost-experience-v2.js?v=20260910a',base);js.defer=true;js.dataset.northernExperienceV2='';document.head.appendChild(js);
+  }
+})();
