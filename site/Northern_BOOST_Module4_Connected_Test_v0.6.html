@@ -4,6 +4,12 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Northern BOOST — Module 4</title>
 <link rel="canonical" href="module4-v4.html">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf3f6;color:#183244;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}.landing{min-height:100vh;display:grid;place-items:center;padding:24px}.card{width:min(760px,100%);background:#fff;border:1px solid #d4e0e8;border-radius:20px;padding:28px;box-shadow:0 14px 38px #1832441f}.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-weight:900;font-size:.75rem;color:#176f66}h1{margin:.25rem 0 .5rem;color:#102b46;font-size:clamp(2rem,5vw,3rem)}p{line-height:1.55}.summary{margin:18px 0;padding:14px 16px;border-left:5px solid #2a9d8f;background:#eef8f6;border-radius:12px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:11px 16px;border-radius:11px;text-decoration:none;font-weight:900}.report{background:#173f61;color:#fff}.review{background:#e9f3ff;color:#174c80}.map{background:#f2f4f5;color:#425766}.small{font-size:.85rem;color:#657782;margin-top:16px}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="landing" class="landing hidden"><section class="card"><div class="eyebrow">Northern Arizona BOOST • Module 4 Complete</div><h1>Your decision is saved.</h1><p>Your BOOST Career Decision Report is ready. It brings together the evidence you gathered across Discover, Reality Check, Career Mobility, and Decide.</p><div id="summary" class="summary"></div><div class="actions"><a class="report" href="career-decision-report.html">OPEN MY CAREER DECISION REPORT →</a><a class="review" href="module4-v4.html?review=1">REVIEW / CHANGE MY DECISION</a><a class="map" href="index.html#step=module4">RETURN TO BOOST MAP</a></div><div class="small">Your report can be printed or saved as a PDF, and it also includes a Career Coach Summary view.</div></section></div>
 <script>
 (()=>{
 'use strict';
@@ -11,6 +17,7 @@ const JKEY='boost_naz_journey_v1',SKEY='northern_boost_career_exploration_v1';
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(_){return{}}};
 const present=v=>!(v===undefined||v===null||v==='');
 const soc=v=>String(v||'');
+const ROUTE={READY:'WORK NOW',BRIDGE:'EARN WHILE YOU LEARN',BUILD:'TRAINING INVESTMENT CONVERSATION',RECONSIDER:'EXPLORE BEFORE COMMITTING'};
 const FALLBACK={
  '31-1131':{pathway:'Nursing',position:'Entry Point',bridge:['Licensed Practical / Vocational Nurse'],dest:['Registered Nurse']},
  '15-1232':{pathway:'IT Systems & Analysis',position:'Entry Point',bridge:['Network / Systems Administrator','Computer Systems Analyst'],dest:['Computer & Information Systems Manager']},
@@ -26,9 +33,11 @@ function merge(a,b){const out=(a&&typeof a==='object'&&!Array.isArray(a))?{...a}
 function mergeList(a,b){const m=new Map();for(const x of [...(a||[]),...(b||[])]){if(!x?.soc)continue;const k=soc(x.soc);m.set(k,merge(m.get(k)||{},x))}return[...m.values()]}
 function mergeModule(a,b){const out=merge(a||{},b||{}),va=a?.validationBySoc||{},vb=b?.validationBySoc||{};out.validationBySoc={...va};for(const[k,v]of Object.entries(vb))out.validationBySoc[k]=merge(out.validationBySoc[k]||{},v);out.careers=mergeList(a?.careers,b?.careers);if(a?.selected||b?.selected)out.selected=mergeList(a?.selected,b?.selected);return out}
 function patchForward(st){const m3=st?.module3;if(!m3)return;m3.mobilitySignalsBySoc=m3.mobilitySignalsBySoc||{};m3.decisionEvidence=m3.decisionEvidence||{};m3.decisionEvidence.mobilitySignalsBySoc=m3.decisionEvidence.mobilitySignalsBySoc||{};const list=(m3.careers?.length?m3.careers:(st?.module2?.careers?.length?st.module2.careers:(st?.module1?.selected||st?.module1?.careers||[]))).filter(x=>x?.soc);list.forEach(c=>{const a=m3.mobilitySignalsBySoc[c.soc]||{},b=m3.decisionEvidence.mobilitySignalsBySoc[c.soc]||{},p=a.forwardPathway||b.forwardPathway||FALLBACK[c.soc];if(!p)return;if(a.relationship?.kind==='forward_pathway')a.relationship=a.mobilityRelationship||null;if(b.relationship?.kind==='forward_pathway')b.relationship=b.mobilityRelationship||null;a.forwardPathway=p;b.forwardPathway=p;m3.mobilitySignalsBySoc[c.soc]=a;m3.decisionEvidence.mobilitySignalsBySoc[c.soc]=b})}
-const j=read(JKEY),s=read(SKEY);for(const n of ['module1','module2','module3']){const merged=mergeModule(j[n]||{},s[n]||{});if(Object.keys(merged).length){j[n]=merged;s[n]=merged}}patchForward(j);patchForward(s);if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));location.replace('module4-v4.html?handoff=20260910m4guard1'+(location.hash||''));
+const j=read(JKEY),s=read(SKEY);for(const n of ['module1','module2','module3']){const merged=mergeModule(j[n]||{},s[n]||{});if(Object.keys(merged).length){j[n]=merged;s[n]=merged}}patchForward(j);patchForward(s);if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));
+const m4=s.module4||j.module4||{};
+if(m4.completedAt&&m4.careerTarget?.soc){const landing=document.getElementById('landing');landing.classList.remove('hidden');const route=m4.participantDirection||m4.boostSignal?.route||'RECONSIDER';document.getElementById('summary').innerHTML=`<b>${m4.careerTarget.title||m4.careerTarget.soc}</b><br>${ROUTE[route]||route}`;return}
+location.replace('module4-v4.html?handoff=20260910m4report1'+(location.hash||''));
 })();
 </script>
-</head>
-<body><p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v4.html?handoff=20260910m4guard1">Continue</a></p></body>
+</body>
 </html>
