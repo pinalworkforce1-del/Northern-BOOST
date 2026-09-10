@@ -12,6 +12,17 @@ const JKEY='boost_naz_journey_v1',SKEY='northern_boost_career_exploration_v1';
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(_){return{}}};
 const present=v=>!(v===undefined||v===null||v==='');
 const soc=v=>String(v||'');
+const FALLBACK={
+ '31-1131':{pathway:'Nursing',position:'Entry Point',bridge:['Licensed Practical / Vocational Nurse'],dest:['Registered Nurse']},
+ '15-1232':{pathway:'IT Systems & Analysis',position:'Entry Point',bridge:['Network / Systems Administrator','Computer Systems Analyst'],dest:['Computer & Information Systems Manager']},
+ '53-3032':{pathway:'Transportation & Logistics',position:'Skilled Entry',bridge:['Transportation / Material-Moving Supervisor','Dispatcher / Fleet Coordinator'],dest:['Transportation, Storage & Distribution Manager','Logistician']},
+ '53-7062':{pathway:'Logistics & Supply Chain',position:'Entry Point',bridge:['First-Line Transportation / Material-Moving Supervisor'],dest:['Logistician']},
+ '49-9071':{pathway:'Maintenance & Facilities Leadership',position:'Skilled Entry',bridge:['First-Line Supervisor of Mechanics / Installers / Repairers'],dest:['Facilities Manager','General & Operations Manager']},
+ '43-4051':{pathway:'Customer Operations',position:'Entry Point',bridge:['First-Line Office / Administrative Support Supervisor'],dest:['Administrative Services Manager','General & Operations Manager']},
+ '41-2031':{pathway:'Retail & Sales Leadership',position:'Entry Point',bridge:['First-Line Retail Sales Supervisor'],dest:['General & Operations Manager','Sales Manager']},
+ '35-3023':{pathway:'Food Service Leadership',position:'Entry Point',bridge:['Food Service Supervisor','Food Service Manager'],dest:['General & Operations Manager']},
+ '47-2061':{pathway:'Construction Leadership',position:'Entry Point',bridge:['First-Line Supervisor of Construction Trades'],dest:['Construction Manager']}
+};
 function merge(a,b){
  const out=(a&&typeof a==='object'&&!Array.isArray(a))?{...a}:{};
  if(!b||typeof b!=='object'||Array.isArray(b))return present(b)?b:out;
@@ -39,20 +50,42 @@ function mergeModule(a,b){
  if(a?.selected||b?.selected)out.selected=mergeList(a?.selected,b?.selected);
  return out;
 }
+function relFromPath(p){
+ if(!p)return null;
+ const seq=[...(p.bridge||[]),...(p.dest||[])].filter(Boolean);
+ return{kind:'forward_pathway',pathway:p.pathway||'Career pathway',position:`${p.position||'Starting point'}${seq.length?' → '+seq.join(' → '):''}`,nextMoves:seq};
+}
+function patchForwardPathways(st){
+ const m3=st?.module3;if(!m3)return;
+ m3.mobilitySignalsBySoc=m3.mobilitySignalsBySoc||{};
+ m3.decisionEvidence=m3.decisionEvidence||{};
+ m3.decisionEvidence.mobilitySignalsBySoc=m3.decisionEvidence.mobilitySignalsBySoc||{};
+ const list=(m3.careers?.length?m3.careers:(st?.module2?.careers?.length?st.module2.careers:(st?.module1?.selected||st?.module1?.careers||[]))).filter(x=>x?.soc);
+ list.forEach(c=>{
+  const a=m3.mobilitySignalsBySoc[c.soc]||{},b=m3.decisionEvidence.mobilitySignalsBySoc[c.soc]||{};
+  const p=a.forwardPathway||b.forwardPathway||FALLBACK[c.soc];if(!p)return;
+  const rel=relFromPath(p);
+  if(a.relationship&&a.relationship.kind!=='forward_pathway'&&!a.mobilityRelationship)a.mobilityRelationship=a.relationship;
+  if(b.relationship&&b.relationship.kind!=='forward_pathway'&&!b.mobilityRelationship)b.mobilityRelationship=b.relationship;
+  a.forwardPathway=p;a.relationship=rel;b.forwardPathway=p;b.relationship=rel;
+  m3.mobilitySignalsBySoc[c.soc]=a;m3.decisionEvidence.mobilitySignalsBySoc[c.soc]=b;
+ });
+}
 const j=read(JKEY),s=read(SKEY);
 for(const n of ['module1','module2','module3']){
  const merged=mergeModule(j[n]||{},s[n]||{});
  if(Object.keys(merged).length){j[n]=merged;s[n]=merged}
 }
+patchForwardPathways(j);patchForwardPathways(s);
 if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}
 const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;
 localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));
-const target='module4-v3.html?handoff=20260910m4merge1'+(location.hash||'');
+const target='module4-v3.html?handoff=20260910m4path2'+(location.hash||'');
 location.replace(target);
 })();
 </script>
 </head>
 <body>
-<p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v3.html?handoff=20260910m4merge1">Continue</a></p>
+<p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v3.html?handoff=20260910m4path2">Continue</a></p>
 </body>
 </html>
