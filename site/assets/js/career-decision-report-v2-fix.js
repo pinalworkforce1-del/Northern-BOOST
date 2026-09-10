@@ -1,0 +1,1 @@
+(()=>{try{const wc=typeof wageComparison==='function'?wageComparison():null,el=document.querySelector('.deltaBig');if(wc&&el&&wc.delta<0){const pct=wc.pct==null?'':` (${wc.pct.toFixed(1)}%)`;el.textContent=`-$${Math.abs(Math.round(wc.delta)).toLocaleString()}/yr${pct}`}}catch(e){console.warn('Wage delta display fix failed',e)}})();
