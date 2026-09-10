@@ -61,3 +61,16 @@ window.BOOST_CONFIG = {
     };
   },{once:true});
 })();
+
+// Module 4 carry-forward: expose the integrated Module 3 evidence package
+// (O*NET interests, transferable skills, Pizza Lab preferences, and career
+// decisions) inside the existing Northern Decide build without changing Pinal.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(!file.includes('module4_')) return;
+  if(document.querySelector('script[data-boost-m4-carry]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-module4-carry-v1.js?v=20260910m3carry1';
+  s.dataset.boostM4Carry='1';
+  document.head.appendChild(s);
+})();
