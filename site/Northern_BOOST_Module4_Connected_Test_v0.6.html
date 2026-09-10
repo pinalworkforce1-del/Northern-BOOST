@@ -1,10 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Northern BOOST — Module 4</title>
-<link rel="canonical" href="module4-v3.html">
+<link rel="canonical" href="module4-v4.html">
 <script>
 (()=>{
 'use strict';
@@ -23,69 +22,13 @@ const FALLBACK={
  '35-3023':{pathway:'Food Service Leadership',position:'Entry Point',bridge:['Food Service Supervisor','Food Service Manager'],dest:['General & Operations Manager']},
  '47-2061':{pathway:'Construction Leadership',position:'Entry Point',bridge:['First-Line Supervisor of Construction Trades'],dest:['Construction Manager']}
 };
-function merge(a,b){
- const out=(a&&typeof a==='object'&&!Array.isArray(a))?{...a}:{};
- if(!b||typeof b!=='object'||Array.isArray(b))return present(b)?b:out;
- for(const [k,v] of Object.entries(b)){
-  if(Array.isArray(v)){if(v.length)out[k]=v;continue}
-  if(v&&typeof v==='object'){out[k]=merge(out[k]&&typeof out[k]==='object'?out[k]:{},v);continue}
-  if(present(v))out[k]=v;
- }
- return out;
-}
-function mergeList(a,b){
- const m=new Map();
- for(const x of [...(a||[]),...(b||[])]){
-  if(!x?.soc)continue;
-  const k=soc(x.soc);m.set(k,merge(m.get(k)||{},x));
- }
- return [...m.values()];
-}
-function mergeModule(a,b){
- const out=merge(a||{},b||{});
- const va=a?.validationBySoc||{},vb=b?.validationBySoc||{};
- out.validationBySoc={...va};
- for(const [k,v] of Object.entries(vb))out.validationBySoc[k]=merge(out.validationBySoc[k]||{},v);
- out.careers=mergeList(a?.careers,b?.careers);
- if(a?.selected||b?.selected)out.selected=mergeList(a?.selected,b?.selected);
- return out;
-}
-function relFromPath(p){
- if(!p)return null;
- const seq=[...(p.bridge||[]),...(p.dest||[])].filter(Boolean);
- return{kind:'forward_pathway',pathway:p.pathway||'Career pathway',position:`${p.position||'Starting point'}${seq.length?' → '+seq.join(' → '):''}`,nextMoves:seq};
-}
-function patchForwardPathways(st){
- const m3=st?.module3;if(!m3)return;
- m3.mobilitySignalsBySoc=m3.mobilitySignalsBySoc||{};
- m3.decisionEvidence=m3.decisionEvidence||{};
- m3.decisionEvidence.mobilitySignalsBySoc=m3.decisionEvidence.mobilitySignalsBySoc||{};
- const list=(m3.careers?.length?m3.careers:(st?.module2?.careers?.length?st.module2.careers:(st?.module1?.selected||st?.module1?.careers||[]))).filter(x=>x?.soc);
- list.forEach(c=>{
-  const a=m3.mobilitySignalsBySoc[c.soc]||{},b=m3.decisionEvidence.mobilitySignalsBySoc[c.soc]||{};
-  const p=a.forwardPathway||b.forwardPathway||FALLBACK[c.soc];if(!p)return;
-  const rel=relFromPath(p);
-  if(a.relationship&&a.relationship.kind!=='forward_pathway'&&!a.mobilityRelationship)a.mobilityRelationship=a.relationship;
-  if(b.relationship&&b.relationship.kind!=='forward_pathway'&&!b.mobilityRelationship)b.mobilityRelationship=b.relationship;
-  a.forwardPathway=p;a.relationship=rel;b.forwardPathway=p;b.relationship=rel;
-  m3.mobilitySignalsBySoc[c.soc]=a;m3.decisionEvidence.mobilitySignalsBySoc[c.soc]=b;
- });
-}
-const j=read(JKEY),s=read(SKEY);
-for(const n of ['module1','module2','module3']){
- const merged=mergeModule(j[n]||{},s[n]||{});
- if(Object.keys(merged).length){j[n]=merged;s[n]=merged}
-}
-patchForwardPathways(j);patchForwardPathways(s);
-if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}
-const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;
-localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));
-const target='module4-v3.html?handoff=20260910m4path2'+(location.hash||'');
-location.replace(target);
+function merge(a,b){const out=(a&&typeof a==='object'&&!Array.isArray(a))?{...a}:{};if(!b||typeof b!=='object'||Array.isArray(b))return present(b)?b:out;for(const[k,v]of Object.entries(b)){if(Array.isArray(v)){if(v.length)out[k]=v;continue}if(v&&typeof v==='object'){out[k]=merge(out[k]&&typeof out[k]==='object'?out[k]:{},v);continue}if(present(v))out[k]=v}return out}
+function mergeList(a,b){const m=new Map();for(const x of [...(a||[]),...(b||[])]){if(!x?.soc)continue;const k=soc(x.soc);m.set(k,merge(m.get(k)||{},x))}return[...m.values()]}
+function mergeModule(a,b){const out=merge(a||{},b||{}),va=a?.validationBySoc||{},vb=b?.validationBySoc||{};out.validationBySoc={...va};for(const[k,v]of Object.entries(vb))out.validationBySoc[k]=merge(out.validationBySoc[k]||{},v);out.careers=mergeList(a?.careers,b?.careers);if(a?.selected||b?.selected)out.selected=mergeList(a?.selected,b?.selected);return out}
+function patchForward(st){const m3=st?.module3;if(!m3)return;m3.mobilitySignalsBySoc=m3.mobilitySignalsBySoc||{};m3.decisionEvidence=m3.decisionEvidence||{};m3.decisionEvidence.mobilitySignalsBySoc=m3.decisionEvidence.mobilitySignalsBySoc||{};const list=(m3.careers?.length?m3.careers:(st?.module2?.careers?.length?st.module2.careers:(st?.module1?.selected||st?.module1?.careers||[]))).filter(x=>x?.soc);list.forEach(c=>{const a=m3.mobilitySignalsBySoc[c.soc]||{},b=m3.decisionEvidence.mobilitySignalsBySoc[c.soc]||{},p=a.forwardPathway||b.forwardPathway||FALLBACK[c.soc];if(!p)return;if(a.relationship?.kind==='forward_pathway')a.relationship=a.mobilityRelationship||null;if(b.relationship?.kind==='forward_pathway')b.relationship=b.mobilityRelationship||null;a.forwardPathway=p;b.forwardPathway=p;m3.mobilitySignalsBySoc[c.soc]=a;m3.decisionEvidence.mobilitySignalsBySoc[c.soc]=b})}
+const j=read(JKEY),s=read(SKEY);for(const n of ['module1','module2','module3']){const merged=mergeModule(j[n]||{},s[n]||{});if(Object.keys(merged).length){j[n]=merged;s[n]=merged}}patchForward(j);patchForward(s);if(j.participant||s.participant){const p=merge(j.participant||{},s.participant||{});j.participant=p;s.participant=p}const now=new Date().toISOString();j.region='Northern Arizona';s.region='Northern Arizona';j.updatedAt=now;s.updatedAt=now;localStorage.setItem(JKEY,JSON.stringify(j));localStorage.setItem(SKEY,JSON.stringify(s));location.replace('module4-v4.html?handoff=20260910m4guard1'+(location.hash||''));
 })();
 </script>
 </head>
-<body>
-<p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v3.html?handoff=20260910m4path2">Continue</a></p>
-</body>
+<body><p>Preparing your Northern BOOST evidence for Module 4… <a href="module4-v4.html?handoff=20260910m4guard1">Continue</a></p></body>
 </html>
