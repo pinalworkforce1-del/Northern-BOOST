@@ -12,6 +12,7 @@ This package converts the connected Northern Arizona BOOST journey from browser-
 - If a participant later opens a valid BOOST resume link on another browser/device, the adapter can restore the cloud record into browser storage and reload the experience.
 - Supabase table access is locked down; the browser uses token-validated RPC functions instead of direct table CRUD.
 - GitHub Actions workflow publishes only `/site` to GitHub Pages.
+- Rosie welcome media now uses the validated web-optimized `rosie-boost-intro-web.mp4` asset; the corrupted truncated copy was removed.
 
 ## 1. Create / connect Supabase
 Run `supabase/migrations/001_boost_journeys.sql` in the Supabase SQL editor.
