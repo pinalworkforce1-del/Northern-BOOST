@@ -5,6 +5,13 @@ window.__NorthernBOOSTAppliedMapGateInstalled=true;
 const JK='boost_naz_journey_v1',SK='northern_boost_career_exploration_v1',PATH='boost_naz_pathway_v1';
 const VALID=new Set(['skilled_trades','advanced_manufacturing','healthcare','it','cdl','customer_service']);
 const NAMES={skilled_trades:'Skilled Trades',advanced_manufacturing:'Advanced Manufacturing',healthcare:'Health Care',it:'Information Technology',cdl:'Transportation & Logistics',customer_service:'Customer Service'};
+const POS={
+  skilled_trades:{left:'77.2%',top:'40.2%',width:'22.4%',height:'8.4%'},
+  advanced_manufacturing:{left:'77.2%',top:'47.7%',width:'22.4%',height:'8.4%'},
+  healthcare:{left:'77.2%',top:'55.2%',width:'22.4%',height:'8.4%'},
+  it:{left:'77.2%',top:'62.7%',width:'22.4%',height:'8.4%'},
+  cdl:{left:'77.2%',top:'70.0%',width:'22.4%',height:'10.2%'}
+};
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(_){return{}}};
 const soc=v=>String(v??'').replace(/\D/g,'').slice(0,6);
 const norm=v=>String(v??'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
@@ -30,8 +37,39 @@ function recommended(){
 function ensureStyle(){
   if(document.getElementById('boostAppliedMapGateStyle'))return;
   const s=document.createElement('style');s.id='boostAppliedMapGateStyle';
-  s.textContent=`.stage .hot[data-applied]{pointer-events:auto!important;cursor:not-allowed!important}.stage .hot[data-applied].boostMatchedIndustry,.stage .hot[data-applied][data-recommended-industry="true"]{pointer-events:auto!important;cursor:pointer!important;z-index:40!important}`;
+  s.textContent=`
+.stage .hot[data-applied]{pointer-events:auto!important;cursor:not-allowed!important}
+.stage .hot[data-applied].boostMatchedIndustry,.stage .hot[data-applied][data-recommended-industry="true"]{pointer-events:auto!important;cursor:pointer!important;z-index:40!important}
+#boostActiveIndustrySurface{position:absolute;z-index:90;display:block;border-radius:18px;background:rgba(255,255,255,0);cursor:pointer!important;pointer-events:auto!important;outline:3px solid transparent;transition:.16s;text-decoration:none}
+#boostActiveIndustrySurface:hover,#boostActiveIndustrySurface:focus-visible{outline-color:#ffdd78;box-shadow:0 0 0 6px rgba(255,214,94,.34),0 0 28px rgba(255,205,65,.45);background:rgba(255,227,139,.10)}
+#boostActiveIndustrySurface .boostActiveIndustryTip{position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);display:none;width:max-content;max-width:260px;padding:7px 9px;border-radius:8px;background:#081a2af5;color:#fff;font-size:11px;font-weight:900;text-align:center;box-shadow:0 5px 18px #0005;pointer-events:none}
+#boostActiveIndustrySurface:hover .boostActiveIndustryTip,#boostActiveIndustrySurface:focus-visible .boostActiveIndustryTip{display:block}
+`;
   document.head.appendChild(s);
+}
+function installActiveSurface(rec){
+  document.getElementById('boostActiveIndustrySurface')?.remove();
+  if(!rec||!POS[rec])return;
+  const source=document.querySelector(`[data-applied="${rec}"]`);
+  const stage=document.querySelector('.stage');
+  const href=source?.getAttribute('href');
+  if(!stage||!href)return;
+  const a=document.createElement('a');
+  a.id='boostActiveIndustrySurface';
+  a.href=href;
+  a.setAttribute('aria-label',`Open ${NAMES[rec]} applied career experience`);
+  a.title=`Open ${NAMES[rec]}`;
+  Object.assign(a.style,POS[rec]);
+  const tip=document.createElement('span');
+  tip.className='boostActiveIndustryTip';
+  tip.textContent=`Open ${NAMES[rec]} — recommended next`;
+  a.appendChild(tip);
+  a.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    localStorage.setItem(PATH,'career');
+    location.assign(new URL(href,location.href).href);
+  });
+  stage.appendChild(a);
 }
 function decorate(){
   ensureStyle();
@@ -57,6 +95,7 @@ function decorate(){
       el.style.removeProperty('z-index');
     }
   });
+  installActiveSurface(rec);
 }
 function explainLocked(el){
   const info=el.querySelector('.boostSeqInfo');if(info){info.click();return;}
@@ -64,6 +103,7 @@ function explainLocked(el){
   try{window.showToast?.(msg)}catch(_){alert(msg)}
 }
 window.addEventListener('click',e=>{
+  if(e.target?.closest?.('#boostActiveIndustrySurface'))return;
   const el=e.target?.closest?.('[data-applied]');if(!el||!module4Done())return;
   const rec=recommended(),key=el.dataset.applied;
   e.preventDefault();e.stopImmediatePropagation();
