@@ -1,0 +1,43 @@
+name: Repair Rosie intro media
+on:
+  push:
+    branches: [fix-rosie-intro-2026-09-10]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-rosie-intro-2026-09-10
+          fetch-depth: 0
+      - name: Re-encode damaged Rosie intro
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+          ffmpeg -y -fflags +genpts+discardcorrupt -err_detect ignore_err \
+            -i site/assets/video/rosie-boost-intro.mp4 \
+            -vf 'fps=30' \
+            -af 'aresample=async=1:min_hard_comp=0.100:first_pts=0' \
+            -c:v libx264 -preset medium -crf 24 -pix_fmt yuv420p \
+            -c:a aac -b:a 96k -movflags +faststart \
+            site/assets/video/rosie-boost-intro.repaired.mp4
+          mv site/assets/video/rosie-boost-intro.repaired.mp4 site/assets/video/rosie-boost-intro.mp4
+          ffmpeg -v error -i site/assets/video/rosie-boost-intro.mp4 -f null - 2> repaired-decode-errors.txt || true
+          if [ -s repaired-decode-errors.txt ]; then
+            echo 'Repaired file still has decode errors:'
+            cat repaired-decode-errors.txt
+            exit 1
+          fi
+          ffprobe -v error -show_entries format=duration,size,bit_rate -of default=noprint_wrappers=1 site/assets/video/rosie-boost-intro.mp4
+      - name: Commit repaired media
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/assets/video/rosie-boost-intro.mp4
+          git commit -m 'Repair Rosie intro MP4 for stable playback'
+          git push origin HEAD:fix-rosie-intro-2026-09-10
