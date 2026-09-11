@@ -1,5 +1,7 @@
 (()=>{
 'use strict';
+if(window.__NorthernBOOSTAppliedMapGateInstalled)return;
+window.__NorthernBOOSTAppliedMapGateInstalled=true;
 const JK='boost_naz_journey_v1',SK='northern_boost_career_exploration_v1',PATH='boost_naz_pathway_v1';
 const VALID=new Set(['skilled_trades','advanced_manufacturing','healthcare','it','cdl','customer_service']);
 const NAMES={skilled_trades:'Skilled Trades',advanced_manufacturing:'Advanced Manufacturing',healthcare:'Health Care',it:'Information Technology',cdl:'Transportation & Logistics',customer_service:'Customer Service'};
@@ -25,24 +27,34 @@ function recommended(){
   if(['41','43'].includes(major)||/customer service|retail|sales|hospitality|food service/.test(text))return'customer_service';
   return null;
 }
+function ensureStyle(){
+  if(document.getElementById('boostAppliedMapGateStyle'))return;
+  const s=document.createElement('style');s.id='boostAppliedMapGateStyle';
+  s.textContent=`.stage .hot[data-applied]{pointer-events:auto!important;cursor:not-allowed!important}.stage .hot[data-applied].boostMatchedIndustry,.stage .hot[data-applied][data-recommended-industry="true"]{pointer-events:auto!important;cursor:pointer!important;z-index:40!important}`;
+  document.head.appendChild(s);
+}
 function decorate(){
+  ensureStyle();
   const rec=recommended();
   document.querySelectorAll('[data-applied]').forEach(el=>{
     const match=!!rec&&el.dataset.applied===rec;
-    el.style.setProperty('pointer-events','auto','important');
-    el.style.setProperty('cursor',match?'pointer':'not-allowed','important');
+    el.classList.toggle('boostMatchedIndustry',match);
     if(match){
       el.classList.remove('boostSeqLocked');
-      el.classList.add('boostMatchedIndustry');
       el.dataset.recommendedIndustry='true';
       el.removeAttribute('aria-disabled');
       el.setAttribute('role','link');
       el.setAttribute('tabindex','0');
+      el.style.setProperty('pointer-events','auto','important');
+      el.style.setProperty('cursor','pointer','important');
+      el.style.setProperty('z-index','40','important');
       el.setAttribute('aria-label',`${NAMES[rec]} — open your matched applied career experience`);
     }else if(module4Done()){
-      el.classList.remove('boostMatchedIndustry');
       el.removeAttribute('data-recommended-industry');
       el.setAttribute('aria-disabled','true');
+      el.style.setProperty('pointer-events','auto','important');
+      el.style.setProperty('cursor','not-allowed','important');
+      el.style.removeProperty('z-index');
     }
   });
 }
@@ -58,15 +70,15 @@ window.addEventListener('click',e=>{
   if(!rec||key!==rec){explainLocked(el);return;}
   const href=el.getAttribute('href');if(!href||href.startsWith('#'))return;
   localStorage.setItem(PATH,'career');
-  location.href=new URL(href,location.href).href;
+  location.assign(new URL(href,location.href).href);
 },true);
 window.addEventListener('keydown',e=>{
   if(e.key!=='Enter'&&e.key!==' ')return;
   const el=e.target?.closest?.('[data-applied]');if(!el||!module4Done())return;
   e.preventDefault();el.click();
 },true);
-function run(){decorate();setTimeout(decorate,150);setTimeout(decorate,700)}
+function run(){decorate();setTimeout(decorate,100);setTimeout(decorate,500);setTimeout(decorate,1500)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
-window.addEventListener('pageshow',run);window.addEventListener('storage',run);setInterval(decorate,1200);
+window.addEventListener('pageshow',run);window.addEventListener('storage',run);setInterval(decorate,1000);
 window.NorthernBOOSTAppliedMapGate={recommended,module4Done,decorate};
 })();
