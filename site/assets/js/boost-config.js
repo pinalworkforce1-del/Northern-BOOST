@@ -41,21 +41,21 @@ window.BOOST_CONFIG = {
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-sequence-guide]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/sequence-guide.js?v=20260910industry3';
+  s.src='assets/js/sequence-guide.js?v=20260911industry-lock2';
   s.defer=true;
   s.dataset.boostSequenceGuide='1';
   document.head.appendChild(s);
 })();
 
-// After Module 4, every applied-industry hotspot must remain physically clickable.
-// Sequence-guide can still visually recommend one; this prevents stale lock state from
-// swallowing clicks on Transportation / Logistics or another industry card.
+// After Module 4, exactly one applied-industry hotspot is actionable: the one
+// matched to the participant's selected occupation in Decide. This capture-phase
+// gate also prevents stale/legacy handlers from opening locked industries.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-applied-map-click]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-applied-map-click-v1.js?v=20260911a';
+  s.src='assets/js/northern-applied-map-click-v1.js?v=20260911single-industry2';
   s.defer=true;
   s.dataset.boostAppliedMapClick='1';
   document.head.appendChild(s);
@@ -175,7 +175,7 @@ window.BOOST_CONFIG = {
   if(file!=='index.html'&&!file.includes('module4_')) return;
   if(document.querySelector('script[data-boost-m4-industry-map]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-module4-industry-map-v1.js?v=20260910industry3';
+  s.src='assets/js/northern-module4-industry-map-v1.js?v=20260911industry-lock2';
   s.defer=true;
   s.dataset.boostM4IndustryMap='1';
   document.head.appendChild(s);
