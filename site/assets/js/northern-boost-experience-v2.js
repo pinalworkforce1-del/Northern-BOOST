@@ -39,6 +39,16 @@
     if(!document.querySelector('link[data-northern-module1-v3]')){const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('../css/northern-module1-v3.css?v=20260910a',base);css.dataset.northernModule1V3='';document.head.appendChild(css)}
     if(!document.querySelector('script[data-northern-module1-v3]')){const js=document.createElement('script');js.src=new URL('northern-module1-v3.js?v=20260910a',base);js.dataset.northernModule1V3='';document.head.appendChild(js)}
   }
-  const init=()=>{if(moduleNumber===1){loadModule1Conversion();return}if(document.querySelector('.nbHud'))return;renderHud();addRegionalBanner();alignExperienceLanguage();guardRegionalLanguage()};
+  function recordModuleActivity(){
+    const j=getJourney(),now=new Date().toISOString();
+    j.region=j.region||'Northern Arizona';
+    j.tracking=j.tracking||{};
+    j.tracking.currentModule=`module${moduleNumber}`;
+    j.tracking.lastActivityAt=now;
+    if(moduleNumber===1&&!j.tracking.boostStartedAt)j.tracking.boostStartedAt=now;
+    try{localStorage.setItem(journeyKey,JSON.stringify(j))}catch(_){}
+    try{window.BOOSTCloud?.queueSave?.(j)}catch(_){}
+  }
+  const init=()=>{recordModuleActivity();if(moduleNumber===1){loadModule1Conversion();return}if(document.querySelector('.nbHud'))return;renderHud();addRegionalBanner();alignExperienceLanguage();guardRegionalLanguage()};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
