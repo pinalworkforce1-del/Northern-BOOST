@@ -1,0 +1,39 @@
+name: Inspect Rosie intro media
+on:
+  push:
+    branches: [fix-rosie-intro-2026-09-10]
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-rosie-intro-2026-09-10
+      - name: Inspect media
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+          {
+            echo 'ROSIE MEDIA REPORT'
+            echo
+            echo 'FORMAT:'
+            ffprobe -v error -show_entries format=duration,size,bit_rate -of default=noprint_wrappers=1 site/assets/video/rosie-boost-intro.mp4
+            echo
+            echo 'STREAMS:'
+            ffprobe -v error -show_entries stream=index,codec_name,codec_type,duration,start_time,sample_rate,channels,width,height,r_frame_rate -of default=noprint_wrappers=1 site/assets/video/rosie-boost-intro.mp4
+            echo
+            echo 'DECODE CHECK:'
+            if ffmpeg -v error -i site/assets/video/rosie-boost-intro.mp4 -f null - 2>decode-errors.txt; then echo 'decode_ok=true'; else echo 'decode_ok=false'; fi
+            if [ -s decode-errors.txt ]; then cat decode-errors.txt; else echo 'no_decode_errors'; fi
+          } > rosie-media-report.txt
+      - name: Commit report
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add rosie-media-report.txt
+          git commit -m 'Record Rosie media inspection' || exit 0
+          git push origin HEAD:fix-rosie-intro-2026-09-10
