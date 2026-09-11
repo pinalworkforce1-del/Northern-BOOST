@@ -55,7 +55,7 @@ window.BOOST_CONFIG = {
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-applied-map-click]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-applied-map-click-v1.js?v=20260911single-industry2';
+  s.src='assets/js/northern-applied-map-click-v1.js?v=20260911active-card4';
   s.defer=true;
   s.dataset.boostAppliedMapClick='1';
   document.head.appendChild(s);
