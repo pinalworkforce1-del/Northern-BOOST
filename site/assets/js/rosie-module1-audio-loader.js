@@ -34,8 +34,15 @@
     catch (_) {}
   }
 
+  function hasParticipantIdentity(journey){
+    const name = String(journey?.participant?.name || '').trim();
+    const email = String(journey?.participant?.email || '').trim();
+    return !!(name || email);
+  }
+
   function recordModule1Entry(){
     const journey = readJourney();
+    if (!hasParticipantIdentity(journey)) return false;
     const now = new Date().toISOString();
     journey.region = journey.region || 'Northern Arizona';
     journey.tracking = journey.tracking || {};
@@ -44,6 +51,13 @@
     if (!journey.tracking.boostStartedAt) journey.tracking.boostStartedAt = now;
     writeJourney(journey);
     setTimeout(function(){ try { window.BOOSTCloud?.flush?.(); } catch (_) {} }, 450);
+    return true;
+  }
+
+  function recordModule1EntryWhenIdentified(attempt){
+    if (recordModule1Entry()) return;
+    if ((attempt || 0) >= 40) return;
+    setTimeout(function(){ recordModule1EntryWhenIdentified((attempt || 0) + 1); }, 250);
   }
 
   async function syncCompletedModule1(){
@@ -75,7 +89,7 @@
   }
 
   function installCompletionSync(){
-    recordModule1Entry();
+    recordModule1EntryWhenIdentified(0);
     const saveBtn = document.getElementById('saveBtn');
     if (!saveBtn || saveBtn.dataset.boostCloudSync === '1') return;
     saveBtn.dataset.boostCloudSync = '1';
