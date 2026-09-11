@@ -129,7 +129,6 @@
         <h2 id="rosieDialogTitle">Rosie — Discover</h2>
         <p>Use the controls below to listen at your own pace. This introduction is optional and does not affect module completion.</p>
         <audio id="rosieAudio" controls preload="metadata">
-          <source src="assets/audio/rosie-naz-module1-intro-web.mp3?v=20260910a" type="audio/mpeg">
           Your browser does not support audio playback.
         </audio>
       </div>
@@ -142,6 +141,7 @@
 <script src="assets/js/boost-cloud.js?v=20260909a"></script>
 <script src="assets/js/northern-occupation-master-v1.js?v=20260910a"></script>
 <script src="assets/js/northern-module1-pinalflow-v1.js?v=20260910a"></script>
+<script src="assets/js/rosie-module1-audio-loader.js?v=20260910d"></script>
 <script>
 (function(){
   const launch=document.getElementById('rosieLaunch');
@@ -149,7 +149,7 @@
   const close=document.getElementById('rosieClose');
   const audio=document.getElementById('rosieAudio');
   if(!launch||!modal||!close||!audio) return;
-  function openRosie(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');close.focus();}
+  function openRosie(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');if(window.BOOSTRosieModule1Audio)window.BOOSTRosieModule1Audio.prepare();close.focus();}
   function closeRosie(){audio.pause();modal.classList.remove('open');modal.setAttribute('aria-hidden','true');launch.focus();}
   launch.addEventListener('click',openRosie);
   close.addEventListener('click',closeRosie);
