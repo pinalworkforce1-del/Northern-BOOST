@@ -1,9 +1,14 @@
 (()=>{
 'use strict';
+if(window.__NorthernBOOSTSequenceGuideInstalled)return;
+window.__NorthernBOOSTSequenceGuideInstalled=true;
+
 const AREA='Northern BOOST';
 const JK='boost_naz_journey_v1',PK='boost_naz_portal_progress_v1',PATH='boost_naz_pathway_v1';
+const NONCE_PREFIX='boost_naz_completion_nonce:';
 const ROSIE_IMG='assets/images/rosie-master.webp';
 const INDUSTRY_LABELS={skilled_trades:'Skilled Trades',advanced_manufacturing:'Advanced Manufacturing',healthcare:'Health Care',it:'Information Technology',cdl:'Transportation & Logistics',customer_service:'Customer Service'};
+const INDUSTRY_PROGRESS=['skilledTrades','advancedManufacturing','healthcare','it','cdl','customerService'];
 const steps={
  module1:{title:'Module 1 — Discover',unlock:'Start here',text:'This is where your BOOST journey begins. We’ll use your interests, strengths, and career ideas to identify possibilities worth exploring. What you save here becomes evidence that follows you into the next steps.',audio:'assets/audio/rosie-map-module1.mp3'},
  coach:{title:'Career Coach Check-In',unlock:'Complete Module 1 first',text:'This conversation helps you and your Career Coach look at what you discovered before choosing a pathway. BOOST gives you evidence; your conversation helps turn that evidence into an individualized next step.',audio:'assets/audio/rosie-map-coach.mp3'},
@@ -20,13 +25,15 @@ const steps={
 };
 const rapidOrder=['skillmobility','jobsearch','financial','ai'];
 const careerOrder=['module2','module3','module4','industry','financial','careerai'];
+
 function j(){try{return JSON.parse(localStorage.getItem(JK)||'{}')}catch{return{}}}
-function p(){try{return JSON.parse(localStorage.getItem(PK)||'{}')}catch{return{visited:{},rapid:{}}}}
+function p(){try{return JSON.parse(localStorage.getItem(PK)||'{}')}catch{return{visited:{},rapid:{},career:{}}}}
 function selectedPath(){return localStorage.getItem(PATH)||''}
 function module4State(x=j()){return x.module4||x.modules?.module4||{}}
 function coreDone(id){const x=j(),pr=x.progress||{};if(id==='module1')return pr.module1==='complete'||!!x.module1?.careers?.length;if(id==='module2')return pr.module2==='complete'||!!x.module2?.careers?.length;if(id==='module3')return pr.module3==='complete'||!!x.module3?.careers?.length;if(id==='module4'){const m=module4State(x);return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}return false}
+function industryDone(){const pr=j().progress||{};return INDUSTRY_PROGRESS.some(k=>pr[k]==='complete')}
 function rapidDone(id){const x=j(),pr=x.progress||{},pp=p();return pr[id]==='complete'||!!pp.rapid?.[id]}
-function careerDone(id){if(id.startsWith('module'))return coreDone(id);const x=j(),pr=x.progress||{},pp=p();if(id==='financial')return pr.financial==='complete'||!!pp.career?.financial;if(id==='careerai')return pr.ai==='complete'||pr.careerAi==='complete'||!!pp.career?.ai;if(id==='industry')return ['skilledTrades','advancedManufacturing','healthcare','it','cdl','customerService'].some(k=>pr[k]==='complete');return false}
+function careerDone(id){if(id.startsWith('module'))return coreDone(id);const pr=j().progress||{};if(id==='financial')return pr.financial==='complete';if(id==='careerai')return pr.ai==='complete'||pr.careerAi==='complete';if(id==='industry')return industryDone();return false}
 function keyFor(el){if(el.dataset.core)return el.dataset.core;if(el.dataset.rapid)return el.dataset.rapid;if(el.dataset.shared==='financial')return'financial';if(el.dataset.shared==='ai')return selectedPath()==='career'?'careerai':'ai';if(el.dataset.careerResource==='ai')return'careerai';if(el.hasAttribute('data-industry-choice'))return'industry';if(el.dataset.applied)return'applied:'+el.dataset.applied;if(el.dataset.visit==='coach')return'coach';if(el.hasAttribute('data-choose'))return'choose';return null}
 function infoFor(key){if(key?.startsWith('applied:'))return steps.industry;return steps[key]||null}
 function socKey(v){const d=String(v??'').replace(/\D/g,'');return d.length>=6?d.slice(0,6):d}
@@ -57,6 +64,46 @@ function unlocked(key){
  if(rapidOrder.includes(key)||careerOrder.includes(key))return false;
  return true;
 }
+
+function randomNonce(){const bytes=new Uint8Array(18);crypto.getRandomValues(bytes);return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}
+function cleanReturnUrl(){const u=new URL(location.href);u.searchParams.delete('boost_complete');u.searchParams.delete('boost_nonce');history.replaceState({},'',u.toString())}
+function clearUnvalidatedCareerFlags(){const x=j(),pr=x.progress||{},pp=p();let changed=false;pp.career=pp.career||{};if(pp.career.financial&&pr.financial!=='complete'){delete pp.career.financial;changed=true}if(pp.career.ai&&pr.ai!=='complete'&&pr.careerAi!=='complete'){delete pp.career.ai;changed=true}if(changed)localStorage.setItem(PK,JSON.stringify(pp))}
+function acceptSharedReturn(){
+ const q=new URLSearchParams(location.search),moduleId=q.get('boost_complete'),nonce=q.get('boost_nonce');
+ if(!['financial','ai'].includes(moduleId||''))return false;
+ const expected=sessionStorage.getItem(NONCE_PREFIX+moduleId);
+ if(!expected||!nonce||expected!==nonce){cleanReturnUrl();console.warn('Northern BOOST shared completion was not accepted because the session receipt did not match.');return false}
+ const now=new Date().toISOString(),x=j();x.progress=x.progress||{};x.sharedModules=x.sharedModules||{};x.progress[moduleId]='complete';x.sharedModules[moduleId]={completed:true,completedAt:now,source:'validated_completion_return'};x.updatedAt=now;localStorage.setItem(JK,JSON.stringify(x));
+ const pp=p(),lane=selectedPath()==='career'?'career':'rapid';pp[lane]=pp[lane]||{};pp[lane][moduleId]=true;pp.updatedAt=now;localStorage.setItem(PK,JSON.stringify(pp));
+ sessionStorage.removeItem(NONCE_PREFIX+moduleId);cleanReturnUrl();
+ try{window.BOOSTCloud?.flush?.()}catch(_){}
+ try{window.BOOSTCloud?.saveNow?.()}catch(_){}
+ document.dispatchEvent(new CustomEvent('boostprogress',{detail:{moduleId,status:'complete'}}));
+ try{window.showToast?.(`${moduleId==='financial'?'Build Strong Financial Habits':'AI & You'} complete ✓`)}catch(_){}
+ return true;
+}
+function launchShared(el){
+ const moduleId=el.dataset.shared==='financial'?'financial':'ai',href=el.getAttribute('href');if(!href)return;
+ const nonce=randomNonce();sessionStorage.setItem(NONCE_PREFIX+moduleId,nonce);
+ const target=new URL(href,location.href);target.searchParams.set('boost_return',location.origin+location.pathname);target.searchParams.set('boost_module',moduleId);target.searchParams.set('boost_nonce',nonce);location.assign(target.toString());
+}
+function sharedLaunchGate(e){
+ const el=e.target?.closest?.('[data-shared]');if(!el)return;
+ const key=keyFor(el);if(!key||!unlocked(key))return;
+ e.preventDefault();e.stopImmediatePropagation();launchShared(el);
+}
+
+function updateMapProgress(){
+ if(selectedPath()!=='career')return;
+ const x=j(),pr=x.progress||{},financial=pr.financial==='complete',ai=pr.ai==='complete'||pr.careerAi==='complete',industry=industryDone();
+ const done=['module1','module2','module3','module4'].filter(coreDone).length+(industry?1:0)+(financial?1:0)+(ai?1:0),total=7;
+ const fill=document.getElementById('fill'),count=document.getElementById('count');if(fill)fill.style.width=Math.min(100,Math.round(done/total*100))+'%';if(count)count.textContent=done+' of '+total;
+ const f=document.querySelector('[data-shared="financial"]'),a=document.querySelector('[data-shared="ai"]');
+ if(f){f.classList.toggle('done',financial);f.classList.toggle('current',industry&&!financial)}
+ if(a){a.classList.toggle('done',ai);a.classList.toggle('current',financial&&!ai)}
+}
+function patchBaseRender(){if(window.__NorthernBOOSTRenderPatched)return;const base=window.render;if(typeof base!=='function')return;window.__NorthernBOOSTRenderPatched=true;window.render=function(){const r=base.apply(this,arguments);setTimeout(()=>{decorate();updateMapProgress()},0);return r}}
+
 function renderIndustryArrow(){
  document.querySelectorAll('.boostPinalIndustryArrow').forEach(n=>n.remove());
  document.querySelectorAll('[data-applied]').forEach(el=>{el.classList.remove('boostRecommendedIndustry');el.removeAttribute('data-recommended-industry')});
@@ -74,7 +121,7 @@ function renderIndustryArrow(){
  const arrow=document.createElement('span');arrow.className='boostPinalIndustryArrow';arrow.textContent='➜';arrow.setAttribute('aria-hidden','true');el.appendChild(arrow);
  const tip=el.querySelector('.tip');if(tip)tip.textContent=`Recommended next — open ${INDUSTRY_LABELS[rec]||'this industry'} experience`;
 }
-function injectStyles(){const s=document.createElement('style');s.textContent=`.boostSeqLocked{filter:none!important;outline:none!important;box-shadow:none!important;cursor:pointer!important}.boostSeqLocked:before{display:none!important}.hot[data-applied].boostSeqLocked:before{content:'LOCKED';display:block!important;position:absolute;right:6px;top:6px;z-index:12;padding:4px 7px;border-radius:999px;background:#10243ad9;color:#fff;border:1px solid #ffffffbb;font:900 9px/1 Inter,Arial,sans-serif;letter-spacing:.06em}.hot[data-applied].boostSeqLocked{background:#0b22372a!important}.boostSeqInfo{position:absolute;left:6px;bottom:6px;z-index:10;width:27px;height:27px;border:2px solid #fff;border-radius:50%;background:#e4a72b;color:#132b43;font-weight:950;font-size:15px;display:grid;place-items:center;box-shadow:0 3px 10px #0005;cursor:pointer;opacity:0;transform:scale(.92);transition:opacity .18s ease,transform .18s ease}.hot:hover .boostSeqInfo,.hot:focus-within .boostSeqInfo,.hot:focus-visible .boostSeqInfo{opacity:1;transform:scale(1)}.boostRecommendedIndustry{pointer-events:auto!important;cursor:pointer!important;z-index:9!important}.boostRecommendedIndustry .boostSeqInfo{display:none!important}.boostPinalIndustryArrow{position:absolute;left:0;top:50%;transform:translate(-42%,-50%);z-index:50;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#e4a72b;color:#10243a;border:3px solid #fff;box-shadow:0 5px 16px #0006;font:1000 31px/1 Arial,sans-serif;pointer-events:none}.boostSeqModal{position:fixed;inset:0;z-index:2147483600;background:#03101bd9;display:none;align-items:center;justify-content:center;padding:18px}.boostSeqModal.show{display:flex}.boostSeqCard{width:min(720px,96vw);background:#fffaf0;border-radius:20px;overflow:hidden;box-shadow:0 30px 90px #0009}.boostSeqHead{background:linear-gradient(90deg,#102d49,#1f587f);color:#fff;padding:18px 20px;border-bottom:3px solid #e4a72b}.boostSeqHead small{display:block;text-transform:uppercase;letter-spacing:.09em;color:#f4cd71;font-weight:900;margin-bottom:4px}.boostSeqHead h2{margin:0}.boostSeqBody{padding:20px}.boostSeqRosie{display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:stretch}.boostSeqAvatar{min-height:210px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#eef6fa,#dceaf1);border:2px solid #c9d9e2;display:flex;align-items:flex-end;justify-content:center}.boostSeqAvatar img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}.boostSeqSpeech{background:#f4f8fa;border-left:5px solid #e4a72b;border-radius:12px;padding:14px;line-height:1.55}.boostSeqUnlock{margin-top:13px;font-size:12px;font-weight:900;color:#526977}.boostSeqActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.boostSeqBtn{border:0;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer;background:#0d2741;color:#fff}.boostSeqBtn.alt{background:#eef4f7;color:#17324d;border:1px solid #c9d7df}.boostSeqAudioStatus{font-size:12px;color:#60727e;margin-top:7px}@media(max-width:620px){.boostSeqRosie{grid-template-columns:1fr}.boostSeqAvatar{min-height:180px;max-height:230px}.boostSeqAvatar img{object-position:50% 15%}.boostPinalIndustryArrow{width:42px;height:42px;font-size:25px;border-width:2px}}`;
+function injectStyles(){if(document.getElementById('boostSequenceGuideStyle'))return;const s=document.createElement('style');s.id='boostSequenceGuideStyle';s.textContent=`.boostSeqLocked{filter:none!important;outline:none!important;box-shadow:none!important;cursor:pointer!important}.boostSeqLocked:before{display:none!important}.hot[data-applied].boostSeqLocked:before{content:'LOCKED';display:block!important;position:absolute;right:6px;top:6px;z-index:12;padding:4px 7px;border-radius:999px;background:#10243ad9;color:#fff;border:1px solid #ffffffbb;font:900 9px/1 Inter,Arial,sans-serif;letter-spacing:.06em}.hot[data-applied].boostSeqLocked{background:#0b22372a!important}.boostSeqInfo{position:absolute;left:6px;bottom:6px;z-index:10;width:27px;height:27px;border:2px solid #fff;border-radius:50%;background:#e4a72b;color:#132b43;font-weight:950;font-size:15px;display:grid;place-items:center;box-shadow:0 3px 10px #0005;cursor:pointer;opacity:0;transform:scale(.92);transition:opacity .18s ease,transform .18s ease}.hot:hover .boostSeqInfo,.hot:focus-within .boostSeqInfo,.hot:focus-visible .boostSeqInfo{opacity:1;transform:scale(1)}.boostRecommendedIndustry{pointer-events:auto!important;cursor:pointer!important;z-index:9!important}.boostRecommendedIndustry .boostSeqInfo{display:none!important}.boostPinalIndustryArrow{position:absolute;left:0;top:50%;transform:translate(-42%,-50%);z-index:50;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#e4a72b;color:#10243a;border:3px solid #fff;box-shadow:0 5px 16px #0006;font:1000 31px/1 Arial,sans-serif;pointer-events:none}.boostSeqModal{position:fixed;inset:0;z-index:2147483600;background:#03101bd9;display:none;align-items:center;justify-content:center;padding:18px}.boostSeqModal.show{display:flex}.boostSeqCard{width:min(720px,96vw);background:#fffaf0;border-radius:20px;overflow:hidden;box-shadow:0 30px 90px #0009}.boostSeqHead{background:linear-gradient(90deg,#102d49,#1f587f);color:#fff;padding:18px 20px;border-bottom:3px solid #e4a72b}.boostSeqHead small{display:block;text-transform:uppercase;letter-spacing:.09em;color:#f4cd71;font-weight:900;margin-bottom:4px}.boostSeqHead h2{margin:0}.boostSeqBody{padding:20px}.boostSeqRosie{display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:stretch}.boostSeqAvatar{min-height:210px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#eef6fa,#dceaf1);border:2px solid #c9d9e2;display:flex;align-items:flex-end;justify-content:center}.boostSeqAvatar img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;display:block}.boostSeqSpeech{background:#f4f8fa;border-left:5px solid #e4a72b;border-radius:12px;padding:14px;line-height:1.55}.boostSeqUnlock{margin-top:13px;font-size:12px;font-weight:900;color:#526977}.boostSeqActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.boostSeqBtn{border:0;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer;background:#0d2741;color:#fff}.boostSeqBtn.alt{background:#eef4f7;color:#17324d;border:1px solid #c9d7df}.boostSeqAudioStatus{font-size:12px;color:#60727e;margin-top:7px}@media(max-width:620px){.boostSeqRosie{grid-template-columns:1fr}.boostSeqAvatar{min-height:180px;max-height:230px}.boostSeqAvatar img{object-position:50% 15%}.boostPinalIndustryArrow{width:42px;height:42px;font-size:25px;border-width:2px}}`;
 document.head.appendChild(s)}
 let modal,activeKey;
 function ensureModal(){if(modal)return;modal=document.createElement('div');modal.className='boostSeqModal';modal.innerHTML='<div class="boostSeqCard"><div class="boostSeqHead"><small>Tell me about this step</small><h2 id="boostSeqTitle"></h2></div><div class="boostSeqBody"><div class="boostSeqRosie"><div class="boostSeqAvatar"><img src="'+ROSIE_IMG+'" alt="Rosie, BOOST guide"></div><div><div class="boostSeqSpeech" id="boostSeqText"></div><div class="boostSeqUnlock" id="boostSeqUnlock"></div><div class="boostSeqAudioStatus" id="boostSeqAudioStatus"></div></div></div><div class="boostSeqActions"><button class="boostSeqBtn" id="boostSeqPlay">▶ Play Rosie</button><button class="boostSeqBtn alt" id="boostSeqClose">Close</button></div><audio id="boostSeqAudio" preload="none"></audio></div></div>';document.body.appendChild(modal);modal.querySelector('#boostSeqClose').onclick=()=>closeModal();modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});modal.querySelector('#boostSeqPlay').onclick=()=>{const d=infoFor(activeKey),a=modal.querySelector('#boostSeqAudio'),st=modal.querySelector('#boostSeqAudioStatus');if(!d?.audio)return;st.textContent='';a.src=d.audio;a.play().catch(()=>st.textContent='Rosie audio has not been added for this step yet. The text guide is ready now.')};}
@@ -93,8 +140,9 @@ function openModal(key){
  modal.querySelector('#boostSeqAudioStatus').textContent='';modal.classList.add('show');
 }
 function closeModal(){modal?.classList.remove('show');const a=modal?.querySelector('#boostSeqAudio');if(a){a.pause();a.currentTime=0}}
-function decorate(){document.querySelectorAll('.hot').forEach(el=>{const key=keyFor(el);if(!key||!infoFor(key))return;const canOpen=unlocked(key);el.classList.toggle('boostSeqLocked',!canOpen);if(!canOpen)el.setAttribute('aria-disabled','true');else el.removeAttribute('aria-disabled');if(!el.querySelector('.boostSeqInfo')){const b=document.createElement('span');b.className='boostSeqInfo';b.textContent='?';b.title='Tell me about this step';b.setAttribute('role','button');b.setAttribute('aria-label','Tell me about this step');b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openModal(key)},true);el.appendChild(b)}});renderIndustryArrow()}
+function decorate(){document.querySelectorAll('.hot').forEach(el=>{const key=keyFor(el);if(!key||!infoFor(key))return;const canOpen=unlocked(key);el.classList.toggle('boostSeqLocked',!canOpen);if(!canOpen)el.setAttribute('aria-disabled','true');else el.removeAttribute('aria-disabled');if(!el.querySelector('.boostSeqInfo')){const b=document.createElement('span');b.className='boostSeqInfo';b.textContent='?';b.title='Tell me about this step';b.setAttribute('role','button');b.setAttribute('aria-label','Tell me about this step');b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openModal(key)},true);el.appendChild(b)}});renderIndustryArrow();updateMapProgress()}
 function gate(e){const el=e.target.closest('.hot');if(!el)return;const key=keyFor(el);if(!key)return;if(el.dataset.recommendedIndustry==='true')return;if(e.target.closest('.boostSeqInfo'))return;if(!unlocked(key)){e.preventDefault();e.stopImmediatePropagation();openModal(key)}}
-function init(){injectStyles();ensureModal();if(coreDone('module4')&&selectedPath()!=='career')localStorage.setItem(PATH,'career');decorate();document.addEventListener('click',gate,true);window.addEventListener('storage',decorate);document.addEventListener('boostprogress',decorate);document.addEventListener('boostpathway',()=>setTimeout(decorate,0));window.addEventListener('pageshow',()=>setTimeout(decorate,0));setInterval(decorate,1200)}
+function init(){acceptSharedReturn();clearUnvalidatedCareerFlags();patchBaseRender();injectStyles();ensureModal();if(coreDone('module4')&&selectedPath()!=='career')localStorage.setItem(PATH,'career');decorate();document.addEventListener('click',sharedLaunchGate,true);document.addEventListener('click',gate,true);window.addEventListener('storage',decorate);document.addEventListener('boostprogress',decorate);document.addEventListener('boostpathway',()=>setTimeout(decorate,0));window.addEventListener('pageshow',()=>setTimeout(decorate,0));setInterval(decorate,1200)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+window.NorthernBOOSTSequence={unlocked,careerDone,industryDone,recommendedIndustry,decorate};
 })();
