@@ -47,6 +47,20 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// After Module 4, every applied-industry hotspot must remain physically clickable.
+// Sequence-guide can still visually recommend one; this prevents stale lock state from
+// swallowing clicks on Transportation / Logistics or another industry card.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(file && file!=='index.html') return;
+  if(document.querySelector('script[data-boost-applied-map-click]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-applied-map-click-v1.js?v=20260911a';
+  s.defer=true;
+  s.dataset.boostAppliedMapClick='1';
+  document.head.appendChild(s);
+})();
+
 // Completed core modules are always reviewable/reopenable from the map.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
