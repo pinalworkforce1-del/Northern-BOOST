@@ -8,6 +8,19 @@ window.BOOST_CONFIG = {
   region: "Northern Arizona"
 };
 
+// Standardize the participant-facing journey bar across core Northern modules.
+// Module 3 remains the visual gold master; Modules 1, 2 and 4 are normalized to it.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(!['northern_boost_module1_pinalflow_v1.html','northern_boost_module2_pinalflow_v1.html','module4-v4.html'].includes(file)) return;
+  if(document.querySelector('script[data-boost-standard-journey]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/boost-standard-journey-v1.js?v=20260911a';
+  s.defer=true;
+  s.dataset.boostStandardJourney='1';
+  document.head.appendChild(s);
+})();
+
 // Home-map enhancement: sequential progression + Rosie “Tell me about this step” guide.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
