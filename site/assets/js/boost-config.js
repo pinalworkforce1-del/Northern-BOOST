@@ -8,6 +8,20 @@ window.BOOST_CONFIG = {
   region: "Northern Arizona"
 };
 
+// Applied career experiences now use the qualitative interest connection label
+// carried from Discover / Career Mobility instead of expecting the old numeric percentage.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  const applied=['advanced_manufacturing','healthcare','skilled_trades','it_','cdl_'];
+  if(!file.includes('northern_boost_')||!file.includes('connected_test')||!applied.some(x=>file.includes(x))) return;
+  if(document.querySelector('script[data-boost-applied-interest-label]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-applied-interest-label-v1.js?v=20260911a';
+  s.defer=true;
+  s.dataset.boostAppliedInterestLabel='1';
+  document.head.appendChild(s);
+})();
+
 // Standardize the participant-facing journey bar across core Northern modules.
 // Module 3 remains the visual gold master; Modules 1, 2 and 4 are normalized to it.
 (() => {
