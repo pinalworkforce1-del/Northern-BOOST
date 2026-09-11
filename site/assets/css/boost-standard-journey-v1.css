@@ -1,0 +1,17 @@
+.journeyWrap{background:#fff;border-bottom:1px solid #d9e2ec;padding:14px 16px}
+.journeyWrap .journey{max-width:1120px;margin:auto;background:transparent;padding:0}
+.journeyWrap .journeyLabel{font-size:.7rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#2a9d8f;margin-bottom:8px}
+.journeyWrap .journeyTrack{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:start}
+.journeyWrap .journeyStage{position:relative;text-align:center;color:#7a8b99;font-size:.72rem;font-weight:800;padding-top:20px;min-width:0}
+.journeyWrap .journeyStage:before{content:"";position:absolute;top:5px;left:50%;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#cdd9e0;z-index:2}
+.journeyWrap .journeyStage:after{content:"";position:absolute;height:3px;background:#dfe7ec;top:9px;left:-50%;width:100%;z-index:1}
+.journeyWrap .journeyStage:first-child:after{display:none}
+.journeyWrap .journeyStage.done:before{background:#2a9d8f}
+.journeyWrap .journeyStage.done:after{background:#2a9d8f}
+.journeyWrap .journeyStage.active{color:#0b3158}
+.journeyWrap .journeyStage.active:before{background:#f4b942;box-shadow:0 0 0 5px rgba(244,185,66,.22)}
+.journeyWrap .journeyStage.active:after{background:#2a9d8f}
+.journeyWrap .journeyYou{margin-top:9px;font-size:.78rem;color:#64748b}
+.journeyWrap .journeyYou strong{color:#526579}
+@media(max-width:760px){.journeyWrap{overflow-x:auto;padding-left:12px;padding-right:12px}.journeyWrap .journey{min-width:680px}.journeyWrap .journeyTrack{gap:4px}}
+@media print{.journeyWrap{display:none!important}}
