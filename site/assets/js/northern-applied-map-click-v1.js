@@ -122,3 +122,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.addEventListener('pageshow',run);window.addEventListener('storage',run);setInterval(decorate,1000);
 window.NorthernBOOSTAppliedMapGate={recommended,module4Done,decorate};
 })();
+
+(()=>{
+'use strict';
+if(window.__NorthernBOOSTSequenceLoaderInstalled)return;
+window.__NorthernBOOSTSequenceLoaderInstalled=true;
+if(window.__NorthernBOOSTSequenceGuideInstalled||document.querySelector('script[data-northern-sequence-guide]'))return;
+const s=document.createElement('script');
+s.src='assets/js/sequence-guide.js?v=20260911sequence2';
+s.dataset.northernSequenceGuide='1';
+document.head.appendChild(s);
+})();
