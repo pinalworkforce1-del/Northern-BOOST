@@ -139,3 +139,16 @@ window.BOOST_CONFIG = {
   s.dataset.boostM4IndustryMap='1';
   document.head.appendChild(s);
 })();
+
+// Module 4 intro narration: move the existing player out of the hero and into
+// a Rosie audio card immediately below the BOOST progression bar.
+(() => {
+  const file=(location.pathname.split('/').pop()||'').toLowerCase();
+  if(file!=='module4-v4.html') return;
+  if(document.querySelector('script[data-boost-m4-rosie-audio]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-module4-rosie-audio-v1.js?v=20260911m4rosie1';
+  s.defer=true;
+  s.dataset.boostM4RosieAudio='1';
+  document.head.appendChild(s);
+})();
