@@ -75,11 +75,14 @@ function ensureMapStyle(){
   const st=document.createElement('style');st.id='boostNazMapCompletionRecStyle';
   st.textContent=`
     .hot.current{outline-color:transparent!important;box-shadow:none!important}.hot.current:after{content:none!important;display:none!important}
-    .hot[data-applied].rec{outline:4px solid #ffd65e!important;box-shadow:0 0 0 6px rgba(255,214,94,.28),0 8px 28px rgba(0,0,0,.34)!important;background:rgba(255,227,139,.10)!important;pointer-events:auto!important;cursor:pointer!important;z-index:8!important}
+    .hot[data-applied].rec{outline:4px solid #ffd65e!important;box-shadow:0 0 0 6px rgba(255,214,94,.28),0 8px 28px rgba(0,0,0,.34)!important;background:rgba(255,227,139,.12)!important;pointer-events:auto!important;cursor:pointer!important;z-index:8!important;animation:boostRecommendedGlow 1.65s ease-in-out infinite}
     .hot[data-applied].rec .rec{display:none!important}
     .hot[data-applied].rec .boostSeqInfo{display:none!important}
+    @keyframes boostRecommendedGlow{0%,100%{outline-color:#ffd65e;box-shadow:0 0 0 5px rgba(255,214,94,.24),0 8px 28px rgba(0,0,0,.34)}50%{outline-color:#fff3a9;box-shadow:0 0 0 12px rgba(255,214,94,.50),0 0 34px rgba(255,205,65,.72),0 8px 28px rgba(0,0,0,.34)}}
     .boostIndustryArrow{position:absolute;left:0;top:50%;transform:translate(-38%,-50%);z-index:30;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:#e4a72b;color:#10243a;border:3px solid #fff;box-shadow:0 5px 16px rgba(0,0,0,.38);font:1000 31px/1 Arial,sans-serif;pointer-events:none}
-    @media(max-width:760px){.boostIndustryArrow{width:40px;height:40px;font-size:25px;border-width:2px}}
+    .boostIndustryNext{position:absolute;right:6px;top:6px;z-index:31;padding:5px 9px;border-radius:999px;background:#10243a;color:#fff;border:2px solid #ffd65e;box-shadow:0 4px 12px rgba(0,0,0,.34);font:900 10px/1.15 Inter,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+    @media(max-width:760px){.boostIndustryArrow{width:40px;height:40px;font-size:25px;border-width:2px}.boostIndustryNext{font-size:8px;padding:4px 6px}}
+    @media(prefers-reduced-motion:reduce){.hot[data-applied].rec{animation:none!important}}
   `;
   document.head.appendChild(st);
 }
@@ -91,14 +94,15 @@ function applyMap(){
     const on=!!rec&&el.dataset.applied===rec.key;
     el.classList.toggle('rec',on);
     el.classList.toggle('boostSeqLocked',!on&&el.classList.contains('boostSeqLocked'));
-    el.querySelectorAll('.boostIndustryArrow').forEach(a=>a.remove());
+    el.querySelectorAll('.boostIndustryArrow,.boostIndustryNext').forEach(a=>a.remove());
     if(on){
       el.classList.remove('boostSeqLocked');
       el.removeAttribute('aria-disabled');
       el.style.pointerEvents='auto';
       const arrow=document.createElement('span');arrow.className='boostIndustryArrow';arrow.textContent='→';arrow.setAttribute('aria-hidden','true');el.appendChild(arrow);
-      el.setAttribute('aria-label',`${rec.label} — recommended next applied career experience`);
-      const tip=el.querySelector('.tip');if(tip)tip.textContent=`Open ${rec.label} — Recommended after Module 4`;
+      const next=document.createElement('span');next.className='boostIndustryNext';next.textContent='Next';next.setAttribute('aria-hidden','true');el.appendChild(next);
+      el.setAttribute('aria-label',`${rec.label} — recommended next career exploration based on your Module 4 career choice`);
+      const tip=el.querySelector('.tip');if(tip)tip.textContent=`Next: Open ${rec.label} Career Exploration`;
     }
   });
   const choice=document.querySelector('[data-industry-choice] .tip');if(choice)choice.textContent=rec?`Recommended next: ${rec.label}`:'Choose Your Applied Career Experience';
