@@ -193,3 +193,17 @@ window.BOOST_CONFIG = {
   s.dataset.boostM4RosieAudio='1';
   document.head.appendChild(s);
 })();
+
+// Northern Ask Rosie Career Coach. Keep this in the shared config loader so the
+// map and core Modules 1–4 receive the same closed, read-only coaching layer
+// without changing their internal learning/progression logic.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const eligible=!file||file==='index.html'||file==='activity.html'||/module[1-4]/.test(file);
+  if(!eligible||document.querySelector('script[data-northern-ask-rosie]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-ask-rosie-v1.js?v=20260913wire1';
+  s.defer=true;
+  s.dataset.northernAskRosie='1';
+  document.head.appendChild(s);
+})();
