@@ -6,6 +6,8 @@ window.__NORTHERN_ASK_ROSIE_V1__=true;
 const ENDPOINT='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/boost-ask-rosie-northern';
 const JOURNEY_KEY='boost_naz_journey_v1';
 const SHARED_KEY='northern_boost_career_exploration_v1';
+const PORTAL_KEY='boost_naz_portal_progress_v1';
+const PATH_KEY='boost_naz_pathway_v1';
 const ROSIE_IMG='assets/images/rosie-master.webp';
 const ALIASES={
   'cna':['31-1131'],'certified nursing assistant':['31-1131'],'nursing assistant':['31-1131'],
@@ -43,13 +45,21 @@ async function loadOccupations(){
 
 function rawJourney(){return read(JOURNEY_KEY)}
 function rawShared(){return read(SHARED_KEY)}
+function rawPortal(){return read(PORTAL_KEY)}
 function currentWage(j,s){return j?.participant?.currentHourlyWage||j?.module2?.currentHourlyWage||j?.module2?.wageBaseline?.hourly||s?.module2?.currentHourlyWage||s?.module2?.wageBaseline?.hourly||j?.module3?.currentWage||s?.module3?.currentWage||null}
 function sanitizedJourney(){
-  const j=rawJourney(),s=rawShared();
+  const j=rawJourney(),s=rawShared(),p=rawPortal(),path=localStorage.getItem(PATH_KEY)||'';
   return{
     region:'Northern Arizona',
     participant:{name:j?.participant?.name||'',currentHourlyWage:currentWage(j,s)},
     progress:j.progress||{},
+    portal:{
+      pathway:path,
+      map:p,
+      career:{financialMarked:!!p?.career?.financial,aiMarked:!!p?.career?.ai},
+      rapid:{skillMobilityMarked:!!p?.rapid?.skillmobility,jobSearchMarked:!!p?.rapid?.jobsearch,financialMarked:!!p?.rapid?.financial,aiMarked:!!p?.rapid?.ai},
+      completionSource:'Northern BOOST map interaction state; treat missing markers as not currently marked complete, not proof an activity was never completed.'
+    },
     modules:{
       module1:j.module1||s.module1||{},
       module2:j.module2||s.module2||{},
@@ -62,7 +72,7 @@ function careerArrays(j,s){return[
   j?.module1?.careers,s?.module1?.selected,j?.module2?.careers,s?.module2?.careers,j?.module3?.careers,s?.module3?.careers,
   j?.module3?.activeCareers,s?.module3?.activeCareers
 ].filter(Array.isArray)}
-function savedSocs(){const j=rawJourney(),s=rawShared(),out=new Set();for(const arr of careerArrays(j,s))for(const c of arr){const v=String(c?.soc||c?.SOC||'');if(v)out.add(v)}for(const v of[j?.module4?.selectedSoc,s?.module4?.selectedSoc,j?.module4?.soc,s?.module4?.soc])if(v)out.add(String(v));return out}
+function savedSocs(){const j=rawJourney(),s=rawShared(),out=new Set();for(const arr of careerArrays(j,s))for(const c of arr){const v=String(c?.soc||c?.SOC||'');if(v)out.add(v)}for(const v of[j?.module4?.selectedSoc,s?.module4?.selectedSoc,j?.module4?.soc,s?.module4?.soc,j?.module4?.careerTarget?.soc,s?.module4?.careerTarget?.soc])if(v)out.add(String(v));return out}
 function findFocus(all,q){
   const nq=norm(q);
   for(const[alias,socs]of Object.entries(ALIASES))if(nq.includes(alias)){const hit=all.find(o=>socs.includes(o.soc));if(hit){lastFocus=hit;return hit}}
@@ -123,7 +133,7 @@ function build(){
   if(!eligiblePage()||document.getElementById('northernAskRosieLaunch'))return;
   addStyles();
   const launch=document.createElement('button');launch.id='northernAskRosieLaunch';launch.type='button';launch.innerHTML=`<img src="${ROSIE_IMG}" alt=""><span>Ask Rosie</span>`;document.body.appendChild(launch);
-  const panel=document.createElement('section');panel.id='northernAskRosiePanel';panel.setAttribute('aria-label','Ask Rosie — Northern BOOST Career Coach');panel.innerHTML=`<div class="narHead"><img src="${ROSIE_IMG}" alt="Rosie"><div class="narHeadText"><b>Ask Rosie</b><span>Northern Arizona Career Coach • evidence, not roadblocks</span></div><button class="narClose" type="button" aria-label="Close Ask Rosie">×</button></div><div class="narBody"><div class="narWelcome"><b>Hi — I’m Rosie.</b> Ask me a normal question about your BOOST results, Northern Arizona jobs and wages, career mobility, training, or what your evidence means. The Northern Recommendation Gate controls what BOOST proactively surfaces — it never tells you what you are allowed to explore.</div><div class="narStarters"><button class="narChip" type="button">Why am I seeing my careers?</button><button class="narChip" type="button">Compare my saved careers</button><button class="narChip" type="button">What careers pay more than my current wage?</button><button class="narChip" type="button">What training options are approved?</button><button class="narChip" type="button">Explain my Module 4 direction</button></div></div><div class="narFoot"><div class="narForm"><textarea aria-label="Ask Rosie a question" placeholder="Ask Rosie about your career evidence…"></textarea><button class="narSend" type="button">Send</button></div><div class="narHint">Rosie uses your Northern BOOST journey, Northern Arizona labor-market evidence, approved O*NET evidence, and approved Arizona ETPL data. Eligibility and funding decisions stay with your Career Coach.</div></div>`;document.body.appendChild(panel);
+  const panel=document.createElement('section');panel.id='northernAskRosiePanel';panel.setAttribute('aria-label','Ask Rosie — Northern BOOST Career Coach');panel.innerHTML=`<div class="narHead"><img src="${ROSIE_IMG}" alt="Rosie"><div class="narHeadText"><b>Ask Rosie</b><span>Northern Arizona Career Coach • evidence, not roadblocks</span></div><button class="narClose" type="button" aria-label="Close Ask Rosie">×</button></div><div class="narBody"><div class="narWelcome"><b>Hi — I’m Rosie.</b> Ask me a normal question about your BOOST results, Northern Arizona jobs and wages, career mobility, training, or what your evidence means. The Northern Recommendation Gate controls what BOOST proactively surfaces — it never tells you what you are allowed to explore.</div><div class="narStarters"><button class="narChip" type="button">Why am I seeing my careers?</button><button class="narChip" type="button">Compare my saved careers</button><button class="narChip" type="button">What careers pay more than my current wage?</button><button class="narChip" type="button">What training options are approved?</button><button class="narChip" type="button">Explain my Module 4 direction</button></div></div><div class="narFoot"><div class="narForm"><textarea aria-label="Ask Rosie a question" placeholder="Ask Rosie about your career evidence…"></textarea><button class="narSend" type="button">Send</button></div><div class="narHint">Rosie uses your Northern BOOST journey, Northern Arizona labor-market evidence, approved O*NET evidence, approved Arizona ETPL data, and your Northern BOOST map progress. Eligibility and funding decisions stay with your Career Coach.</div></div>`;document.body.appendChild(panel);
   const body=panel.querySelector('.narBody'),input=panel.querySelector('textarea'),send=panel.querySelector('.narSend');
   function open(){panel.classList.add('open');launch.style.display='none';setTimeout(()=>input.focus(),30)}function close(){panel.classList.remove('open');launch.style.display='flex';launch.focus()}function go(){const q=input.value.trim();if(!q||send.disabled)return;input.value='';ask(q,body,send)}
   launch.addEventListener('click',open);panel.querySelector('.narClose').addEventListener('click',close);send.addEventListener('click',go);input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go()}});panel.querySelectorAll('.narChip').forEach(b=>b.addEventListener('click',()=>{input.value=b.textContent||'';go()}));
