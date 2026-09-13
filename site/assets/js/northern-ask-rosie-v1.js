@@ -3,7 +3,7 @@
 if(window.__NORTHERN_ASK_ROSIE_V1__)return;
 window.__NORTHERN_ASK_ROSIE_V1__=true;
 
-const ENDPOINT='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/boost-ask-rosie-northern';
+const ENDPOINT='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/boost-ask-rosie-northern-v171';
 const JOURNEY_KEY='boost_naz_journey_v1';
 const SHARED_KEY='northern_boost_career_exploration_v1';
 const PORTAL_KEY='boost_naz_portal_progress_v1';
