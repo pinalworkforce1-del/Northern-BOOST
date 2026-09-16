@@ -207,3 +207,14 @@ window.BOOST_CONFIG = {
   s.dataset.northernAskRosie='1';
   document.head.appendChild(s);
 })();
+
+// Northern Rapid Employment: validated Skill Mobility + 48-Hour Job Search launch/return.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  if(file!=='index.html'||document.querySelector('script[data-northern-rapid-map-v2]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-rapid-map-v2.js?v=20260916a';
+  s.defer=true;
+  s.dataset.northernRapidMapV2='1';
+  document.head.appendChild(s);
+})();
