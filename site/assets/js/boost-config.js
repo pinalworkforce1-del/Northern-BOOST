@@ -35,13 +35,44 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Northern AI & You v2 adapter. The shared learning experience stays in the
+// AI_Literacy repo, while Northern owns journey context, Rosie, cloud persistence,
+// and the validated completion receipt. A return receipt is ignored unless the
+// new Module 5 evidence exists in the Northern journey.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  if(file!=='index.html') return;
+  try{
+    const q=new URLSearchParams(location.search);
+    if(q.get('boost_complete')==='ai'){
+      const j=JSON.parse(localStorage.getItem('boost_naz_journey_v1')||'{}')||{};
+      const m5=j.module5||j.modules?.module5||{};
+      if(!m5.completedAt&&!m5.completed_at){
+        const u=new URL(location.href);u.searchParams.delete('boost_complete');u.searchParams.delete('boost_nonce');
+        history.replaceState({},'',u.toString());
+        console.warn('Northern BOOST AI & You completion receipt was ignored because Module 5 evidence was not found.');
+      }
+    }
+  }catch(e){console.warn('Northern AI & You completion guard unavailable',e)}
+  const wire=()=>{
+    const ai=document.querySelector('[data-shared="ai"]');
+    if(!ai) return false;
+    ai.href='ai-you.html';
+    ai.removeAttribute('target');
+    ai.removeAttribute('rel');
+    const tip=ai.querySelector('.tip');if(tip)tip.textContent='AI & You • Practical AI Literacy';
+    return true;
+  };
+  if(!wire()) document.addEventListener('DOMContentLoaded',wire,{once:true});
+})();
+
 // Home-map enhancement: sequential progression + Rosie “Tell me about this step” guide.
 (() => {
   const file=(location.pathname.split('/').pop()||'').toLowerCase();
   if(file && file!=='index.html') return;
   if(document.querySelector('script[data-boost-sequence-guide]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/sequence-guide.js?v=20260911industry-lock2';
+  s.src='assets/js/sequence-guide.js?v=20260916ai2';
   s.defer=true;
   s.dataset.boostSequenceGuide='1';
   document.head.appendChild(s);
@@ -196,7 +227,8 @@ window.BOOST_CONFIG = {
 
 // Northern Ask Rosie Career Coach. Keep this in the shared config loader so the
 // map and core Modules 1–4 receive the same closed, read-only coaching layer
-// without changing their internal learning/progression logic.
+// without changing their internal learning/progression logic. AI & You uses the
+// Northern adapter page, which calls the same Northern Rosie function directly.
 (() => {
   const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   const eligible=!file||file==='index.html'||file==='activity.html'||/module[1-4]/.test(file);
