@@ -99,7 +99,7 @@
       document.documentElement.style.visibility="hidden";
       saveLocalCredentials(fromHash);
       const j=await remoteLoad(fromHash);
-      if(j){originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));location.reload();return;}
+      if(j){j=reconcileFreshness(j);originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));location.reload();return;}
       document.documentElement.style.visibility="";
       return;
     }
@@ -116,7 +116,7 @@
     if(!localRaw && cred.id && cred.token){
       document.documentElement.style.visibility="hidden";
       const j=await remoteLoad(cred);
-      if(j){originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));location.reload();return;}
+      if(j){j=reconcileFreshness(j);originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));location.reload();return;}
       document.documentElement.style.visibility="";
     }
   }
@@ -177,9 +177,22 @@
     s.textContent='.boostAuthGate{position:fixed;inset:0;z-index:2147483640;background:rgba(4,17,28,.86);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:18px;font-family:Arial,sans-serif}.boostAuthCard{width:min(540px,96vw);background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.45);overflow:hidden}.boostAuthHead{padding:20px 22px;background:linear-gradient(90deg,#102d49,#1f587f);color:#fff;border-bottom:3px solid #e4a72b}.boostAuthHead h2{margin:0;font-size:25px}.boostAuthHead p{margin:7px 0 0;color:#d9e8f2;line-height:1.4}.boostAuthBody{padding:20px 22px}.boostAuthBody label{display:block;font-weight:800;color:#17324d;margin:11px 0 5px}.boostAuthBody input{width:100%;padding:12px 13px;border:1px solid #bdccd5;border-radius:11px;font:inherit}.boostAuthRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.boostAuthBtn{width:100%;border:0;border-radius:12px;padding:12px 14px;margin-top:14px;background:#0d2741;color:#fff;font-weight:900;font-size:15px;cursor:pointer}.boostAuthBtn.secondary{background:#eef4f7;color:#17324d;border:1px solid #c4d3db}.boostAuthBtn:disabled{opacity:.55;cursor:wait}.boostAuthNote{margin-top:12px;padding:10px 12px;border-radius:10px;background:#f2f7fa;color:#526975;font-size:13px;line-height:1.45}.boostAuthStatus{margin-top:10px;font-size:13px;font-weight:800;color:#2f6b50}.boostAuthCode{display:none}.boostAuthCode.show{display:block}@media(max-width:600px){.boostAuthRow{grid-template-columns:1fr}}';
     document.head.appendChild(s);
   }
+  function moduleTime(mod){const v=mod?.completedAt||mod?.finalizedAt||'';const t=Date.parse(v);return Number.isFinite(t)?t:0}
+  function reconcileFreshness(j){
+    j=j||{};j.progress=j.progress||{};j.staleModules=j.staleModules||{};
+    const m2=j.module2||{},m3=j.module3||{},m4=j.module4||{};
+    const m2t=moduleTime(m2),m3t=moduleTime(m3),m4t=moduleTime(m4);
+    const stale3=m2t&&m3t&&m2t>m3t;
+    const stale4=(m3t&&m4t&&m3t>m4t)||stale3;
+    if(stale3){j.progress.module3='stale';j.staleModules.module3={reason:'Module 2 was updated after Career Mobility',markedAt:new Date().toISOString()}}
+    else if(j.progress.module3==='stale'){delete j.staleModules.module3}
+    if(stale4){j.progress.module4='stale';j.staleModules.module4={reason:'Earlier career evidence changed after Decide',markedAt:new Date().toISOString()}}
+    else if(j.progress.module4==='stale'){delete j.staleModules.module4}
+    return j
+  }
   function mergeParticipant(name,email){
     let j={};try{j=JSON.parse(localStorage.getItem(JOURNEY_KEY)||'{}')}catch(e){}
-    j.region=j.region||'Northern Arizona';j.participant=j.participant||{};
+    j=reconcileFreshness(j);j.region=j.region||'Northern Arizona';j.participant=j.participant||{};
     if(name)j.participant.name=name;if(email)j.participant.email=email.toLowerCase();
     originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));queueSave(j);
   }
@@ -223,7 +236,7 @@
     const c=getClient();const {data:{session}}=await c.auth.getSession();if(!session?.user)return;
     const pendingName=localStorage.getItem('boost_naz_pending_name')||'';const pendingEmail=localStorage.getItem('boost_naz_pending_email')||session.user.email||'';
     const remote=await loadAuthenticatedJourney();
-    if(remote){originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(remote));}
+    if(remote){const clean=reconcileFreshness(remote);originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(clean));}
     mergeParticipant(pendingName,pendingEmail);localStorage.removeItem('boost_naz_pending_name');localStorage.removeItem('boost_naz_pending_email');await flush();
   }
 
