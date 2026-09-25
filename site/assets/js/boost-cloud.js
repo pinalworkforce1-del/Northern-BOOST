@@ -185,9 +185,9 @@
     const stale3=m2t&&m3t&&m2t>m3t;
     const stale4=(m3t&&m4t&&m3t>m4t)||stale3;
     if(stale3){j.progress.module3='stale';j.staleModules.module3={reason:'Module 2 was updated after Career Mobility',markedAt:new Date().toISOString()}}
-    else if(j.progress.module3==='stale'){delete j.staleModules.module3}
+    else if(j.progress.module3==='stale'){if(m3t)j.progress.module3='complete';delete j.staleModules.module3}
     if(stale4){j.progress.module4='stale';j.staleModules.module4={reason:'Earlier career evidence changed after Decide',markedAt:new Date().toISOString()}}
-    else if(j.progress.module4==='stale'){delete j.staleModules.module4}
+    else if(j.progress.module4==='stale'){if(m4t)j.progress.module4='complete';delete j.staleModules.module4}
     return j
   }
   function mergeParticipant(name,email){
