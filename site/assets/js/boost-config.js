@@ -234,7 +234,7 @@ window.BOOST_CONFIG = {
   const eligible=!file||file==='index.html'||file==='activity.html'||/module[1-4]/.test(file);
   if(!eligible||document.querySelector('script[data-northern-ask-rosie]')) return;
   const s=document.createElement('script');
-  s.src='assets/js/northern-ask-rosie-v1.js?v=20260913mapctx1';
+  s.src='assets/js/northern-ask-rosie-v1.js?v=20260926completion1';
   s.defer=true;
   s.dataset.northernAskRosie='1';
   document.head.appendChild(s);
