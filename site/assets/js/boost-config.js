@@ -22,6 +22,20 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Participant-facing alignment language. The underlying 0–100 indexes remain
+// available for sorting and evidence carry-forward, but the UI presents them as
+// similarity indexes rather than percentages, probabilities, or grades.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const eligible=['northern_boost_module1_pinalflow_v1.html','northern_boost_module2_pinalflow_v1.html','activity.html','module4-v4.html','career-decision-report.html'].includes(file)||file.includes('module4_');
+  if(!eligible||document.querySelector('script[data-boost-alignment-display]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-alignment-display-v1.js?v=20260926a';
+  s.defer=true;
+  s.dataset.boostAlignmentDisplay='1';
+  document.head.appendChild(s);
+})();
+
 // Standardize the participant-facing journey bar across core Northern modules.
 // Module 3 remains the visual gold master; Modules 1, 2 and 4 are normalized to it.
 (() => {
