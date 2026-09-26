@@ -50,6 +50,20 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Targeted review guide. When upstream evidence changes, tell the participant
+// exactly which career/answers need attention instead of making a text-heavy
+// module feel like it must be repeated from the beginning.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const eligible=file==='northern_boost_module2_pinalflow_v1.html'||file==='activity.html'||file==='module4-v4.html'||file.includes('module4_');
+  if(!eligible||document.querySelector('script[data-boost-review-guide]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-review-guide-v1.js?v=20260926a';
+  s.defer=true;
+  s.dataset.boostReviewGuide='1';
+  document.head.appendChild(s);
+})();
+
 // Standardize the participant-facing journey bar across core Northern modules.
 // Module 3 remains the visual gold master; Modules 1, 2 and 4 are normalized to it.
 (() => {
