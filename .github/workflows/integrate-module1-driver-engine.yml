@@ -1,0 +1,32 @@
+name: Integrate Northern Module 1 driver engine
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/integrate_module1_driver_engine.py'
+      - '.github/workflows/integrate-module1-driver-engine.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Integrate work-driver evidence into Module 1
+        run: python tools/integrate_module1_driver_engine.py
+      - name: Commit integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/Northern_BOOST_Module1_PinalFlow_v1.html site/assets/js/northern-module1-pinalflow-v1.js
+          if git diff --cached --quiet; then
+            echo 'No integration changes.'
+            exit 0
+          fi
+          git commit -m 'Integrate mindmap drivers into Northern career matching'
+          git push
