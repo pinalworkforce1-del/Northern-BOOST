@@ -36,6 +36,20 @@ window.BOOST_CONFIG = {
   document.head.appendChild(s);
 })();
 
+// Upstream dependency freshness. Preserve completed evidence, but when Discover
+// changes, visually mark downstream modules for review and prevent stale Module 3
+// or Decide evidence from silently remaining authoritative.
+(() => {
+  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  const eligible=!file||file==='index.html'||file==='activity.html'||file==='northern_boost_module1_pinalflow_v1.html'||file==='northern_boost_module2_pinalflow_v1.html'||file==='module4-v4.html'||file.includes('module4_');
+  if(!eligible||document.querySelector('script[data-boost-dependency-freshness]')) return;
+  const s=document.createElement('script');
+  s.src='assets/js/northern-dependency-freshness-v1.js?v=20260926a';
+  s.defer=true;
+  s.dataset.boostDependencyFreshness='1';
+  document.head.appendChild(s);
+})();
+
 // Standardize the participant-facing journey bar across core Northern modules.
 // Module 3 remains the visual gold master; Modules 1, 2 and 4 are normalized to it.
 (() => {
