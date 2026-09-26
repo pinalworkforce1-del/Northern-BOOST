@@ -3,6 +3,8 @@
 
 function alignReadinessLanguage(){
   document.querySelectorAll('.career').forEach(card=>{
+    if(card.dataset.readinessAligned==='1')return;
+
     const prepSelect=card.querySelector('select[data-field="prep"]');
     if(prepSelect){
       const step=prepSelect.closest('.evidenceStep');
@@ -38,15 +40,17 @@ function alignReadinessLanguage(){
       if(description)description.textContent='Look for paid training, trainee positions, apprenticeship, OJT, tuition assistance, certification reimbursement, or credentials that can be earned after hire.';
       if(label&&label.tagName==='LABEL')label.textContent='What employer-supported option did you verify?';
     }
+
+    card.dataset.readinessAligned='1';
   });
 }
 
 function init(){
+  // Module 2 renders synchronously before this script's DOMContentLoaded handler.
+  // Apply the language pass once. The previous subtree MutationObserver rewrote
+  // select.innerHTML from inside its own callback, which could continuously
+  // retrigger itself and make the page feel frozen or severely laggy.
   alignReadinessLanguage();
-  const careers=document.getElementById('careers');
-  if(!careers)return;
-  const observer=new MutationObserver(()=>alignReadinessLanguage());
-  observer.observe(careers,{childList:true,subtree:true});
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
