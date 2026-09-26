@@ -1,161 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Northern BOOST — Module 1 Discover</title>
 <link rel="stylesheet" href="assets/css/northern-module1-pinalflow-v1.css?v=20260909a">
 <style>
-.heroGrid{grid-template-columns:1fr}
-.rosieOption{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:linear-gradient(135deg,#f5fbff,#edf6fb);border:1px solid #c6dce9;border-radius:18px;padding:18px 20px;margin-bottom:18px;box-shadow:0 8px 27px #17334610}
-.rosieOption h2{margin:.1rem 0 .35rem;font-size:1.35rem}.rosieOption p{margin:0;color:var(--muted);line-height:1.5}.rosieLaunch{border:0;border-radius:999px;background:#15547f;color:#fff;padding:12px 18px;font-weight:900;cursor:pointer;white-space:nowrap}.rosieLaunch:hover,.rosieLaunch:focus-visible{background:#0d4165;outline:3px solid #e6aa3266;outline-offset:2px}
-.rosieModal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:18px;background:#061522d9}.rosieModal.open{display:flex}.rosieDialog{position:relative;width:min(760px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 28px 90px #0008;border:1px solid #ffffff55}.rosieDialogTop{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:22px;align-items:center;padding:22px}.rosiePortrait{min-height:330px;border-radius:18px;background:linear-gradient(160deg,#dcecf5,#9fbfd2);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border:1px solid #c7dce8}.rosiePortrait img{display:block;width:min(285px,90%);max-height:360px;object-fit:contain;object-position:center bottom}.rosieAudio h2{margin:.1rem 0 .4rem;color:#173346}.rosieAudio p{color:#607585;line-height:1.5}.rosieAudio audio{width:100%;margin-top:10px}.rosieClose{position:absolute;right:12px;top:12px;width:40px;height:40px;border:0;border-radius:50%;background:#0c2944;color:#fff;font-size:1.35rem;font-weight:900;cursor:pointer;z-index:2}
-@media(max-width:720px){.rosieOption{grid-template-columns:1fr}.rosieLaunch{width:100%}.rosieDialogTop{grid-template-columns:1fr}.rosiePortrait{min-height:240px}.rosiePortrait img{max-height:270px}}
+.heroGrid{grid-template-columns:1fr}.mindIntro{background:linear-gradient(135deg,#0f3857,#17648a);color:#fff;border-radius:20px;padding:22px;margin-bottom:18px}.mindIntro h2{margin:.1rem 0 .5rem}.mindIntro p{line-height:1.55;margin:.3rem 0}.mindGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.mindQ{border:1px solid #cbdde7;border-radius:15px;padding:14px;background:#f8fcff}.mindQ.wide{grid-column:1/-1}.mindQ label{display:block;font-weight:900;color:#173346;margin-bottom:7px}.mindQ small{display:block;color:#617989;margin-bottom:8px;line-height:1.35}.mindQ input,.mindQ textarea,.mindQ select{width:100%;border:1px solid #afc8d7;border-radius:10px;padding:10px;font:inherit;background:#fff}.mindQ textarea{min-height:82px;resize:vertical}.driverGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.driver{border:1px solid #bed1dc;border-radius:12px;padding:10px;background:#fff;text-align:left;cursor:pointer;font:inherit}.driver b{display:block;color:#173346}.driver small{font-weight:900;margin-top:3px}.driver.yes{background:#e6f7ed;border-color:#3f9d68}.driver.maybe{background:#fff8e8;border-color:#e4b85d}.driver.no{background:#f2f4f5;color:#6c7a83}.profileCard{margin-top:15px;border:2px solid #d9a737;border-radius:16px;padding:16px;background:#fffaf0}.profileCard h3{margin:.1rem 0 .5rem;color:#173346}.mindmapChips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.mindmapChips span{border-radius:999px;padding:6px 9px;background:#e9f3f8;color:#174e70;font-size:12px;font-weight:900}.profileCard dl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 0}.profileCard dl div{background:#f5f8fa;border-radius:10px;padding:9px}.profileCard dt{font-size:11px;text-transform:uppercase;font-weight:900;color:#637b8b}.profileCard dd{margin:3px 0 0}.rosieMindmap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}.rosieMindmap button{border:0;border-radius:999px;background:#e4a72b;color:#173346;padding:10px 14px;font-weight:900;cursor:pointer}.rosieMindmapText{font-size:13px;color:#d9eef9;max-width:760px}.onetTransition{border-left:5px solid #e4a72b;padding-left:14px;margin-bottom:14px}@media(max-width:760px){.mindGrid,.profileCard dl{grid-template-columns:1fr}.driverGrid{grid-template-columns:1fr 1fr}.mindQ.wide{grid-column:auto}}
 </style>
 </head>
 <body>
-<nav class="moduleNav" aria-label="Northern BOOST module navigation">
-  <a href="index.html">← Back to BOOST Map</a>
-  <strong>Module 1 — Discover</strong>
-  <span aria-hidden="true"></span>
-</nav>
-<header class="hero">
-  <div class="wrap heroGrid">
-    <div>
-      <div class="eyebrow">NORTHERN ARIZONA BOOST • MODULE 1 — DISCOVER</div>
-      <h1>What Kind of Work Could Fit You?</h1>
-      <p>Start with the kinds of work that interest you, then see how those interests connect with real career opportunities across Northern Arizona. Your interests are a preference signal — not a test of what you can or cannot do.</p>
-      <div class="heroNote">Regional labor-market context: Apache, Coconino, Gila &amp; Navajo Counties.</div>
-    </div>
-  </div>
-</header>
+<nav class="moduleNav" aria-label="Northern BOOST module navigation"><a href="index.html">← Back to BOOST Map</a><strong>Module 1 — Discover</strong><span></span></nav>
+<header class="hero"><div class="wrap heroGrid"><div><div class="eyebrow">NORTHERN ARIZONA BOOST • MODULE 1 — DISCOVER</div><h1>Start With What Pulls You</h1><p>Your dream job is not a commitment. It is a clue. We will explore what feels natural about it, identify the patterns underneath it, add your O*NET interest results, and then look for careers where that same wiring shows up in Northern Arizona.</p><div class="heroNote">Dream → Dig Deeper → Find the Pattern → Add O*NET → Explore Regional Opportunity</div></div></div></header>
 <div class="rail"><div class="railInner"><span class="on">DISCOVER</span><span>REALITY CHECK</span><span>CAREER MOBILITY</span><span>DECIDE</span></div></div>
 <main><div class="wrap">
-  <section class="rosieOption" aria-labelledby="rosieOptionTitle">
-    <div>
-      <div class="stepTag">Optional audio</div>
-      <h2 id="rosieOptionTitle">Want Rosie to introduce Module 1?</h2>
-      <p>Open Rosie for a short audio introduction before you begin. You can play, pause, scrub backward or forward, adjust volume, and close it at any time.</p>
-    </div>
-    <button class="rosieLaunch" id="rosieLaunch" type="button">▶ LISTEN WITH ROSIE</button>
-  </section>
-
-  <section class="panel">
-    <div class="stepTag">Step 1</div>
-    <h2>Take the O*NET Interest Profiler</h2>
-    <p class="sub">If you have not already completed it, start with the official O*NET Interest Profiler. It helps identify the kinds of work activities and environments you may enjoy. BOOST uses those results as one piece of career evidence.</p>
-    <div class="onetBox">
-      <div>
-        <b>Use the official O*NET Interest Profiler</b>
-        <div class="howGrid">
-          <div class="how"><b>1. Open the profiler</b>It opens in a new tab so you can keep BOOST open.</div>
-          <div class="how"><b>2. Complete the questions</b>Answer based on whether you would like doing the activity — not whether you already know how.</div>
-          <div class="how"><b>3. Bring back your six scores</b>Record Realistic, Investigative, Artistic, Social, Enterprising, and Conventional below.</div>
-        </div>
-      </div>
-      <a href="https://www.mynextmove.org/explore/ip" target="_blank" rel="noopener">TAKE THE O*NET INTEREST PROFILER ↗</a>
-    </div>
-  </section>
-
-  <section class="panel" id="scoresPanel">
-    <div class="stepTag">Step 2</div>
-    <h2>Record your O*NET Interest Profiler scores</h2>
-    <p class="sub">Enter the six scores shown on your results page. BOOST compares the overall pattern with occupations, then adds Northern Arizona labor-market evidence. Interest does not measure readiness, qualification, or training need.</p>
-    <div class="scoreGrid">
-      <div class="score"><label for="R">R</label><b>Realistic</b><input id="R" type="number" min="0" max="60" inputmode="decimal"></div>
-      <div class="score"><label for="I">I</label><b>Investigative</b><input id="I" type="number" min="0" max="60" inputmode="decimal"></div>
-      <div class="score"><label for="A">A</label><b>Artistic</b><input id="A" type="number" min="0" max="60" inputmode="decimal"></div>
-      <div class="score"><label for="S">S</label><b>Social</b><input id="S" type="number" min="0" max="60" inputmode="decimal"></div>
-      <div class="score"><label for="E">E</label><b>Enterprising</b><input id="E" type="number" min="0" max="60" inputmode="decimal"></div>
-      <div class="score"><label for="C">C</label><b>Conventional</b><input id="C" type="number" min="0" max="60" inputmode="decimal"></div>
-    </div>
-    <div class="actionRow"><button class="primary" id="surfaceBtn" type="button">SEE CAREERS THAT CONNECT →</button><span class="note">BOOST will only proactively surface careers with enough Northern Arizona opportunity evidence. Search remains open to every occupation.</span></div>
-    <div class="error" id="scoreError">Enter all six O*NET scores before continuing.</div>
-    <div class="interestSummary" id="interestSummary"></div>
-  </section>
-
-  <section class="panel" id="recommendations">
-    <div class="stepTag">Step 3</div>
-    <div class="resultsHead">
-      <div>
-        <h2>See careers that connect your interests with regional opportunity</h2>
-        <p class="sub">BOOST combines your interest pattern with Northern Arizona employment, annual openings, projected growth, and wages. The recommendation gate controls what BOOST surfaces automatically — it never blocks a career you want to explore.</p>
-      </div>
-      <div class="filters" aria-label="Career filters">
-        <button class="filterBtn active" data-filter="all" type="button">View All</button>
-        <button class="filterBtn" data-filter="priority" type="button">Priority Sectors</button>
-        <button class="filterBtn" data-filter="strong" type="button">Strong / Established Opportunity</button>
-      </div>
-    </div>
-    <div class="cards" id="cards"><div class="load">Loading Northern Arizona career evidence…</div></div>
-    <div class="showMore"><button class="secondary" id="moreBtn" type="button" style="display:none">SHOW MORE CAREERS</button></div>
-  </section>
-
-  <section class="panel">
-    <div class="stepTag">Explore beyond recommendations</div>
-    <h2>Want to explore a career BOOST did not surface?</h2>
-    <p class="sub">Search any occupation by title or SOC code. Careers below the automatic recommendation threshold remain fully available. BOOST will show the Northern Arizona evidence and explain what it means rather than blocking the career.</p>
-    <div class="searchWrap">
-      <input class="searchInput" id="searchInput" type="search" autocomplete="off" placeholder="Try CNA, electrician, software developer, welder, CDL, or a SOC code…">
-      <div class="searchResults" id="searchResults"></div>
-    </div>
-    <div class="searchDetail" id="searchDetail"></div>
-  </section>
-
-  <section class="selectionBox">
-    <div class="stepTag">My Career Exploration</div>
-    <h2>Choose the careers you want to carry forward</h2>
-    <p class="sub">Save up to three careers for Reality Check. They can come from BOOST recommendations, your own search, or a combination of both.</p>
-    <div class="chosen" id="chosen"></div>
-    <div class="participantRow">
-      <label>Your name<input id="participantName" autocomplete="name" placeholder="Name"></label>
-      <label>Email <span style="font-weight:500">(optional if not signed in)</span><input id="participantEmail" type="email" autocomplete="email" placeholder="you@example.com"></label>
-    </div>
-    <div class="selectionActions"><button class="secondary" id="saveBtn" type="button">SAVE CAREER EXPLORATION FOR REALITY CHECK →</button></div>
-    <div class="status" id="saveStatus">Your selections are saved as you work. Use the button when you are ready to complete Discover.</div>
-    <div class="completion" id="completion"><h3>Module 1 Complete</h3><p>Your interests and career exploration are saved in your Northern BOOST journey and ready to carry into Reality Check.</p><a href="index.html">Return to Northern BOOST Map</a></div>
-  </section>
-
-  <div class="sourceNote">Northern BOOST uses O*NET interest evidence with Northern Arizona labor-market information. Automatic recommendations require the existing Northern regional opportunity gate; careers outside that gate remain available through participant-directed exploration. Interest connections are shown in plain language; no single score determines eligibility, training need, or a career decision.</div>
+<section class="mindIntro"><div class="stepTag">Step 1 • Career Mindmap</div><h2>Imagine work that just feels right.</h2><p>For a moment, forget whether you are qualified, whether training is required, or whether the exact job is available nearby. What work naturally pulls your attention?</p><p><b>We are not choosing your career yet.</b> We are using your answer to learn what may energize you at work.</p><div class="rosieMindmap"><button id="rosieMindmapBtn" type="button">▶ Rosie: Read My Pattern</button><span class="rosieMindmapText" id="rosieMindmapText">Rosie will use the answers you choose to reflect the pattern back to you. You decide whether it sounds right.</span></div></section>
+<section class="panel"><div class="mindGrid">
+<div class="mindQ wide"><label for="dreamJob">If you could wake up tomorrow and do work that felt right, what would you be doing?</label><small>Use a job title if one comes to mind, or simply describe the work.</small><input id="dreamJob" placeholder="Example: mechanic, nurse, chef, running my own business, building things..."></div>
+<div class="mindQ"><label for="dreamTasks">What are you actually doing?</label><small>Picture the workday. What activities are happening?</small><textarea id="dreamTasks"></textarea></div>
+<div class="mindQ"><label for="dreamNatural">What about that feels natural to you?</label><small>What makes you think, “Yeah, I could see myself doing that”?</small><textarea id="dreamNatural"></textarea></div>
+<div class="mindQ"><label for="dreamHelp">Who or what are you helping?</label><small>People, customers, a team, machines, a community, a business, animals?</small><textarea id="dreamHelp"></textarea></div>
+<div class="mindQ"><label for="dreamProblems">What kinds of problems are you solving?</label><small>Think about the challenge, not the job title.</small><textarea id="dreamProblems"></textarea></div>
+<div class="mindQ"><label for="dreamProud">What would make you proud at the end of the day?</label><textarea id="dreamProud"></textarea></div>
+<div class="mindQ"><label for="dreamMotivation">What about this work motivates you deep down?</label><small>Go beyond pay. What would make the work matter to you?</small><textarea id="dreamMotivation"></textarea></div>
+<div class="mindQ"><label for="incomeNeeds">Income needs</label><small>What does work need to provide financially?</small><input id="incomeNeeds" placeholder="Example: at least $22/hour, enough for my household..."></div>
+<div class="mindQ"><label for="scheduleNeeds">Work schedule</label><small>What schedule would fit your life?</small><input id="scheduleNeeds" placeholder="Days, nights, predictable, flexible..."></div>
+<div class="mindQ"><label for="environmentNeeds">Work environment</label><small>Inside, outside, active, desk, people, independent?</small><input id="environmentNeeds"></div>
+<div class="mindQ"><label for="growthNeeds">Growth opportunities</label><small>What would you like this work to lead toward?</small><input id="growthNeeds"></div>
+<div class="mindQ"><label for="trainingComfort">Training comfort</label><small>How much additional training would you realistically consider right now?</small><select id="trainingComfort"><option value="">Choose...</option><option>Prefer to work now / minimal training</option><option>Short-term training could work</option><option>Apprenticeship or work-based learning interests me</option><option>Longer training could be worth it for the right career</option><option>I am not sure yet</option></select></div>
+<div class="mindQ wide"><label>Which themes sound like you?</label><small>Tap each card to cycle through Maybe → Yes → Not really. BOOST may notice themes from your written answers too, but you get the final say.</small><div class="driverGrid">
+<button class="driver" data-driver="helping"><b>Helping people directly</b><small>Maybe</small></button><button class="driver" data-driver="hands"><b>Working with my hands</b><small>Maybe</small></button><button class="driver" data-driver="solving"><b>Solving problems</b><small>Maybe</small></button><button class="driver" data-driver="creating"><b>Creating or improving things</b><small>Maybe</small></button><button class="driver" data-driver="leading"><b>Leading or influencing</b><small>Maybe</small></button><button class="driver" data-driver="organizing"><b>Organizing details/systems</b><small>Maybe</small></button><button class="driver" data-driver="independence"><b>Having independence</b><small>Maybe</small></button><button class="driver" data-driver="team"><b>Being part of a team</b><small>Maybe</small></button><button class="driver" data-driver="movement"><b>Staying active</b><small>Maybe</small></button><button class="driver" data-driver="stability"><b>Having stability</b><small>Maybe</small></button><button class="driver" data-driver="growth"><b>Growing into more</b><small>Maybe</small></button><button class="driver" data-driver="impact"><b>Doing work that matters</b><small>Maybe</small></button></div></div>
+</div><div class="profileCard" id="boostProfileOutput"><h3>My BOOST Profile</h3><p>Your pattern will appear here as you work.</p></div><div class="actionRow"><button class="primary" id="profileBtn" type="button">ADD ANOTHER SIGNAL: O*NET →</button></div></section>
+<section class="panel"><div class="stepTag">Step 2 • Structured Interest Signal</div><div class="onetTransition"><h2>Now add the O*NET Interest Profiler</h2><p class="sub">Your mindmap tells BOOST what seems to pull you and why. O*NET gives us a structured interest pattern. Neither is the answer by itself. Together they give us better evidence for exploration.</p></div><div class="onetBox"><div><b>Use the official O*NET Interest Profiler</b><div class="howGrid"><div class="how"><b>1. Open the profiler</b>It opens in a new tab.</div><div class="how"><b>2. Complete the questions</b>Answer whether you would like doing the activity — not whether you already know how.</div><div class="how"><b>3. Bring back six scores</b>Record R, I, A, S, E and C below.</div></div></div><a href="https://www.mynextmove.org/explore/ip" target="_blank" rel="noopener">TAKE THE O*NET INTEREST PROFILER ↗</a></div></section>
+<section class="panel" id="scoresPanel"><div class="stepTag">Step 3 • Combine the Evidence</div><h2>Record your O*NET Interest Profiler scores</h2><p class="sub">BOOST compares the full pattern with occupations, while carrying forward the work drivers and lifestyle fit you identified above.</p><div class="scoreGrid"><div class="score"><label for="R">R</label><b>Realistic</b><input id="R" type="number" min="0" max="60"></div><div class="score"><label for="I">I</label><b>Investigative</b><input id="I" type="number" min="0" max="60"></div><div class="score"><label for="A">A</label><b>Artistic</b><input id="A" type="number" min="0" max="60"></div><div class="score"><label for="S">S</label><b>Social</b><input id="S" type="number" min="0" max="60"></div><div class="score"><label for="E">E</label><b>Enterprising</b><input id="E" type="number" min="0" max="60"></div><div class="score"><label for="C">C</label><b>Conventional</b><input id="C" type="number" min="0" max="60"></div></div><div class="profileCard" id="combinedOutput"><h3>Combined profile waiting</h3></div><div class="actionRow"><button class="primary" id="surfaceBtn" type="button">SEE CAREERS THAT CONNECT →</button><span class="note">Career cards use O*NET alignment plus Northern Arizona opportunity evidence. Your mindmap profile travels with your journey and Rosie.</span></div><div class="error" id="scoreError">Enter all six O*NET scores before continuing.</div><div class="interestSummary" id="interestSummary"></div></section>
+<section class="panel" id="recommendations"><div class="stepTag">Step 4 • Explore the Regional Market</div><div class="resultsHead"><div><h2>Where could your pattern show up?</h2><p class="sub">BOOST combines your interest pattern with Northern Arizona employment, openings, growth and wages. Your mindmap gives you and your coach a second lens for asking whether the work actually fits.</p></div><div class="filters"><button class="filterBtn active" data-filter="all">View All</button><button class="filterBtn" data-filter="priority">Priority Sectors</button><button class="filterBtn" data-filter="strong">Strong / Established Opportunity</button></div></div><div class="cards" id="cards"><div class="load">Loading Northern Arizona career evidence…</div></div><div class="showMore"><button class="secondary" id="moreBtn" type="button" style="display:none">SHOW MORE CAREERS</button></div></section>
+<section class="panel"><div class="stepTag">Explore beyond recommendations</div><h2>Have another career in mind?</h2><p class="sub">Search any occupation. BOOST will show the Northern Arizona evidence rather than blocking a career because it was not automatically surfaced.</p><div class="searchWrap"><input class="searchInput" id="searchInput" type="search" autocomplete="off" placeholder="Try CNA, electrician, software developer, welder, CDL..."><div class="searchResults" id="searchResults"></div></div><div class="searchDetail" id="searchDetail"></div></section>
+<section class="selectionBox"><div class="stepTag">My Career Exploration</div><h2>Choose the careers you want to carry forward</h2><p class="sub">Save up to three careers for Reality Check. Your mindmap profile and O*NET pattern travel with them.</p><div class="chosen" id="chosen"></div><div class="participantRow"><label>Your name<input id="participantName" autocomplete="name" placeholder="Name"></label><label>Email <span style="font-weight:500">(optional if not signed in)</span><input id="participantEmail" type="email" autocomplete="email" placeholder="you@example.com"></label></div><div class="selectionActions"><button class="secondary" id="saveBtn" type="button">SAVE CAREER EXPLORATION FOR REALITY CHECK →</button></div><div class="status" id="saveStatus">Your selections and Module 1 profile are saved as you work.</div><div class="completion" id="completion"><h3>Module 1 Complete</h3><p>Your dream-work clues, work drivers, O*NET pattern and career exploration are saved in your Northern BOOST journey.</p><a href="index.html">Return to Northern BOOST Map</a></div></section>
+<div class="sourceNote">BOOST treats the dream-job exercise as a discovery prompt, not a career prescription. Participant narrative, O*NET interests and Northern Arizona labor-market evidence are separate signals used together to support exploration. The participant remains the decision-maker.</div>
 </div></main>
-
-<div class="rosieModal" id="rosieModal" role="dialog" aria-modal="true" aria-labelledby="rosieDialogTitle" aria-hidden="true">
-  <div class="rosieDialog">
-    <button class="rosieClose" id="rosieClose" type="button" aria-label="Close Rosie introduction">×</button>
-    <div class="rosieDialogTop">
-      <div class="rosiePortrait"><img src="assets/images/rosie-master.webp" alt="Rosie, the Northern BOOST guide"></div>
-      <div class="rosieAudio">
-        <div class="stepTag">Module 1 audio guide</div>
-        <h2 id="rosieDialogTitle">Rosie — Discover</h2>
-        <p>Use the controls below to listen at your own pace. This introduction is optional and does not affect module completion.</p>
-        <audio id="rosieAudio" controls preload="metadata">
-          Your browser does not support audio playback.
-        </audio>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/boost-config.js?v=20260911dbsync1"></script>
-<script src="assets/js/boost-cloud.js?v=20260911dbsync1"></script>
-<script src="assets/js/northern-occupation-master-v1.js?v=20260910a"></script>
-<script src="assets/js/northern-module1-pinalflow-v1.js?v=20260910a"></script>
-<script src="assets/js/rosie-module1-audio-loader.js?v=20260911dbsync1"></script>
-<script>
-(function(){
-  const launch=document.getElementById('rosieLaunch');
-  const modal=document.getElementById('rosieModal');
-  const close=document.getElementById('rosieClose');
-  const audio=document.getElementById('rosieAudio');
-  if(!launch||!modal||!close||!audio) return;
-  function openRosie(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');if(window.BOOSTRosieModule1Audio)window.BOOSTRosieModule1Audio.prepare();close.focus();}
-  function closeRosie(){audio.pause();modal.classList.remove('open');modal.setAttribute('aria-hidden','true');launch.focus();}
-  launch.addEventListener('click',openRosie);
-  close.addEventListener('click',closeRosie);
-  modal.addEventListener('click',function(e){if(e.target===modal) closeRosie();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open')) closeRosie();});
-})();
-</script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/boost-config.js?v=20260911dbsync1"></script><script src="assets/js/boost-cloud.js?v=20260911dbsync1"></script><script src="assets/js/northern-occupation-master-v1.js?v=20260910a"></script><script src="assets/js/northern-module1-pinalflow-v1.js?v=20260910a"></script><script src="assets/js/northern-module1-mindmap-v1.js?v=20260925a"></script>
+</body></html>
