@@ -1,0 +1,32 @@
+name: Add Northern alignment carry-forward layer
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/add_alignment_carry_layer.py'
+      - '.github/workflows/add-alignment-carry-layer.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Add alignment carry-forward layer
+        run: python tools/add_alignment_carry_layer.py
+      - name: Commit alignment integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site
+          if git diff --cached --quiet; then
+            echo 'No alignment changes.'
+            exit 0
+          fi
+          git commit -m 'Carry Discover alignment through Northern BOOST'
+          git push
