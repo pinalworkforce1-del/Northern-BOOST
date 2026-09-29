@@ -29,6 +29,27 @@ const careerOrder=['module2','module3','module4','industry','financial','careera
 function j(){try{return JSON.parse(localStorage.getItem(JK)||'{}')}catch{return{}}}
 function p(){try{return JSON.parse(localStorage.getItem(PK)||'{}')}catch{return{visited:{},rapid:{},career:{}}}}
 function selectedPath(){return localStorage.getItem(PATH)||''}
+function normalizeSavedCompletions(){
+ const x=j();let changed=false;x.progress=x.progress||{};x.modules=x.modules||{};
+ const ai=x.modules?.ai||x.ai||x.sharedModules?.ai||null;
+ if(ai&&(ai.completed_at||ai.completedAt)&&x.progress.ai!=='complete'){x.progress.ai='complete';changed=true}
+ const aliases={skilled_trades:'skilledTrades',advanced_manufacturing:'advancedManufacturing',healthcare:'healthcare',it:'it',cdl:'cdl',customer_service:'customerService'};
+ for(const [key,legacy] of Object.entries(aliases)){
+   const ev=x.appliedModules?.[key]||x.modules?.['industry-'+key]||null;
+   const complete=ev?.completed===true||!!ev?.completedAt||x.progress[legacy]==='complete'||x.progress['industry-'+key]==='complete';
+   if(!complete)continue;
+   if(x.progress[legacy]!=='complete'){x.progress[legacy]='complete';changed=true}
+   if(x.progress['industry-'+key]!=='complete'){x.progress['industry-'+key]='complete';changed=true}
+   if(ev&&!x.modules['industry-'+key]){x.modules['industry-'+key]={...ev,completed:true,completedAt:ev.completedAt||new Date().toISOString(),source:ev.source||'northern_applied_experience'};changed=true}
+ }
+ if(changed){
+   x.updatedAt=new Date().toISOString();
+   localStorage.setItem(JK,JSON.stringify(x));
+   setTimeout(()=>{try{window.BOOSTCloud?.flush?.()}catch(_){}},50);
+   document.dispatchEvent(new CustomEvent('boostprogress',{detail:{type:'normalized_completion_state'}}));
+ }
+ return changed;
+}
 function module4State(x=j()){return x.module4||x.modules?.module4||{}}
 function coreDone(id){const x=j(),pr=x.progress||{};if(id==='module1')return pr.module1==='complete'||!!x.module1?.careers?.length;if(id==='module2')return pr.module2==='complete'||!!x.module2?.careers?.length;if(id==='module3')return pr.module3==='complete'||!!x.module3?.careers?.length;if(id==='module4'){const m=module4State(x);return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}return false}
 function industryDone(){const x=j(),pr=x.progress||{},ap=x.appliedModules||{};return INDUSTRY_PROGRESS.some(k=>pr[k]==='complete')||Object.values(ap).some(v=>v&&v.completed===true)}
@@ -158,7 +179,7 @@ function openModal(key){
 function closeModal(){modal?.classList.remove('show');const a=modal?.querySelector('#boostSeqAudio');if(a){a.pause();a.currentTime=0}}
 function decorate(){document.querySelectorAll('.hot').forEach(el=>{const key=keyFor(el);if(!key||!infoFor(key))return;const canOpen=unlocked(key);el.classList.toggle('boostSeqLocked',!canOpen);if(!canOpen)el.setAttribute('aria-disabled','true');else el.removeAttribute('aria-disabled');if(!el.querySelector('.boostSeqInfo')){const b=document.createElement('span');b.className='boostSeqInfo';b.textContent='?';b.title='Tell me about this step';b.setAttribute('role','button');b.setAttribute('aria-label','Tell me about this step');b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openModal(key)},true);el.appendChild(b)}});renderIndustryArrow();updateMapProgress()}
 function gate(e){const el=e.target.closest('.hot');if(!el)return;const key=keyFor(el);if(!key)return;if(el.dataset.recommendedIndustry==='true')return;if(e.target.closest('.boostSeqInfo'))return;if(!unlocked(key)){e.preventDefault();e.stopImmediatePropagation();openModal(key)}}
-function init(){acceptSharedReturn();clearUnvalidatedCareerFlags();patchBaseRender();injectStyles();ensureModal();if(coreDone('module4')&&selectedPath()!=='career')localStorage.setItem(PATH,'career');decorate();document.addEventListener('click',sharedLaunchGate,true);document.addEventListener('click',gate,true);window.addEventListener('storage',decorate);document.addEventListener('boostprogress',decorate);document.addEventListener('boostpathway',()=>setTimeout(decorate,0));window.addEventListener('pageshow',()=>setTimeout(decorate,0));setInterval(decorate,1200)}
+function init(){acceptSharedReturn();normalizeSavedCompletions();clearUnvalidatedCareerFlags();patchBaseRender();injectStyles();ensureModal();if(coreDone('module4')&&selectedPath()!=='career')localStorage.setItem(PATH,'career');decorate();document.addEventListener('click',sharedLaunchGate,true);document.addEventListener('click',gate,true);window.addEventListener('storage',()=>{normalizeSavedCompletions();decorate()});document.addEventListener('boostprogress',decorate);document.addEventListener('boostpathway',()=>setTimeout(decorate,0));window.addEventListener('pageshow',()=>setTimeout(decorate,0));setInterval(decorate,1200)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 window.NorthernBOOSTSequence={unlocked,careerDone,industryDone,recommendedIndustry,decorate};
 })();
