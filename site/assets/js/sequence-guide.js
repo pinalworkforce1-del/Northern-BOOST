@@ -51,7 +51,7 @@ function normalizeSavedCompletions(){
  return changed;
 }
 function module4State(x=j()){return x.module4||x.modules?.module4||{}}
-function coreDone(id){const x=j(),pr=x.progress||{};if(id==='module1')return pr.module1==='complete'||!!x.module1?.careers?.length;if(id==='module2')return pr.module2==='complete'||!!x.module2?.careers?.length;if(id==='module3')return pr.module3==='complete'||!!x.module3?.careers?.length;if(id==='module4'){const m=module4State(x);return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}return false}
+function coreDone(id){const x=j(),pr=x.progress||{};if(id==='module1')return pr.module1==='complete';if(id==='module2')return pr.module2==='complete'||!!x.module2?.careers?.length;if(id==='module3')return pr.module3==='complete'||!!x.module3?.careers?.length;if(id==='module4'){const m=module4State(x);return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}return false}
 function industryDone(){const x=j(),pr=x.progress||{},ap=x.appliedModules||{};return INDUSTRY_PROGRESS.some(k=>pr[k]==='complete')||Object.values(ap).some(v=>v&&v.completed===true)}
 function rapidDone(id){const x=j(),pr=x.progress||{},pp=p();return pr[id]==='complete'||!!pp.rapid?.[id]}
 function careerDone(id){if(id.startsWith('module'))return coreDone(id);const pr=j().progress||{};if(id==='financial')return pr.financial==='complete';if(id==='careerai')return pr.ai==='complete'||pr.careerAi==='complete';if(id==='industry')return industryDone();return false}
