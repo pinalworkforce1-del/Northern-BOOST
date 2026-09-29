@@ -171,10 +171,39 @@
       delete j.progress[legacy];delete j.progress['industry-'+key];delete j.staleModules['industry-'+key];
       if(j.appliedModules)delete j.appliedModules[key];
       delete j.modules['industry-'+key];
+    }else if(moduleId==='module1'){
+      const prior=j.module1||j.modules.module1||{};
+      const keep={};
+      if(prior.riasec)keep.riasec=prior.riasec;
+      if(prior.topInterests)keep.topInterests=prior.topInterests;
+      if(prior.mindmap)keep.mindmap=prior.mindmap;
+      if(prior.alignmentProfile)keep.alignmentProfile=prior.alignmentProfile;
+      if(prior.evidenceVersion)keep.evidenceVersion=prior.evidenceVersion;
+      if(prior.geography)keep.geography=prior.geography;
+      j.module1=keep;
+      delete j.modules.module1;
+      delete j.progress.module1;
+      delete j.staleModules.module1;
+      delete j.module1_checkpoint;
+      delete j.modules.module1_checkpoint;
+      try{
+        const sk='northern_boost_career_exploration_v1',shared=JSON.parse(localStorage.getItem(sk)||'{}')||{};
+        if(shared.module1){
+          shared.module1={...shared.module1,selected:[]};
+          delete shared.module1.completedAt;
+          shared.module1.updatedAt=new Date().toISOString();
+          originalSetItem.call(localStorage,sk,JSON.stringify(shared));
+        }
+      }catch(_){}
+      ['module2','module3','module4'].forEach(id=>{
+        if(j.progress[id]==='complete'||j[id]||j.modules[id]){
+          j.progress[id]='stale';
+          j.staleModules[id]={reason:'Module 1 career selections were cleared and need to be carried forward again.',markedAt:new Date().toISOString()};
+        }
+      });
     }else{
       remove(moduleId);
       delete j.modules[moduleId+'_checkpoint'];
-      if(moduleId==='module1')delete j.module1_checkpoint;
       if(moduleId==='module2')delete j.module2_checkpoint;
       if(moduleId==='module3')delete j.module3_checkpoint;
       if(moduleId==='module4')delete j.module4_checkpoint;
