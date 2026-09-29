@@ -154,6 +154,53 @@
     if(f.includes('it_connected')) return ['it','Step 5 of 6 • Information Technology'];
     return null;
   }
+  function clearModuleState(moduleId){
+    let j={};try{j=JSON.parse(localStorage.getItem(JOURNEY_KEY)||'{}')||{}}catch(_){j={}}
+    j.progress=j.progress||{};j.modules=j.modules||{};j.staleModules=j.staleModules||{};
+    const remove=(k)=>{delete j[k];delete j.modules[k];delete j.progress[k];delete j.staleModules[k]};
+    const industryMap={
+      skilled_trades:['skilledTrades','skilled_trades'],
+      advanced_manufacturing:['advancedManufacturing','advanced_manufacturing'],
+      healthcare:['healthcare','healthcare'],
+      it:['it','it'],
+      cdl:['cdl','cdl'],
+      customer_service:['customerService','customer_service']
+    };
+    if(industryMap[moduleId]){
+      const [legacy,key]=industryMap[moduleId];
+      delete j.progress[legacy];delete j.progress['industry-'+key];delete j.staleModules['industry-'+key];
+      if(j.appliedModules)delete j.appliedModules[key];
+      delete j.modules['industry-'+key];
+    }else{
+      remove(moduleId);
+      delete j.modules[moduleId+'_checkpoint'];
+      if(moduleId==='module1')delete j.module1_checkpoint;
+      if(moduleId==='module2')delete j.module2_checkpoint;
+      if(moduleId==='module3')delete j.module3_checkpoint;
+      if(moduleId==='module4')delete j.module4_checkpoint;
+    }
+    j.updatedAt=new Date().toISOString();j.updated_at=j.updatedAt;
+    originalSetItem.call(localStorage,JOURNEY_KEY,JSON.stringify(j));
+    queueSave(j);
+    return j;
+  }
+  async function clearCurrentModule(){
+    const ctx=mapContext();if(!ctx)return false;
+    const id=ctx[0],label=ctx[1].replace(/^Step\s+\d+\s+of\s+\d+\s+•\s*/,'');
+    if(!confirm('Clear saved progress for '+label+' and start this module over? Other BOOST modules will not be deleted.'))return false;
+    clearModuleState(id);
+    try{await flush()}catch(_){}
+    location.reload();return true;
+  }
+  function injectClearModuleButton(){
+    if(document.querySelector('.boostClearModuleFab'))return;
+    const ctx=mapContext();if(!ctx)return;
+    const style=document.createElement('style');
+    style.textContent='.boostClearModuleFab{position:fixed;right:16px;top:16px;z-index:2147483000;border:2px solid #d8a52b;border-radius:999px;padding:9px 13px;background:#fff7df;color:#5d4310;font:900 12px Arial,sans-serif;box-shadow:0 8px 22px rgba(0,0,0,.18);cursor:pointer}.boostClearModuleFab:hover,.boostClearModuleFab:focus-visible{outline:3px solid #d8a52b55;outline-offset:2px;background:#fff1c4}@media(max-width:700px){.boostClearModuleFab{right:10px;top:10px}}';
+    document.head.appendChild(style);
+    const b=document.createElement('button');b.type='button';b.className='boostClearModuleFab';b.textContent='↺ Clear Module';b.setAttribute('aria-label','Clear this BOOST module and start it over');b.addEventListener('click',clearCurrentModule);document.body.appendChild(b);
+  }
+
   function injectJourneyMapButton(){
     if(document.querySelector('.boostJourneyMapFab')) return;
     const ctx=mapContext(); if(!ctx) return;
@@ -240,8 +287,8 @@
     mergeParticipant(pendingName,pendingEmail);localStorage.removeItem('boost_naz_pending_name');localStorage.removeItem('boost_naz_pending_email');await flush();
   }
 
-  window.BOOSTCloud={configured,queueSave,flush,resumeLink,remoteLoad,ensureCredentials,loadAuthenticatedJourney};
-  (async()=>{await bootstrapRemoteIfNeeded();await finishAuthReturn();if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{injectJourneyMapButton();showAuthGate();});}else{injectJourneyMapButton();showAuthGate();}})();
+  window.BOOSTCloud={configured,queueSave,flush,resumeLink,remoteLoad,ensureCredentials,loadAuthenticatedJourney,clearCurrentModule,clearModuleState};
+  (async()=>{await bootstrapRemoteIfNeeded();await finishAuthReturn();if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{injectJourneyMapButton();injectClearModuleButton();showAuthGate();});}else{injectJourneyMapButton();injectClearModuleButton();showAuthGate();}})();
   window.addEventListener("pagehide",()=>{try{flush()}catch(e){}});
 })();
 
