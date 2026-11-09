@@ -23,9 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # Each run attempt needs its own artifact; GitHub retains artifacts from failed attempts.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+          name: northern-boost-pages-${{ github.run_attempt }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: northern-boost-pages-${{ github.run_attempt }}
