@@ -2,6 +2,7 @@
 'use strict';
 if(window.__NorthernBoostV2Preview)return;window.__NorthernBoostV2Preview=true;
 const JOURNEY_KEY='boost_naz_journey_v1',PORTAL_KEY='boost_naz_portal_progress_v1',PATH_KEY='boost_naz_pathway_v1',PICK_KEY='northern_boost_v2_preview_pathway',AREA_KEY='boost_naz_service_area_v1',NONCE_PREFIX='boost_naz_completion_nonce:';
+const RETURN_KEY='boost_naz_preview_return_v1',RETURN_NOTICE_KEY='boost_naz_preview_return_notice_v1';
 const AREA_FORMS={
  agn:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNE1NN1o0RUNFMUI1OENHSUlTTVJKUURMTi4u',
  coconino:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNFFNVjFYS0dRNEU5UFRBR1JERVEyQkJNTi4u'
@@ -166,16 +167,13 @@ function launch(id){
     url.searchParams.set('boost_module',id);
     url.searchParams.set('boost_nonce',t);
  }
- if(id==='module1'||id==='module2'||id==='module3'||id==='module4'||id==='industry'){
-   // Keep the preview open; legacy modules currently return to the existing Northern map.
-   const tab=window.open(url.toString(),'_blank','noopener');
-   if(!tab){window.location.assign(url.toString());return;}
-   $('progressMessage').textContent='Activity opened in a separate tab. After saving, return here and select Refresh Progress.';
- }else{
-   // Same tab preserves the nonce in sessionStorage through the external module return.
-   // Northern's existing production map confirms the completion receipt and persists it.
-   window.location.assign(url.toString());
- }
+ // Keep one browsing context: sessionStorage completion receipts belong to this tab.
+ // The legacy map performs its normal save/validation before the preview-only bridge returns here.
+ const receipt=sessionStorage.getItem(NONCE_PREFIX+id);
+ sessionStorage.setItem(RETURN_KEY,JSON.stringify({
+   version:1,module:id,startedAt:Date.now(),expectedNonce:receipt||null
+ }));
+ window.location.assign(url.toString());
 }
 async function loadJourney(){
  if(!user)return;
@@ -186,6 +184,17 @@ async function loadJourney(){
   lastCloudMessage=Object.keys(journey).length?'Northern authenticated journey loaded (read-only preview).':'No Northern cloud journey found for this test account.';
  }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
  render();
+ const noticeRaw=sessionStorage.getItem(RETURN_NOTICE_KEY);
+ if(noticeRaw){
+   sessionStorage.removeItem(RETURN_NOTICE_KEY);
+   try{
+     const notice=JSON.parse(noticeRaw);
+     if(Date.now()-Number(notice.at||0)<180000){
+       const label=details[notice.module]?.name||'Your activity';
+       $('progressMessage').textContent=label+' returned to BOOST 2.0. '+(done(notice.module)?'Your completion is visible in the Northern cloud journey.':'No new cloud completion is confirmed for this step. Review the activity save if you expected it to be complete.');
+     }
+   }catch(_){}
+ }
 }
 async function refresh(){
  if(!user)return;const b=$('refreshProgress');if(b)b.disabled=true;
