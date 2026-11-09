@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Northern BOOST | Coach Appointment Prep</title>
+<base href="../">
+<link rel="stylesheet" href="preview-v2/coach-prep.css?v=1">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="preview-v2/preview-config.js?v=1"></script>
+<script defer src="preview-v2/coach-prep.js?v=1"></script>
+</head>
+<body>
+<header class="topbar"><a href="preview-v2/index.html" class="brand">← Northern BOOST 2.0</a><span class="tag">STAGING · TEST ACCOUNT ONLY</span></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">BETWEEN DISCOVER &amp; YOUR NEXT PATHWAY</div><h1>Let's get ready for your Career Coach conversation.</h1><p>You've explored careers that might fit. Now bring your discoveries, questions, and next-step priorities to the team before enrollment or service planning.</p><div class="hero-badge"><img src="assets/images/rosie-master.webp" alt="Rosie, your BOOST guide"><div><b>Rosie's reminder</b><span>You're not expected to have every answer. Your coach will help you decide what comes next.</span></div></div></section>
+<div class="notice" id="loadStatus" role="status" aria-live="polite">Checking your secure Northern BOOST record…</div>
+<div id="mainContent" hidden>
+<section class="card"><div class="eyebrow">YOUR SAVED DISCOVER EVIDENCE</div><h2>Your coach conversation brief</h2><p class="muted">These details are drawn from Northern BOOST Module 1. They are conversation starters—not an eligibility determination, a job-placement guarantee, or a final career decision.</p>
+<div class="brief-grid">
+<div class="brief-item"><small>Participant</small><strong id="participantName">—</strong></div>
+<div class="brief-item"><small>O*NET interest themes</small><strong id="interestSummary">—</strong></div>
+<div class="brief-item wide"><small>Careers I'm interested in</small><div class="careers" id="careerList">No career choices saved.</div></div>
+<div class="brief-item wide"><small>Work conditions that matter to me</small><div id="driverList" class="chips"></div></div>
+</div></section>
+<section class="card"><div class="eyebrow">PREPARE FOR YOUR CONVERSATION</div><h2>What should we talk about?</h2>
+<p class="muted">Select what you want to cover. You can discuss private circumstances directly with your coach; do not enter sensitive personal information here.</p>
+<div class="check-grid" id="topics">
+<label><input type="checkbox" value="How my interests connect to real job opportunities"><span>How my interests connect to real job opportunities</span></label>
+<label><input type="checkbox" value="Wages, schedule, and commute"><span>Wages, schedule, and commute</span></label>
+<label><input type="checkbox" value="Training, credentials, or education"><span>Training, credentials, or education</span></label>
+<label><input type="checkbox" value="Employment services and enrollment next steps"><span>Employment services and enrollment next steps</span></label>
+<label><input type="checkbox" value="Current experience and transferable skills"><span>Current experience and transferable skills</span></label>
+<label><input type="checkbox" value="I would like to discuss a personal concern privately"><span>I would like to discuss a personal concern privately</span></label>
+</div>
+<label class="field" for="myQuestion">One question I want to ask my coach <small>(optional; avoid sensitive details)</small></label>
+<textarea id="myQuestion" maxlength="600" rows="3" placeholder="Example: Which of my career ideas should I research next?"></textarea>
+</section>
+<section class="card"><div class="eyebrow">WHAT TO BRING</div><h2>A short appointment checklist</h2><p class="muted">Your local team will explain what is actually needed for eligibility and enrollment. Missing documents should not prevent you from asking for help.</p>
+<div class="check-grid docs" id="documents">
+<label><input type="checkbox" value="My saved BOOST Discover results"><span>My saved BOOST Discover results</span></label>
+<label><input type="checkbox" value="My work history, résumé, or employment goals"><span>My work history, résumé, or employment goals</span></label>
+<label><input type="checkbox" value="My Arizona Job Connection account information"><span>My Arizona Job Connection account information</span></label>
+<label><input type="checkbox" value="Any documentation requested by my local workforce team"><span>Any documentation requested by my local workforce team</span></label>
+</div>
+<p class="privacy"><strong>Privacy:</strong> Do not upload identification, Social Security numbers, income records, medical information, or other sensitive documents here. Bring requested documents directly to authorized workforce staff.</p>
+</section>
+<section class="card save-card"><h2>Confirm your preparation</h2><p>Review your brief and choose the topics you want to discuss. This acknowledgment means you prepared for the conversation; it does <strong>not</strong> mean you attended an appointment, were found eligible, or enrolled.</p>
+<label class="ack"><input id="ack" type="checkbox"><span>I reviewed my Discover results and am ready to discuss my next steps with a Career Coach.</span></label>
+<div class="actions"><button type="button" id="save" class="btn primary">Save Coach Appointment Prep →</button><button type="button" id="print" class="btn secondary">Print / Save as PDF</button><a href="preview-v2/index.html" class="btn secondary">Return to BOOST 2.0</a></div>
+<div id="saveStatus" class="save-status" role="status" aria-live="polite"></div></section>
+</div>
+</main>
+<footer>BOOST · Northern Arizona · Preparation for a coaching conversation, not an enrollment decision.</footer>
+</body></html>
