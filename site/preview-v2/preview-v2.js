@@ -32,7 +32,7 @@ function getClient(){
  return client;
 }
 function localJourney(){return read(JOURNEY_KEY)}
-function cloudOrLocal(){return journey&&Object.keys(journey).length?journey:localJourney()}
+function cloudOrLocal(){return journey||{}}
 function done(id){
  const j=cloudOrLocal(),pr=j.progress||{};
  if(pr[id]==='stale')return false;
@@ -182,11 +182,8 @@ async function loadJourney(){
   const c=getClient(),{data,error}=await c.rpc('boost_load_my_journey_for_region',{p_region:'Northern Arizona'});
   if(error)throw error;
   journey=(data&&typeof data==='object')?data:{};
-  const j=journey;
-  const local=localJourney();
-  if(!Object.keys(j).length&&Object.keys(local).length)lastCloudMessage='No authenticated Northern record found. Local browser progress is shown; verify cloud save before launch.';
-  else lastCloudMessage='Northern authenticated journey loaded (read-only preview).';
- }catch(err){journey=localJourney();lastCloudMessage='Cloud load unavailable; showing local browser data only. '+(err.message||'');}
+  lastCloudMessage=Object.keys(journey).length?'Northern authenticated journey loaded (read-only preview).':'No Northern cloud journey found for this test account.';
+ }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
  render();
 }
 async function refresh(){
