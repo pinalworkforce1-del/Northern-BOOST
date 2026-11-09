@@ -8,7 +8,7 @@ const AREA_FORMS={
 };
 const $=id=>document.getElementById(id);
 const read=(k)=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch{return{}}};
-const industryMap={skilled_trades:{label:'Skilled Trades',url:'Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html',legacy:'skilledTrades'},advanced_manufacturing:{label:'Advanced Manufacturing',url:'Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html',legacy:'advancedManufacturing'},healthcare:{label:'Health Care',url:'Northern_BOOST_Healthcare_Connected_Test_v0.2.html',legacy:'healthcare'},it:{label:'Information Technology',url:'Northern_BOOST_IT_Connected_Test_v0.2.html',legacy:'it'},cdl:{label:'Transportation & Logistics',url:'Northern_BOOST_CDL_Connected_Test_v0.2.html',legacy:'cdl'},customer_service:{label:'Customer Service',url:'Northern_BOOST_Customer_Service_Connected_Test_v0.2.html',legacy:'customerService'}};
+const industryMap={skilled_trades:{label:'Skilled Trades',url:'Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html',legacy:'skilledTrades'},advanced_manufacturing:{label:'Advanced Manufacturing',url:'Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html',legacy:'advancedManufacturing'},healthcare:{label:'Health Care',url:'Northern_BOOST_Healthcare_Connected_Test_v0.2.html',legacy:'healthcare'},it:{label:'Information Technology',url:'Northern_BOOST_IT_Connected_Test_v0.2.html',legacy:'it'},cdl:{label:'Transportation & Logistics',url:'Northern_BOOST_CDL_Connected_Test_v0.2.html',legacy:'cdl'}};
 const details={
  module1:{name:'Module 1 — Discover',desc:'Identify your interests, strengths, work drivers, and occupations worth exploring.',audio:'assets/audio/rosie-map-module1.mp3',url:'Northern_BOOST_Module1_PinalFlow_v1.html'},
  module2:{name:'Module 2 — Reality Check',desc:'Compare the careers you chose with wages, hiring, preparation, and how they fit your life.',audio:'assets/audio/rosie-map-module2.mp3',url:'Northern_BOOST_Module2_PinalFlow_v1.html'},
@@ -59,7 +59,8 @@ function recommendedIndustry(){
  if(soc==='53'||/transport|logistic|cdl|truck|driver|freight|warehouse/.test(title))return'cdl';
  if(soc==='51'||/manufactur|machin|cnc|production|fabricat|automation/.test(title))return'advanced_manufacturing';
  if(['47','49'].includes(soc)||/construction|trade|electrician|plumb|hvac|weld|carpent|maintenance|repair/.test(title))return'skilled_trades';
- if(['41','43'].includes(soc)||/retail|customer service|sales|hospitality|food service/.test(title))return'customer_service';
+ // Customer service is not yet a deployed Northern applied-experience page.
+ if(['41','43'].includes(soc)||/retail|customer service|sales|hospitality|food service/.test(title))return null;
  return null;
 }
 function stale(id){
