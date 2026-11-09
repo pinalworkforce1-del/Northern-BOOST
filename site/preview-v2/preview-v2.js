@@ -19,7 +19,7 @@ const details={
  skillmobility:{name:'Finding Yourself in Work',desc:'Connect your existing skills to opportunities you could pursue now.',audio:'assets/audio/rosie-map-skillmobility.mp3',url:'rapid-employment.html'},
  jobsearch:{name:'48-Hour Job Search Strategy',desc:'Build a focused two-day plan with specific job search actions and contacts.',audio:'assets/audio/rosie-map-jobsearch.mp3',url:'https://pinalworkforce1-del.github.io/48_hour_job_search/boost.html'},
  financial:{name:'Build Strong Financial Habits',desc:'Consider the financial realities of finding and keeping employment.',audio:'assets/audio/rosie-map-financial.mp3',url:'https://pinalworkforce1-del.github.io/Financial_Assessment/'},
- ai:{name:'AI & You',desc:'Learn and practice practical AI skills with your own judgment in control.',audio:'assets/audio/rosie-map-ai.mp3',url:'https://pinalworkforce1-del.github.io/AI_Literacy/'}
+ ai:{name:'AI & You',desc:'Learn and practice practical AI skills with your own judgment in control.',audio:'assets/audio/rosie-map-ai.mp3',url:'ai-you.html'}
 };
 const orders={career:['module2','module3','module4','industry','financial','ai'],rapid:['skillmobility','jobsearch','financial','ai']};
 let client=null,user=null,journey={},portal={},selected=null,activeStep=null,lastCloudMessage='Cloud record not checked',authReady=false;
