@@ -35,7 +35,8 @@ async function tryReturn(){
  if(requiresNonce.includes(marker.module)){
   const pending=sessionStorage.getItem('boost_naz_completion_nonce:'+marker.module);
   if(marker.expectedNonce && pending===marker.expectedNonce) {
-   info.textContent='Waiting for Northern BOOST to validate the saved activity…';
+   info.textContent='Waiting for Northern BOOST to validate the saved activity. If the module did not confirm completion, reopen it and save again.';
+   manual.style.display='inline';
    return;
   }
  }
