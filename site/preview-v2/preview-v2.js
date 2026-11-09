@@ -159,7 +159,9 @@ function launch(id){
  if(id==='skillmobility'||id==='jobsearch'||id==='financial'||id==='ai'){
     const t=nonce();sessionStorage.setItem(NONCE_PREFIX+id,t);
     if(id==='jobsearch')url.searchParams.set('boost_region','northern');
-    url.searchParams.set('boost_return',new URL('preview-v2/index.html',document.baseURI).toString());
+    // Existing Northern map verifies nonce receipts and saves completion to cloud.
+    // Always return through that authoritative controller, not the preview.
+    url.searchParams.set('boost_return',new URL('index.html',document.baseURI).toString());
     url.searchParams.set('boost_module',id);
     url.searchParams.set('boost_nonce',t);
  }
@@ -169,9 +171,9 @@ function launch(id){
    if(!tab){window.location.assign(url.toString());return;}
    $('progressMessage').textContent='Activity opened in a separate tab. After saving, return here and select Refresh Progress.';
  }else{
-   const tab=window.open(url.toString(),'_blank','noopener');
-   if(!tab){window.location.assign(url.toString());return;}
-   $('progressMessage').textContent='Activity opened in a separate tab. After saving, return here and select Refresh Progress.';
+   // Same tab preserves the nonce in sessionStorage through the external module return.
+   // Northern's existing production map confirms the completion receipt and persists it.
+   window.location.assign(url.toString());
  }
 }
 async function loadJourney(){
@@ -217,8 +219,8 @@ function install(){
  $('rosieVideo').addEventListener('ended',()=>closeDialog('rosieDialog'));
  $('playStepAudio').onclick=()=>{const d=details[activeStep];if(!d?.audio)return;const a=$('stepAudio');a.src=d.audio;a.play().catch(()=>{$('audioStatus').textContent='Audio unavailable. The written explanation is still available.'})};
  $('openStep').onclick=()=>{const id=activeStep;closeDialog('stepDialog');launch(id)};
- const refresh=document.createElement('button');refresh.id='refreshProgress';refresh.type='button';refresh.className='ghost dark';refresh.textContent='↻ Refresh Progress';
- $('topActions');document.querySelector('.top-actions').insertBefore(refresh,$('signOut'));refresh.onclick=refresh;
+ const refreshButton=document.createElement('button');refreshButton.id='refreshProgress';refreshButton.type='button';refreshButton.className='ghost dark';refreshButton.textContent='↻ Refresh Progress';
+ document.querySelector('.top-actions').insertBefore(refreshButton,$('signOut'));refreshButton.onclick=refresh;
  $('signOut').onclick=async()=>{try{await getClient().auth.signOut()}finally{user=null;journey={};sessionStorage.removeItem(PICK_KEY);render();}};
  $('authForm').addEventListener('submit',async e=>{
  e.preventDefault();const em=$('email').value.trim();if(!em)return;
