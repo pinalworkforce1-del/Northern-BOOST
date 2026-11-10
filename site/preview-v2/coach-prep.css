@@ -52,3 +52,10 @@
  .source-note{color:#333!important}.score-fill{background:#777!important;print-color-adjust:exact}
  .document-guide{grid-template-columns:1fr 1fr}.document-item{break-inside:avoid}
 }
+
+/* Coach Prep uses the same Pinal illustrated design system as Northern 2.0 dashboard. */
+.hero{isolation:isolate;overflow:hidden;position:relative;background:linear-gradient(98deg,rgba(8,44,69,.99) 0%,rgba(17,65,87,.96) 58%,rgba(17,68,91,.52) 100%),url("https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/coach-preparation.webp") right 43%/cover no-repeat!important}
+.hero>*{position:relative;z-index:1}
+.story-intro{background:linear-gradient(105deg,#e4f2f7ed,#f8fbfdec),url("https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/discover.webp") 95% center/auto 160% no-repeat}
+@media(max-width:680px){.hero{background:linear-gradient(110deg,#0b344eec,#194f6aed),url("https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/coach-preparation.webp") center/cover no-repeat!important}.story-intro{background:#e8f3f8}}
+@media print{.hero,.story-intro{background:#fff!important;color:#000!important}}

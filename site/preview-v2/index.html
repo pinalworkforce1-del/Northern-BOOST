@@ -7,10 +7,10 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>Northern BOOST 2.0 | Staging Preview</title>
 <base href="../">
-<link rel="stylesheet" href="preview-v2/preview-v2.css?v=rosie-20261110">
+<link rel="stylesheet" href="preview-v2/preview-v2.css?v=art-20261110-1">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="preview-v2/preview-config.js?v=1" defer></script>
-<script src="preview-v2/preview-v2.js?v=rosie-20261110" defer></script>
+<script src="preview-v2/preview-v2.js?v=art-20261110-1" defer></script>
 <script src="preview-v2/rosie-guide-v2.js?v=20261110v2" defer></script>
 </head>
 <body>
@@ -38,19 +38,36 @@
     <div class="starter-grid">
       <article class="starter-card"><div class="starter-num">01</div><div><h3>Orientation &amp; Interest Form</h3><p>Start with your local area, orientation video, and interest questions.</p><button id="chooseArea" type="button" class="inline-btn">Choose my service area →</button><span id="startAreaState" class="micro-status"></span></div></article>
       <article class="starter-card"><div class="starter-num">02</div><div><h3>Arizona Job Connection</h3><p>Set up or access your account before working with your Career Coach.</p><a id="ajcLink" class="inline-btn" href="https://www.azjobconnection.gov/" target="_blank" rel="noopener noreferrer">Open Arizona Job Connection ↗</a><span id="ajcState" class="micro-status"></span></div></article>
-      <article class="starter-card featured"><div class="starter-num">03</div><div><h3>Module 1 — Discover</h3><p>Explore your interests and work drivers with the new embedded 30-activity Mini Interest Profiler.</p><button id="discoverBtn" type="button" class="inline-btn">Open Discover →</button><span id="discoverState" class="micro-status"></span></div></article>
+      <article class="starter-card featured art-discover"><div class="starter-num">03</div><div><h3>Module 1 — Discover</h3><p>Explore your interests and work drivers with the new embedded 30-activity Mini Interest Profiler.</p><button id="discoverBtn" type="button" class="inline-btn">Open Discover →</button><span id="discoverState" class="micro-status"></span></div></article>
     </div>
   </div>
   <section class="coach-bridge" id="coachBridge" aria-label="Coach appointment preparation">
     <div class="coach-bridge-icon" id="coachPrepIcon" aria-hidden="true">04</div>
+    <div class="coach-bridge-media" aria-hidden="true"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/coach-preparation.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
     <div class="coach-bridge-content"><span class="overline">AFTER DISCOVER · BEFORE ENROLLMENT</span><h3>Coach Appointment Prep</h3><p>Bring your saved interests, career choices, and questions to your Career Coach. The Northern team determines enrollment and next services.</p><span id="coachPrepState" class="coach-prep-state">Complete Discover to prepare</span></div>
     <button id="coachPrepButton" class="btn primary" type="button" disabled>Open Coach Prep →</button>
   </section>
   <div class="pathway-section" id="pathwaySection">
     <div class="section-heading"><div><span class="overline">PICK YOUR ROUTE</span><h2>Two pathways. One stronger next step.</h2></div><p class="heading-copy">Your path branches after Discover. Changing routes doesn't erase completed work.</p></div>
     <div class="pathway-grid">
-      <button class="pathway-choice" type="button" data-path-choice="career"><div class="path-visual career"><span class="visual-pill">EXPLORE YOUR OPTIONS</span><span class="visual-icon">✦</span></div><div class="path-card-body"><small>PATHWAY 01</small><h3>Career Exploration &amp; Development</h3><p>Test your career ideas, compare opportunities and mobility, decide on a direction, and experience the work.</p><span class="choice-action">View career pathway →</span></div><span class="selection-pill" data-path-tag="career"></span></button>
-      <button class="pathway-choice" type="button" data-path-choice="rapid"><div class="path-visual rapid"><span class="visual-pill">MOVE TOWARD WORK</span><span class="visual-icon">↗</span></div><div class="path-card-body"><small>PATHWAY 02</small><h3>Rapid Employment</h3><p>Discover your transferable skills, make a focused job-search plan, and prepare for your conversation with a coach.</p><span class="choice-action">View rapid pathway →</span></div><span class="selection-pill" data-path-tag="rapid"></span></button>
+      <button class="pathway-choice" type="button" data-path-choice="career"><div class="path-visual career">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/discover.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/validate.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/decide.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">EXPLORE YOUR OPTIONS</span>
+  <span class="path-art-caption" aria-hidden="true">DISCOVER · COMPARE · DECIDE</span>
+</div><div class="path-card-body"><small>PATHWAY 01</small><h3>Career Exploration &amp; Development</h3><p>Test your career ideas, compare opportunities and mobility, decide on a direction, and experience the work.</p><span class="choice-action">View career pathway →</span></div><span class="selection-pill" data-path-tag="career"></span></button>
+      <button class="pathway-choice" type="button" data-path-choice="rapid"><div class="path-visual rapid">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/career-mobility.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/48-hour-job-search.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/financial-habits.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">MOVE TOWARD WORK</span>
+  <span class="path-art-caption" aria-hidden="true">SKILLS · JOB SEARCH · NEXT STEPS</span>
+</div><div class="path-card-body"><small>PATHWAY 02</small><h3>Rapid Employment</h3><p>Discover your transferable skills, make a focused job-search plan, and prepare for your conversation with a coach.</p><span class="choice-action">View rapid pathway →</span></div><span class="selection-pill" data-path-tag="rapid"></span></button>
     </div>
   </div>
   <section id="journeySection" class="journey-section" aria-label="Selected BOOST pathway" hidden>

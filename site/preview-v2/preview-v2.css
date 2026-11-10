@@ -36,3 +36,116 @@
 .rosie-modal-actions{display:flex;justify-content:flex-end;margin-top:13px}
 @media(max-width:950px){.hero-figure{width:245px;min-width:220px;height:310px}.hero-figure img{height:306px}}
 @media(max-width:700px){.hero{min-height:310px;padding:32px 22px 10px}.hero-copy{padding-bottom:30px}.hero-figure{display:none}.rosie-video-dialog{padding:22px 17px}.rosie-video-heading>img{width:60px;height:69px}.rosie-intro-choices{grid-template-columns:1fr}.rosie-intro-choices button{padding:12px 13px}.rosie-intro-choices button[aria-pressed="true"]{padding:11px 12px}.rosie-video-stage{padding:10px}.rosie-video-stage video{max-height:44vh}}
+
+
+/* Northern BOOST 2.0 — Pinal artwork system. Presentation only.
+   No module selectors, link handlers, or progress logic are changed. */
+.path-visual{
+ height:205px;
+ isolation:isolate;
+ background:linear-gradient(115deg,#0d354e,#205d68);
+ overflow:hidden;
+}
+.path-visual.rapid{background:linear-gradient(115deg,#164556,#317567)}
+.path-visual:after,.path-visual.rapid:after{
+ content:"";position:absolute;inset:0;z-index:1;
+ background:linear-gradient(to bottom,rgba(5,32,50,.65),rgba(5,32,50,.08) 42%,rgba(6,28,44,.78));
+ opacity:1;pointer-events:none;
+}
+.path-art-mosaic{
+ position:absolute;inset:0;display:grid;grid-template-columns:1.12fr 1fr 1fr;
+ gap:3px;overflow:hidden;
+}
+.path-art-mosaic img{
+ display:block;min-width:0;width:100%;height:100%;object-fit:cover;
+ object-position:center center;filter:saturate(1.02) contrast(1.02);
+ transition:transform .35s ease,filter .35s ease;
+}
+.path-art-mosaic img:first-child{object-position:48% 50%}
+.pathway-choice:hover .path-art-mosaic img{transform:scale(1.035);filter:saturate(1.15)}
+.pathway-choice:focus-visible .path-art-mosaic img{transform:none}
+.path-visual .visual-pill{z-index:3;top:14px;left:16px;background:#092d43d9;color:#fff}
+.path-art-caption{
+ position:absolute;z-index:3;bottom:19px;left:20px;
+ font-size:12px;letter-spacing:.12em;font-weight:950;color:#fff;
+ text-shadow:0 2px 5px #001c32;
+}
+.pathway-choice.active{outline:3px solid #e5b35d;outline-offset:1px}
+.pathway-choice.active .path-card-body{background:#fffdf8}
+.pathway-choice .selection-pill{top:15px;right:15px}
+.path-card-body{padding:22px 24px 23px}
+.pathway-choice .choice-action{display:inline-block;padding-bottom:2px;border-bottom:1px solid #b1cddf}
+.starter-card{position:relative;isolation:isolate;overflow:hidden}
+.starter-card>div{position:relative;z-index:1}
+.starter-card.art-discover{min-height:192px;padding-right:92px;background:linear-gradient(100deg,#fff 45%,#eef8fb 100%)}
+.starter-card.art-discover:before{
+ content:"";position:absolute;right:-15px;top:0;height:100%;width:100px;
+ background:linear-gradient(90deg,#fff4,#fff0),url("https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/discover.webp") center/cover;
+ opacity:.78;pointer-events:none;
+}
+.coach-bridge{isolation:isolate;overflow:hidden;gap:16px;min-height:152px}
+.coach-bridge-icon{align-self:center}
+.coach-bridge-media{
+ width:125px;height:100px;border-radius:12px;overflow:hidden;
+ flex:0 0 125px;background:linear-gradient(140deg,#cae6ef,#7bb2c5);
+ box-shadow:0 3px 15px #2046581c;
+}
+.coach-bridge-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.coach-bridge-content{min-width:0}
+.coach-bridge .btn{min-width:145px}
+.step-card{
+ grid-template-columns:48px 120px minmax(0,1fr) auto;
+ gap:17px;min-height:128px;
+ padding:15px 20px;
+ transition:border-color .2s,box-shadow .2s;
+}
+.step-card:hover{border-color:#b3d1df;box-shadow:0 8px 23px #123d5b14}
+.step-card .step-number{width:43px;height:43px;border-radius:12px}
+.step-art{
+ width:120px;height:88px;display:block;overflow:hidden;
+ background:linear-gradient(135deg,#c8e7f0,#ebf5f8);
+ border:1px solid #d6e5ed;border-radius:12px;
+}
+.step-art img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.step-art.art-unavailable{background:linear-gradient(140deg,#d2e7ef,#f0f7fa)}
+.step-card.completed .step-art{border-color:#c6e2d3}
+.step-card.locked .step-art{opacity:.5;filter:grayscale(.7)}
+.step-card.completed .step-content h3{color:#164c60}
+.step-card .step-content{min-width:0}
+.step-card .step-content p{max-width:600px}
+.step-controls{align-items:center}
+.step-controls .small-btn{min-height:37px}
+@media(max-width:1080px){
+ .step-card{grid-template-columns:45px 100px minmax(0,1fr);gap:14px}
+ .step-art{width:100px;height:77px}
+ .step-controls{grid-column:3;justify-content:flex-start}
+ .coach-bridge-media{width:95px;height:87px;flex-basis:95px}
+}
+@media(max-width:760px){
+ .path-visual{height:180px}
+ .path-art-caption{font-size:10px;left:15px}
+ .coach-bridge{grid-template-columns:44px minmax(0,1fr);gap:10px}
+ .coach-bridge-media{display:none}
+ .coach-bridge .btn{grid-column:1/-1;min-width:0;width:100%}
+ .step-card{grid-template-columns:40px 76px minmax(0,1fr);gap:10px;padding:13px 12px}
+ .step-art{width:76px;height:72px}
+ .step-card .step-number{width:37px;height:37px}
+ .step-card .step-content h3{font-size:14px}
+ .step-card .step-content p{font-size:12px}
+ .step-controls{grid-column:1/-1;justify-content:flex-start;gap:8px}
+ .step-controls .small-btn{flex:1 1 auto}
+ .starter-card.art-discover{padding-right:70px}
+ .starter-card.art-discover:before{width:85px}
+}
+@media(max-width:420px){
+ .step-card{grid-template-columns:35px 62px minmax(0,1fr)}
+ .step-art{width:62px;height:69px}
+ .path-art-mosaic{grid-template-columns:1fr 1fr}
+ .path-art-mosaic img:last-child{display:none}
+ .starter-card.art-discover{padding-right:58px}
+ .starter-card.art-discover:before{width:67px}
+}
+@media(prefers-reduced-motion:reduce){
+ .path-art-mosaic img,.step-card{transition:none}
+ .pathway-choice:hover .path-art-mosaic img{transform:none}
+}
