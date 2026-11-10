@@ -57,7 +57,7 @@ async function refreshCloudJourney(){
  cloudJourney=data&&typeof data==='object'?data:{};
  return cloudJourney;
 }
-function rawShared(){return read(SHARED_KEY)}
+function rawShared(){return {}}
 function rawPortal(){return read(PORTAL_KEY)}
 function currentWage(j,s){return j?.participant?.currentHourlyWage||j?.module2?.currentHourlyWage||j?.module2?.wageBaseline?.hourly||s?.module2?.currentHourlyWage||s?.module2?.wageBaseline?.hourly||j?.module3?.currentWage||s?.module3?.currentWage||null}
 function sanitizedJourney(){
@@ -129,8 +129,8 @@ async function ask(question,body,send){
   addMsg(body,'user',question);pushHistory('user',question);send.disabled=true;
   const t=thinking(body),started=Date.now();
   try{
-    const[token,all]=await Promise.all([accessToken(),loadOccupations()]);
-    if(!token){t.stop();t.el.remove();addMsg(body,'system','Ask Rosie uses your secure Northern BOOST sign-in. Open Module 1 and sign in with your email, then return here. If you chose “Continue on this device for now,” Rosie will stay unavailable until you sign in.');return}
+    const token=await accessToken();if(!token){t.stop();t.el.remove();addMsg(body,'system','Please sign in to Northern BOOST 2.0 so Rosie can use your saved progress.');return}const all=await loadOccupations();
+    if(!token){t.stop();t.el.remove();addMsg(body,'system','Rosie needs a secure Northern BOOST sign-in to access saved progress. Sign in on the BOOST 2.0 dashboard, then return to Ask Rosie.');return}
     try{await refreshCloudJourney()}catch(e){t.stop();t.el.remove();addMsg(body,'system','Rosie could not securely load your Northern BOOST saved progress. No participant data was changed. Please try again. '+e.message);return}
  const focus=findFocus(all,question),items=relevantOccupations(all,question,focus);
     const response=await fetch(ENDPOINT,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({question,journey:sanitizedJourney(),focusOccupation:focus,occupations:items,history:history.slice(-10),page:pageLabel()})});
@@ -150,7 +150,31 @@ function build(){
   const launch=document.createElement('button');launch.id='northernAskRosieLaunch';launch.type='button';launch.innerHTML=`<img src="${ROSIE_IMG}" alt=""><span>Ask Rosie</span>`;document.body.appendChild(launch);
   const panel=document.createElement('section');panel.id='northernAskRosiePanel';panel.setAttribute('aria-label','Ask Rosie — Northern BOOST Career Coach');panel.innerHTML=`<div class="narHead"><img src="${ROSIE_IMG}" alt="Rosie"><div class="narHeadText"><b>Ask Rosie</b><span>Northern Arizona Career Guide • your results and next steps</span></div><button class="narClose" type="button" aria-label="Close Ask Rosie">×</button></div><div class="narBody"><div class="narWelcome"><b>Hi — I’m Rosie.</b> Ask me a normal question about your BOOST results, Northern Arizona jobs and wages, career mobility, training, or what your evidence means. The Northern Recommendation Gate controls what BOOST proactively surfaces — it never tells you what you are allowed to explore.</div><div class="narStarters"><button class="narChip" type="button">Why am I seeing my careers?</button><button class="narChip" type="button">Compare my saved careers</button><button class="narChip" type="button">What careers pay more than my current wage?</button><button class="narChip" type="button">What training options are approved?</button><button class="narChip" type="button">Explain my Module 4 direction</button></div></div><div class="narFoot"><div class="narForm"><textarea aria-label="Ask Rosie a question" placeholder="Ask Rosie about your career evidence…"></textarea><button class="narSend" type="button">Send</button></div><div class="narHint">Rosie uses your Northern BOOST journey, Northern Arizona labor-market evidence, approved O*NET evidence, approved Arizona ETPL data, and your Northern BOOST map progress. Eligibility and funding decisions stay with your Career Coach.</div></div>`;document.body.appendChild(panel);
   const body=panel.querySelector('.narBody'),input=panel.querySelector('textarea'),send=panel.querySelector('.narSend');
-  function open(){panel.classList.add('open');launch.style.display='none';setTimeout(()=>input.focus(),30)}function close(){panel.classList.remove('open');launch.style.display='flex';launch.focus()}function go(){const q=input.value.trim();if(!q||send.disabled)return;input.value='';ask(q,body,send)}
+   const stage=pageLabel();
+   const intro=panel.querySelector('.narWelcome');
+   intro.textContent=stage.includes('Coach Appointment Prep')
+     ? 'Hi, I’m Rosie. I can help you review your saved Discover interests, dream-work preferences, and career choices before your Northern Arizona Career Coach appointment. No sensitive documents or personal circumstances need to be entered here.'
+     : stage.includes('embedded')
+       ? 'Hi, I’m Rosie. Start with the Career Mindmap and then explore the 30-activity BOOST Mini Interest Profiler. I can help explain your results, career ideas, and Northern Arizona opportunities without choosing a career for you.'
+       : 'Hi, I’m Rosie. Ask me about your saved Northern BOOST progress, your interests, and what comes next. I’ll use your authenticated Northern journey and regional career evidence to support the conversation.';
+   const suggestions=stage.includes('Coach Appointment Prep')
+     ? ['What do my O*NET scores suggest about my interests?','How do my work preferences relate to the careers I chose?','What should I ask my Career Coach?','Which documents should I gather for my appointment?']
+     : stage.includes('embedded')
+       ? ['What is the BOOST 30-activity Mini Interest Profiler?','How do my work drivers relate to my O*NET interests?','Why did BOOST suggest these careers?','What do Northern Arizona opportunity labels mean?']
+       : ['What is my next step in Northern BOOST?','Help me understand my saved O*NET scores','Compare the occupations I am exploring','How should I prepare for my Career Coach conversation?'];
+   const suggested=panel.querySelector('.narStarters');suggested.replaceChildren();
+   for(const question of suggestions){const button=document.createElement('button');button.type='button';button.className='narChip';button.textContent=question;suggested.append(button)}
+   for(const img of [launch.querySelector('img'),panel.querySelector('.narHead img')]){
+     img?.addEventListener('error',()=>{if(img.src!==ROSIE_FALLBACK)img.src=ROSIE_FALLBACK},{once:true});
+   }
+   const polish=document.createElement('style');
+   polish.textContent='#northernAskRosiePanel .narWelcome{border-left:4px solid #dfb25e}#northernAskRosiePanel .narChip{background:#edf5f9;border-color:#c3d8e4;text-align:left;white-space:normal}#northernAskRosiePanel .narHeadText span{line-height:1.35}';
+   document.head.append(polish);
+  function open(){panel.classList.add('open');launch.style.display='none';setTimeout(()=>input.focus(),30)}
+   function close(){panel.classList.remove('open');launch.style.display='flex';launch.focus()}
+   window.NorthernRosieV2={open(prompt){open();if(prompt){input.value=String(prompt).slice(0,1300);input.focus()}}};
+   document.addEventListener('click',e=>{const button=e.target.closest('[data-northern-rosie-question]');if(!button)return;e.preventDefault();window.NorthernRosieV2.open(button.dataset.northernRosieQuestion||'')});
+   function go(){const q=input.value.trim();if(!q||send.disabled)return;input.value='';ask(q,body,send)}
   launch.addEventListener('click',open);panel.querySelector('.narClose').addEventListener('click',close);send.addEventListener('click',go);input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go()}});panel.querySelectorAll('.narChip').forEach(b=>b.addEventListener('click',()=>{input.value=b.textContent||'';go()}));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
   loadOccupations().catch(e=>console.warn('Northern Ask Rosie LMI preload failed',e));
