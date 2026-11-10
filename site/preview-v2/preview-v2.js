@@ -130,6 +130,17 @@ function render(){
  info.append(k,strong,para);n.append(info);
  if(next&&available(next)){const b=document.createElement('button');b.className='btn primary';b.textContent='Open next step →';b.onclick=()=>launch(next);n.append(b);}
  const stepList=$('stepList');stepList.replaceChildren();
+ const ART_BASE='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/';
+ const STEP_ART=Object.freeze({
+   module2:'validate.webp',
+   module3:'career-mobility.webp',
+   module4:'decide.webp',
+   industry:'industry-skills.webp',
+   financial:'financial-habits.webp',
+   ai:'ai-and-you.webp',
+   skillmobility:'career-mobility.webp',
+   jobsearch:'48-hour-job-search.webp'
+ });
  orders[selected].forEach((id,i)=>{
    const complete=done(id),unlocked=available(id),review=stale(id);const article=document.createElement('article');
    article.className='step-card'+(complete?' completed':'')+(!unlocked?' locked':'');
@@ -142,7 +153,13 @@ function render(){
    const controls=document.createElement('div');controls.className='step-controls';
    const explain=document.createElement('button');explain.className='small-btn';explain.textContent='Ask Rosie';explain.onclick=()=>explainStep(id);controls.append(explain);
    const go=document.createElement('button');go.className='small-btn launch';go.textContent=complete?'Review again →':'Open activity →';go.disabled=!unlocked;go.onclick=()=>launch(id);controls.append(go);
-   article.append(badge,body,controls);stepList.append(article);
+   // Decorative art only: preserve original completion state, launch controls and handlers.
+   const media=document.createElement('div');media.className='step-art';media.setAttribute('aria-hidden','true');
+   const art=document.createElement('img');art.alt='';art.loading='lazy';art.decoding='async';
+   art.src=ART_BASE+(STEP_ART[id]||'discover.webp');
+   art.onerror=()=>{media.classList.add('art-unavailable');art.remove();};
+   media.append(art);
+   article.append(badge,media,body,controls);stepList.append(article);
  });
  $('syncStatus').textContent=lastCloudMessage;
 }
