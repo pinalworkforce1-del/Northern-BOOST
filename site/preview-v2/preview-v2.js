@@ -167,6 +167,8 @@ function launch(id){
  const d=details[id];if(!d)return;let target=d.url;
  if(id==='industry'){const key=recommendedIndustry();if(!key||!industryMap[key]){explainStep(id);return}target=industryMap[key].url;}
  if(!target)return;
+ // Coach preparation saves its own atomic cloud record; no legacy completion-return marker.
+ if(id==='coachAppointmentPrep'){sessionStorage.removeItem(RETURN_KEY);window.location.assign(new URL(target,document.baseURI).toString());return;}
  // Preserve existing Northern progression keys only when intentionally entering a test activity.
  if(selected) localStorage.setItem(PATH_KEY,selected);
  const url=new URL(target,document.baseURI);
