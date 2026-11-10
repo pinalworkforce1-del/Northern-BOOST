@@ -7,10 +7,10 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>Northern BOOST 2.0 | Staging Preview</title>
 <base href="../">
-<link rel="stylesheet" href="preview-v2/preview-v2.css?v=1">
+<link rel="stylesheet" href="preview-v2/preview-v2.css?v=rosie-20261110">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="preview-v2/preview-config.js?v=1" defer></script>
-<script src="preview-v2/preview-v2.js?v=1" defer></script>
+<script src="preview-v2/preview-v2.js?v=rosie-20261110" defer></script>
 <script src="preview-v2/rosie-guide-v2.js?v=20261110v2" defer></script>
 </head>
 <body>
@@ -25,9 +25,9 @@
     <div class="eyebrow">ARIZONA@WORK · NORTHERN ARIZONA</div>
     <h1>Build your next move.</h1>
     <p>Explore careers, test what works in the real world, and prepare for your next step with evidence you and your Career Coach can use.</p>
-    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button><button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie</button></div>
+    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button><button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie · Pathway Introductions</button></div>
   </div>
-  <div class="hero-figure"><img src="assets/images/rosie-master.webp" alt="Rosie, your Northern BOOST career guide"><div class="rosie-bubble"><strong>Hi, I'm Rosie!</strong><span>I'll help you see what comes next.</span></div></div>
+  <div class="hero-figure"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp" alt="Rosie, your BOOST career guide" onerror="this.onerror=null;this.src='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp'"></div>
 </section>
 <section class="app-shell" id="appShell" hidden>
   <div class="section-heading"><div><span class="overline">YOUR BOOST JOURNEY</span><h2>Your progress, all in one place.</h2></div><div class="progress-total"><strong id="progressPercent">0%</strong><small id="progressCaption">Getting started</small></div></div>
@@ -67,8 +67,37 @@
 </main>
 <footer>BOOST · Northern Arizona · Staging experience. <a href="index.html" target="_blank" rel="noopener">Open existing Northern BOOST</a></footer>
 <div class="overlay" id="areaDialog" hidden role="dialog" aria-modal="true" aria-labelledby="areaTitle"><div class="dialog"><button class="close" type="button" data-close="areaDialog" aria-label="Close">×</button><div class="overline">GET STARTED</div><h2 id="areaTitle">Choose your Northern Arizona service area</h2><p>Each form includes your orientation video and interest questions.</p><div class="dialog-options"><button type="button" data-area="coconino"><strong>Coconino County</strong><span>Open the local BOOST Priority of Service Application</span></button><button type="button" data-area="agn"><strong>Apache, Gila &amp; Navajo Counties</strong><span>Open the northeastern Arizona BOOST Priority of Service Application</span></button></div></div></div>
-<div class="overlay" id="rosieDialog" hidden role="dialog" aria-modal="true" aria-labelledby="rosieTitle"><div class="dialog video-dialog"><button class="close" type="button" data-close="rosieDialog" aria-label="Close">×</button><div class="overline">YOUR BOOST GUIDE</div><h2 id="rosieTitle">Meet Rosie</h2><p>A short, optional introduction to your Northern BOOST journey. You can skip at any time.</p><video id="rosieVideo" controls playsinline preload="none" poster="assets/images/boost-home-mountain-outcomes-v3.webp"><source src="assets/video/rosie-boost-intro-web.mp4" type="video/mp4"><track src="assets/captions/rosie-boost-intro.vtt" kind="captions" srclang="en" label="English" default></video><button class="btn secondary" type="button" data-close="rosieDialog">Continue to my pathway →</button></div></div>
-<div class="overlay" id="stepDialog" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><div class="dialog"><button class="close" type="button" data-close="stepDialog" aria-label="Close">×</button><div class="rosie-dialog-head"><img src="assets/images/rosie-master.webp" alt=""><div><div class="overline">ROSIE EXPLAINS</div><h2 id="stepTitle">Your next step</h2></div></div><p id="stepDescription"></p><p id="stepRequirement" class="requirement"></p><audio id="stepAudio" preload="none"></audio><div class="dialog-actions"><button class="btn secondary" id="playStepAudio" type="button">▶ Listen to Rosie</button><button class="btn secondary" id="askStepRosie" type="button">Ask Rosie a question</button><button class="btn primary" id="openStep" type="button" hidden>Open this step →</button></div><p id="audioStatus" class="subtle"></p></div></div>
+
+<div class="overlay" id="rosieDialog" hidden role="presentation">
+ <section class="dialog video-dialog rosie-video-dialog" role="dialog" aria-modal="true" aria-labelledby="rosieTitle" aria-describedby="rosieContext">
+  <button class="close" type="button" data-close="rosieDialog" aria-label="Close Rosie introduction">×</button>
+  <div class="rosie-video-heading">
+   <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, your BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'">
+   <div><div class="overline">YOUR NORTHERN BOOST GUIDE</div><h2 id="rosieTitle">Meet Rosie</h2><p>Discover your pathway with Rosie’s updated BOOST 2.0 introductions and recorded narration.</p></div>
+  </div>
+  <p id="rosieContext" class="rosie-local-note"><strong>Northern Arizona:</strong> Begin with Module 1 — Discover, prepare for your initial Career Coach / enrollment review, and then work through your assigned pathway. Your coach confirms appointments and enrollment.</p>
+  <div class="rosie-intro-choices" role="group" aria-label="Choose a pathway introduction">
+    <button id="rosieCareerIntro" type="button" data-rosie-intro="career" aria-pressed="false"><strong>Career Exploration &amp; Development</strong><span>Explore careers and test the evidence</span></button>
+    <button id="rosieRapidIntro" type="button" data-rosie-intro="rapid" aria-pressed="false"><strong>Rapid Employment</strong><span>Build on existing skills and move toward work</span></button>
+  </div>
+  <div id="rosieVideoStage" class="rosie-video-stage" hidden>
+    <h3 id="rosieVideoTitle">Pathway introduction</h3>
+    <video id="rosieVideo" controls playsinline preload="metadata" poster="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp"></video>
+    <p class="rosie-intro-status" id="rosieVideoStatus" role="status" aria-live="polite">Choose Play to hear Rosie introduce this pathway.</p>
+    <a id="rosieVideoFallback" href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/video/rosie-boost2-career-exploration.mp4" target="_blank" rel="noopener noreferrer" hidden>Open recording in a new tab ↗</a>
+  </div>
+  <details id="rosieOverview" class="rosie-overview">
+    <summary><span>Listen to Rosie explain both BOOST pathways</span><small>Optional recorded overview · about 1½ minutes</small></summary>
+    <div class="rosie-overview-body">
+      <p>Before selecting a route, hear how Rapid Employment and Career Exploration both support employment. The recorded overview is shared with Pinal BOOST 2.0; the Northern-specific appointment sequence appears above.</p>
+      <audio id="rosieOverviewAudio" controls preload="none" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/audio/boost-pathways.mp3" aria-label="Rosie explaining the two BOOST pathways"></audio>
+      <p class="source-note"><a href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/captions/boost-pathways-en-US.vtt" target="_blank" rel="noopener noreferrer">Read the recorded narration captions ↗</a></p>
+    </div>
+  </details>
+  <div class="rosie-modal-actions"><button class="btn secondary" type="button" data-close="rosieDialog">Continue to my BOOST journey →</button></div>
+ </section>
+</div>
+<div class="overlay" id="stepDialog" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><div class="dialog"><button class="close" type="button" data-close="stepDialog" aria-label="Close">×</button><div class="rosie-dialog-head"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'"><div><div class="overline">ROSIE EXPLAINS</div><h2 id="stepTitle">Your next step</h2></div></div><p id="stepDescription"></p><p id="stepRequirement" class="requirement"></p><audio id="stepAudio" preload="none"></audio><div class="dialog-actions"><button class="btn secondary" id="playStepAudio" type="button">▶ Listen to Rosie</button><button class="btn secondary" id="askStepRosie" type="button">Ask Rosie a question</button><button class="btn primary" id="openStep" type="button" hidden>Open this step →</button></div><p id="audioStatus" class="subtle"></p></div></div>
 <script>document.documentElement.classList.add('js');</script>
 </body>
 </html>
