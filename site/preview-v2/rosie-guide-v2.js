@@ -3,7 +3,7 @@
 if(window.__NORTHERN_ROSIE_STAGE_V2__)return;
 window.__NORTHERN_ROSIE_STAGE_V2__=true;
 
-const ENDPOINT='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/boost-ask-rosie-northern-v172';
+const ENDPOINT='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/boost-ask-rosie-northern-v173';
 const JOURNEY_KEY='boost_naz_journey_v1';
 const SHARED_KEY='northern_boost_career_exploration_v1';
 const PORTAL_KEY='boost_naz_portal_progress_v1';
@@ -66,18 +66,24 @@ function sanitizedJourney(){
     region:'Northern Arizona',
     participant:{name:j?.participant?.name||'',currentHourlyWage:currentWage(j,s)},
     progress:j.progress||{},
+    appliedModules:j.appliedModules||{},
+    sharedModules:j.sharedModules||{},
     portal:{
       pathway:path,
       map:p,
       career:{financialMarked:!!p?.career?.financial,aiMarked:!!p?.career?.ai},
       rapid:{skillMobilityMarked:!!p?.rapid?.skillmobility,jobSearchMarked:!!p?.rapid?.jobsearch,financialMarked:!!p?.rapid?.financial,aiMarked:!!p?.rapid?.ai},
-      completionSource:'Northern BOOST map interaction state; treat missing markers as not currently marked complete, not proof an activity was never completed.'
+      completionSource:'Northern BOOST authenticated regional cloud journey is authoritative. Browser pathway selection is a navigation preference, not proof of staff enrollment or appointment attendance.'
     },
     modules:{
       module1:j.module1||s.module1||{},
       module2:j.module2||s.module2||{},
       module3:j.module3||s.module3||{},
       module4:j.module4||s.module4||{},
+      financial:j.modules?.financial||j.sharedModules?.financial||{},
+      ai:j.modules?.ai||j.sharedModules?.ai||{},
+      skillmobility:j.modules?.skillmobility||{},
+      jobsearch:j.modules?.jobsearch||{},
        coachAppointmentPrep:{acknowledged:!!j.modules?.coachAppointmentPrep?.readyAt,readyAt:j.modules?.coachAppointmentPrep?.readyAt||null,discussionTopics:Array.isArray(j.modules?.coachAppointmentPrep?.discussionTopics)?j.modules.coachAppointmentPrep.discussionTopics.slice(0,8):[]}
     }
   };
@@ -161,7 +167,7 @@ function build(){
      ? ['What do my O*NET scores suggest about my interests?','How do my work preferences relate to the careers I chose?','What should I ask my Career Coach?','Which documents should I gather for my appointment?']
      : stage.includes('embedded')
        ? ['What is the BOOST 30-activity Mini Interest Profiler?','How do my work drivers relate to my O*NET interests?','Why did BOOST suggest these careers?','What do Northern Arizona opportunity labels mean?']
-       : ['What is my next step in Northern BOOST?','Help me understand my saved O*NET scores','Compare the occupations I am exploring','How should I prepare for my Career Coach conversation?'];
+       : ['What is my next step in Northern BOOST?','When is my first Career Coach meeting?','Compare the occupations I am exploring','What happens after I finish my BOOST pathway?'];
    const suggested=panel.querySelector('.narStarters');suggested.replaceChildren();
    for(const question of suggestions){const button=document.createElement('button');button.type='button';button.className='narChip';button.textContent=question;suggested.append(button)}
    for(const img of [launch.querySelector('img'),panel.querySelector('.narHead img')]){
