@@ -240,6 +240,13 @@ function install(){
  });
  $('rosieVideo').addEventListener('ended',()=>closeDialog('rosieDialog'));
  $('playStepAudio').onclick=()=>{const d=details[activeStep];if(!d?.audio)return;const a=$('stepAudio');a.src=d.audio;a.play().catch(()=>{$('audioStatus').textContent='Audio unavailable. The written explanation is still available.'})};
+ $('askStepRosie').onclick=()=>{
+ const id=activeStep,d=details[id];if(!d)return;
+ closeDialog('stepDialog');
+ const prompt='I am looking at '+d.name+' in Northern BOOST. '+d.desc+' Can you help me understand how it connects to my saved progress and what to discuss with my Career Coach?';
+ if(window.NorthernRosieV2?.open)window.NorthernRosieV2.open(prompt);
+ else $('progressMessage').textContent='Rosie is unavailable right now. You can still open this activity.';
+ };
  $('openStep').onclick=()=>{const id=activeStep;closeDialog('stepDialog');launch(id)};
  const refreshButton=document.createElement('button');refreshButton.id='refreshProgress';refreshButton.type='button';refreshButton.className='ghost dark';refreshButton.textContent='↻ Refresh Progress';
  document.querySelector('.top-actions').insertBefore(refreshButton,$('signOut'));refreshButton.onclick=refresh;
