@@ -89,7 +89,7 @@ function setVisible(){
 function showDialog(id){$(id).hidden=false;document.body.style.overflow='hidden';}
 function closeDialog(id){
  $(id).hidden=true;document.body.style.overflow='';
- if(id==='rosieDialog')$('rosieVideo').pause();
+ if(id==='rosieDialog'){ $('rosieVideo').pause();$('rosieOverviewAudio').pause(); }
  if(id==='stepDialog'){const a=$('stepAudio');a.pause();a.currentTime=0;}
 }
 function render(){
@@ -223,7 +223,39 @@ async function boot(){
  else{setMessage('Enter your test-account email to receive a secure code.');}
 }
 function install(){
- $('chooseArea').onclick=()=>showDialog('areaDialog');$('meetRosie').onclick=()=>showDialog('rosieDialog');
+ $('chooseArea').onclick=()=>showDialog('areaDialog');
+ const INTRO_MEDIA={
+   career:{title:'Career Exploration & Development',src:'https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/video/rosie-boost2-career-exploration.mp4'},
+   rapid:{title:'Rapid Employment',src:'https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/video/rosie-boost2-rapid-reemployment.mp4'}
+ };
+ let introLoaded=null;
+ function offerIntro(type){
+   const chosen=type==='rapid'?'rapid':'career',data=INTRO_MEDIA[chosen];
+   const video=$('rosieVideo');const stage=$('rosieVideoStage'),status=$('rosieVideoStatus');
+   $('rosieOverviewAudio').pause();
+   $('rosieVideoTitle').textContent='Rosie Introduces '+data.title;
+   $('rosieVideoFallback').href=data.src;$('rosieVideoFallback').hidden=true;
+   video.pause();video.removeAttribute('src');video.load();video.src=data.src;video.load();
+   introLoaded=chosen;stage.hidden=false;status.textContent='Video ready. Choose Play when you are ready.';
+   document.querySelectorAll('[data-rosie-intro]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.rosieIntro===chosen)));
+   showDialog('rosieDialog');
+ }
+ $('meetRosie').onclick=()=>{
+   const chosen=selected==='rapid'?'rapid':'career';
+   offerIntro(chosen);
+ };
+ document.querySelectorAll('[data-rosie-intro]').forEach(button=>button.onclick=()=>offerIntro(button.dataset.rosieIntro));
+ $('rosieVideo').addEventListener('error',()=>{
+   $('rosieVideoStatus').textContent='The video could not load here. You can continue your pathway or open the recording in a separate tab.';
+   $('rosieVideoFallback').hidden=false;
+ });
+ $('rosieVideo').addEventListener('loadedmetadata',()=>{
+   $('rosieVideoStatus').textContent='Optional recorded introduction with Rosie. Choose Play to listen.';
+ });
+ $('rosieOverview').addEventListener('toggle',()=>{
+   if($('rosieOverview').open){$('rosieVideo').pause()}
+   else{$('rosieOverviewAudio').pause()}
+ });
  $('resumeBtn').onclick=()=>{if(!user){$('authGate').scrollIntoView({behavior:'smooth'});return;}if(!selected){$('pathwaySection').scrollIntoView({behavior:'smooth'});return;}const id=nextId();if(id)launch(id);else $('journeySection').scrollIntoView({behavior:'smooth'});};
  $('discoverBtn').onclick=()=>launch('module1');
  $('coachPrepButton').onclick=()=>launch('coachAppointmentPrep');
@@ -238,8 +270,8 @@ function install(){
    localStorage.setItem(AREA_KEY,k);portal=read(PORTAL_KEY);portal.visited=portal.visited||{};portal.visited.startarea=true;portal.serviceArea=k;localStorage.setItem(PORTAL_KEY,JSON.stringify(portal));render();
    closeDialog('areaDialog');window.open(AREA_FORMS[k],'_blank','noopener');
  });
- $('rosieVideo').addEventListener('ended',()=>closeDialog('rosieDialog'));
- $('playStepAudio').onclick=()=>{const d=details[activeStep];if(!d?.audio)return;const a=$('stepAudio');a.src=d.audio;a.play().catch(()=>{$('audioStatus').textContent='Audio unavailable. The written explanation is still available.'})};
+ $('rosieVideo').addEventListener('ended',()=>{$('rosieVideoStatus').textContent='Introduction complete. Continue to your Northern BOOST journey whenever you are ready.';});
+ $('playStepAudio').onclick=()=>{closeDialog('stepDialog');offerIntro(selected==='rapid'?'rapid':'career')};
  $('askStepRosie').onclick=()=>{
  const id=activeStep,d=details[id];if(!d)return;
  closeDialog('stepDialog');
