@@ -6,10 +6,10 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>Northern BOOST | Coach Appointment Prep</title>
 <base href="../">
-<link rel="stylesheet" href="preview-v2/coach-prep.css?v=1">
+<link rel="stylesheet" href="preview-v2/coach-prep.css?v=2">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script defer src="preview-v2/preview-config.js?v=1"></script>
-<script defer src="preview-v2/coach-prep.js?v=1"></script>
+<script defer src="preview-v2/coach-prep.js?v=2"></script>
 </head>
 <body>
 <header class="topbar"><a href="preview-v2/index.html" class="brand">← Northern BOOST 2.0</a><span class="tag">STAGING · TEST ACCOUNT ONLY</span></header>
@@ -17,13 +17,15 @@
 <section class="hero"><div class="eyebrow">BETWEEN DISCOVER &amp; YOUR NEXT PATHWAY</div><h1>Let's get ready for your Career Coach conversation.</h1><p>You've explored careers that might fit. Now bring your discoveries, questions, and next-step priorities to the team before enrollment or service planning.</p><div class="hero-badge"><img src="assets/images/rosie-master.webp" alt="Rosie, your BOOST guide"><div><b>Rosie's reminder</b><span>You're not expected to have every answer. Your coach will help you decide what comes next.</span></div></div></section>
 <div class="notice" id="loadStatus" role="status" aria-live="polite">Checking your secure Northern BOOST record…</div>
 <div id="mainContent" hidden>
-<section class="card"><div class="eyebrow">YOUR SAVED DISCOVER EVIDENCE</div><h2>Your coach conversation brief</h2><p class="muted">These details are drawn from Northern BOOST Module 1. They are conversation starters—not an eligibility determination, a job-placement guarantee, or a final career decision.</p>
-<div class="brief-grid">
-<div class="brief-item"><small>Participant</small><strong id="participantName">—</strong></div>
-<div class="brief-item"><small>O*NET interest themes</small><strong id="interestSummary">—</strong></div>
-<div class="brief-item wide"><small>Careers I'm interested in</small><div class="careers" id="careerList">No career choices saved.</div></div>
-<div class="brief-item wide"><small>Work conditions that matter to me</small><div id="driverList" class="chips"></div></div>
-</div></section>
+<section class="card"><div class="eyebrow">YOUR DISCOVER STORY · FROM MODULE 1</div><h2>Let's talk about what you discovered.</h2><p class="muted">Your responses, interests, and career choices are the starting point for a conversation—not a decision about which job you should choose. This brief uses the evidence you saved in Northern BOOST Discover.</p>
+<div class="story-intro"><div class="story-avatar">01</div><div><span class="story-overline">A conversation about you</span><h3 id="storyGreeting">Your career story starts here.</h3><p id="storyOverview">Loading your saved Module 1 results…</p></div></div>
+<div class="story-section"><div class="story-num">1</div><div class="story-body"><div class="story-heading"><h3>These are my O*NET interest scores.</h3><span class="story-kicker">WHAT INTERESTS ME</span></div><p id="onetNarrative">Reading your six O*NET interest themes…</p><div class="score-bars" id="scoreBars" aria-label="Your six O*NET interest scores"></div><p class="interpretation" id="onetInterpretation"></p><p class="source-note">O*NET interest scores describe activities you may enjoy. They do not measure ability, qualifications, job readiness, or hiring prospects. Interpret your relative interest pattern rather than treating the scores as a grade.</p></div></div>
+<div class="story-section"><div class="story-num">2</div><div class="story-body"><div class="story-heading"><h3>This is the work I pictured for myself.</h3><span class="story-kicker">MY DREAM-WORK CLUES</span></div><p id="dreamNarrative">Reading your answers about the work that feels right…</p><div class="evidence-rows" id="dreamEvidence"></div></div></div>
+<div class="story-section"><div class="story-num">3</div><div class="story-body"><div class="story-heading"><h3>These work preferences matter to me.</h3><span class="story-kicker">MY WORK DRIVERS &amp; LIFE FIT</span></div><p id="preferencesNarrative"></p><div class="chips" id="driverList"></div><div id="lifeFit" class="evidence-rows"></div></div></div>
+<div class="story-section"><div class="story-num">4</div><div class="story-body"><div class="story-heading"><h3>Here's how my preferences connect to my O*NET interests.</h3><span class="story-kicker">LOOKING FOR CONNECTIONS</span></div><p id="profileConnection"></p><div id="connectionDetails" class="connection-list"></div><p class="source-note">These are reflective connections between your stated preferences and RIASEC interest themes—not a separate psychometric assessment. Some preferences, such as income and schedule, require real-world research rather than an O*NET interest score.</p></div></div>
+<div class="story-section"><div class="story-num">5</div><div class="story-body"><div class="story-heading"><h3>These are the occupations I'm considering.</h3><span class="story-kicker">MY CAREER OPTIONS</span></div><p id="careerIntro"></p><div class="occupation-grid" id="careerList"></div><p class="source-note">Career connections are carried from Northern BOOST Module 1, using its saved interest and work-driver comparisons where available. They are not predictions of success or guarantees of employment. Local opportunity evidence is a separate consideration.</p></div></div>
+<div class="story-summary"><span class="story-overline">WHAT TO DISCUSS WITH MY COACH</span><h3>What fits, what needs checking, and what comes next?</h3><p id="coachSummary"></p><div id="coachPrompts" class="coach-prompts"></div></div>
+</section>
 <section class="card"><div class="eyebrow">PREPARE FOR YOUR CONVERSATION</div><h2>What should we talk about?</h2>
 <p class="muted">Select what you want to cover. You can discuss private circumstances directly with your coach; do not enter sensitive personal information here.</p>
 <div class="check-grid" id="topics">
@@ -37,14 +39,30 @@
 <label class="field" for="myQuestion">One question I want to ask my coach <small>(optional; avoid sensitive details)</small></label>
 <textarea id="myQuestion" maxlength="600" rows="3" placeholder="Example: Which of my career ideas should I research next?"></textarea>
 </section>
-<section class="card"><div class="eyebrow">WHAT TO BRING</div><h2>A short appointment checklist</h2><p class="muted">Your local team will explain what is actually needed for eligibility and enrollment. Missing documents should not prevent you from asking for help.</p>
-<div class="check-grid docs" id="documents">
-<label><input type="checkbox" value="My saved BOOST Discover results"><span>My saved BOOST Discover results</span></label>
-<label><input type="checkbox" value="My work history, résumé, or employment goals"><span>My work history, résumé, or employment goals</span></label>
-<label><input type="checkbox" value="My Arizona Job Connection account information"><span>My Arizona Job Connection account information</span></label>
-<label><input type="checkbox" value="Any documentation requested by my local workforce team"><span>Any documentation requested by my local workforce team</span></label>
+<section class="card"><div class="eyebrow">WHAT TO BRING · PINAL-STYLE PREPARATION LIST</div><h2>Helpful documents and information to gather</h2>
+<p class="muted">This is a preparation checklist, not an eligibility checklist. Your Northern Arizona team will tell you which documents are required for your situation and how they may be verified. You can meet your coach even if you do not have every item.</p>
+<div class="document-guide">
+<div class="document-item"><b>Photo identification</b><p>A government-issued photo ID, if available. Ask staff about acceptable alternatives.</p></div>
+<div class="document-item"><b>Social Security card, when requested</b><p>Bring it for authorized staff to review only if needed under program verification procedures. Do not enter the number here.</p></div>
+<div class="document-item"><b>Layoff or separation information, if applicable</b><p>Any separation or layoff letter, employer notice, or related information you already have.</p></div>
+<div class="document-item"><b>Résumé and work history</b><p>A résumé, prior job titles and dates, duties, certifications, or employer references—whatever you have available.</p></div>
+<div class="document-item"><b>Income or unemployment information, if applicable</b><p>Relevant pay information, benefit notices, or unemployment records, only when requested by the local workforce team.</p></div>
+<div class="document-item"><b>Address or residency verification, if requested</b><p>A recent letter, lease, bill, or another accepted document. The team can explain alternatives.</p></div>
+<div class="document-item"><b>Education, training, and military records, if relevant</b><p>Diplomas, transcripts, credentials, licenses, military documentation, or other records that help describe your background.</p></div>
+<div class="document-item"><b>Your BOOST Discover work and Arizona Job Connection information</b><p>This completed career brief, the occupations you selected, and access to your Arizona Job Connection account.</p></div>
 </div>
-<p class="privacy"><strong>Privacy:</strong> Do not upload identification, Social Security numbers, income records, medical information, or other sensitive documents here. Bring requested documents directly to authorized workforce staff.</p>
+<h3 class="checklist-heading">My gathering checklist</h3><p class="muted">Check items you've gathered or are planning to bring. You can save your preparation without checking every item.</p>
+<div class="check-grid docs" id="documents">
+<label><input type="checkbox" value="Photo identification if available"><span>Photo identification</span></label>
+<label><input type="checkbox" value="Social Security card if requested"><span>Social Security card, if requested</span></label>
+<label><input type="checkbox" value="Layoff or separation documents if applicable"><span>Layoff/separation information</span></label>
+<label><input type="checkbox" value="Resume and work history"><span>Résumé and work history</span></label>
+<label><input type="checkbox" value="Income or unemployment records if applicable"><span>Income/unemployment information</span></label>
+<label><input type="checkbox" value="Residency verification if requested"><span>Address/residency verification</span></label>
+<label><input type="checkbox" value="Education training credentials or military documents if relevant"><span>Education, credentials, or military records</span></label>
+<label><input type="checkbox" value="BOOST Discover report and Arizona Job Connection"><span>BOOST brief and Arizona Job Connection</span></label>
+</div>
+<p class="privacy"><strong>Privacy:</strong> Do not upload or enter sensitive identity, financial, medical, or eligibility documents on this page. Bring any requested information directly to authorized workforce staff using their approved process. Missing paperwork does not prevent you from requesting an appointment.</p>
 </section>
 <section class="card save-card"><h2>Confirm your preparation</h2><p>Review your brief and choose the topics you want to discuss. This acknowledgment means you prepared for the conversation; it does <strong>not</strong> mean you attended an appointment, were found eligible, or enrolled.</p>
 <label class="ack"><input id="ack" type="checkbox"><span>I reviewed my Discover results and am ready to discuss my next steps with a Career Coach.</span></label>
