@@ -54,7 +54,7 @@ function workflow(body){
 function intent(question){
   const q=question.toLowerCase();
   if(/(?:process for boost|boost process|how (?:does|do) boost work|when .*coach (?:appointment|appountment|meeting)|coach (?:appointment|appountment).*(?:happen|when|scheduled|schedule)|when is my (?:appointment|appountment))/.test(q))return"process";
-  if(/(?:what (?:will|should|can) (?:happen|i expect)|what happens|what do we do).{0,45}(?:coach|appointment|appountment|meeting)|what.{0,30}at my (?:coach |career coach )?(?:appointment|appountment|meeting))/.test(q))return"coach";
+  if(/(?:what (?:will|should|can) (?:happen|i expect)|what happens|what do we do).{0,45}(?:coach|appointment|appountment|meeting)|what.{0,30}at my (?:coach |career coach )?(?:appointment|appountment|meeting)/.test(q))return"coach";
   if(/(?:next step (?:in|for|after) boost|what(?:'s| is| should i do).{0,30}next.{0,25}boost|completed all.{0,35}(?:module|boost)|finished all.{0,35}(?:module|boost)|i.?m done with boost)/.test(q))return"next";
   return"";
 }
