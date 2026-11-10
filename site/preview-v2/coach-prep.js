@@ -82,6 +82,11 @@ function render(j){
  const greeting=firstName?firstName+', here is what you discovered.':'Here is what you discovered.';
  $('storyGreeting').textContent=greeting;
  $('storyOverview').textContent='You explored the work that feels right to you, added your six O*NET interest results, and selected occupations to investigate. This brief puts those pieces together so you can talk through what fits, what remains uncertain, and what to look at next.';
+ const assessment=m.interestAssessment||{};
+ const mini=assessment.type==='boost_onet_mini_30_v1';
+ $('interestAssessmentSource').textContent=mini
+   ?'Source: BOOST 30-activity Mini Interest Profiler (0–20 points per theme). Adapted from O*NET interest themes; not the full official assessment.'
+   :'Source: Saved six-score O*NET interest pattern. If these scores came from the full profiler, its scoring scale differs from BOOST Mini; compare the patterns rather than raw numbers.';
  const rows=savedScoreRows(j),leading=rows.filter(x=>x.value>0).slice(0,3);
  const strong=leading.map(x=>x.label);
  const scoreBars=$('scoreBars');scoreBars.replaceChildren();
