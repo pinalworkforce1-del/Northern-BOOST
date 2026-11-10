@@ -9,6 +9,7 @@ const SHARED_KEY='northern_boost_career_exploration_v1';
 const PORTAL_KEY='boost_naz_portal_progress_v1';
 const PATH_KEY='boost_naz_pathway_v1';
 const ROSIE_IMG='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp';
+const ROSIE_CHAT_IMG='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-chat-avatar.webp';
 const ROSIE_FALLBACK=new URL('assets/images/rosie-master.webp',document.baseURI).href;
 const ALIASES={
   'cna':['31-1131'],'certified nursing assistant':['31-1131'],'nursing assistant':['31-1131'],
@@ -153,7 +154,7 @@ async function ask(question,body,send){
 function build(){
   if(!eligiblePage()||document.getElementById('northernAskRosieLaunch'))return;
   addStyles();
-  const launch=document.createElement('button');launch.id='northernAskRosieLaunch';launch.type='button';launch.innerHTML=`<img src="${ROSIE_IMG}" alt=""><span>Ask Rosie</span>`;document.body.appendChild(launch);
+  const launch=document.createElement('button');launch.id='northernAskRosieLaunch';launch.type='button';launch.innerHTML=`<img src="${ROSIE_CHAT_IMG}" alt=""><span>Ask Rosie</span>`;document.body.appendChild(launch);
   const panel=document.createElement('section');panel.id='northernAskRosiePanel';panel.setAttribute('aria-label','Ask Rosie — Northern BOOST Career Coach');panel.innerHTML=`<div class="narHead"><img src="${ROSIE_IMG}" alt="Rosie"><div class="narHeadText"><b>Ask Rosie</b><span>Northern Arizona Career Guide • your results and next steps</span></div><button class="narClose" type="button" aria-label="Close Ask Rosie">×</button></div><div class="narBody"><div class="narWelcome"><b>Hi — I’m Rosie.</b> Ask me a normal question about your BOOST results, Northern Arizona jobs and wages, career mobility, training, or what your evidence means. The Northern Recommendation Gate controls what BOOST proactively surfaces — it never tells you what you are allowed to explore.</div><div class="narStarters"><button class="narChip" type="button">Why am I seeing my careers?</button><button class="narChip" type="button">Compare my saved careers</button><button class="narChip" type="button">What careers pay more than my current wage?</button><button class="narChip" type="button">What training options are approved?</button><button class="narChip" type="button">Explain my Module 4 direction</button></div></div><div class="narFoot"><div class="narForm"><textarea aria-label="Ask Rosie a question" placeholder="Ask Rosie about your career evidence…"></textarea><button class="narSend" type="button">Send</button></div><div class="narHint">Rosie uses your Northern BOOST journey, Northern Arizona labor-market evidence, approved O*NET evidence, approved Arizona ETPL data, and your Northern BOOST map progress. Eligibility and funding decisions stay with your Career Coach.</div></div>`;document.body.appendChild(panel);
   const body=panel.querySelector('.narBody'),input=panel.querySelector('textarea'),send=panel.querySelector('.narSend');
    const stage=pageLabel();
@@ -174,7 +175,7 @@ function build(){
      img?.addEventListener('error',()=>{if(img.src!==ROSIE_FALLBACK)img.src=ROSIE_FALLBACK},{once:true});
    }
    const polish=document.createElement('style');
-   polish.textContent='#northernAskRosiePanel .narWelcome{border-left:4px solid #dfb25e}#northernAskRosiePanel .narChip{background:#edf5f9;border-color:#c3d8e4;text-align:left;white-space:normal}#northernAskRosiePanel .narHeadText span{line-height:1.35}';
+   polish.textContent='#northernAskRosieLaunch{padding:9px 16px 9px 8px;min-height:56px;border-color:#e3c071}#northernAskRosieLaunch img{width:42px;height:42px;object-fit:cover;object-position:center;border:2px solid #fff9;border-radius:50%}#northernAskRosiePanel .narWelcome{border-left:4px solid #dfb25e}#northernAskRosiePanel .narChip{background:#edf5f9;border-color:#c3d8e4;text-align:left;white-space:normal}#northernAskRosiePanel .narHeadText span{line-height:1.35}';
    document.head.append(polish);
   function open(){panel.classList.add('open');launch.style.display='none';setTimeout(()=>input.focus(),30)}
    function close(){panel.classList.remove('open');launch.style.display='flex';launch.focus()}
