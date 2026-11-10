@@ -29,8 +29,8 @@ function workflow(body){
       Object.values(applied).some(x=>obj(x).completed===true),
     financial:complete(pr.financial)||!!mods.financial?.completedAt,
     ai:complete(pr.ai)||complete(pr.careerAi)||!!mods.ai?.completedAt,
-    skillmobility:complete(pr.skillmobility)||!!portal.rapid?.skillMobilityMarked,
-    jobsearch:complete(pr.jobsearch)||!!portal.rapid?.jobSearchMarked
+    skillmobility:complete(pr.skillmobility)||!!mods.skillmobility?.completedAt,
+    jobsearch:complete(pr.jobsearch)||!!mods.jobsearch?.completedAt
   };
   const source=txt(portal.pathway||"",20).toLowerCase();
   const pathway=source==="career"||source==="rapid"?source:"unknown";
@@ -94,10 +94,10 @@ function answer(question,kind,s){
   if(kind==="next"){
     if(!s.state.module1)
       return "Your next BOOST step is **Module 1 — Discover**. After saving Discover, complete Coach Appointment Prep to get ready for the Northern team's initial eligibility and enrollment conversation. "+caution;
+    if(s.allPathwayComplete)
+      return stageNote(s)+"\n\n**Your next step is a follow-up Career Coach review of your full evidence** to decide the most appropriate employment and service strategy. You do not need to repeat finished activities automatically. If you changed Module 1 after completing later modules, ask the coach whether those later comparisons need a quick alignment review—not a reset. "+(!s.coachPrep?"Your Coach Appointment Prep has not been confirmed in BOOST; you can still review it before the conversation. ":"")+caution;
     if(!s.coachPrep)
       return "Your Module 1 — Discover is marked complete. **Coach Appointment Prep** is available to help you prepare for the initial Northern Career Coach/enrollment conversation. It does not block existing pathway modules. "+stageNote(s)+" "+caution;
-    if(s.allPathwayComplete)
-      return stageNote(s)+"\n\n**Your next step is a follow-up Career Coach review of your full evidence** to decide the most appropriate employment and service strategy. You do not need to repeat finished activities automatically. If you changed Module 1 after completing later modules, ask the coach whether those later comparisons need a quick alignment review—not a reset. "+caution;
     return "Your Discover and Coach Appointment Prep are marked complete. "+stageNote(s)+"\n\nYour Northern team normally conducts an **initial enrollment review after Discover**, with the remaining assigned activities helping prepare for later service planning. The available BOOST data does not confirm whether your initial meeting has already happened. "+caution;
   }
   return"";
@@ -119,7 +119,9 @@ Deno.serve(async req=>{
     try{body=JSON.parse(await req.text())}catch{return json({error:"Invalid request body"},400)}
     const question=txt(body?.question,14000);
     if(!question)return json({error:"Ask Rosie a Northern BOOST career question."},400);
-    const kind=intent(question),state=workflow(body);
+    const unsafeContext=/\b(?:suicid|self.harm|kill myself|hurt myself|kill someone|emergency|crisis|violence|abuse|harass|discriminat|threat|fraud|overdose)\b/i.test(question);
+    const kind=!unsafeContext&&question.length<=500?intent(question):"";
+    const state=workflow(body);
     // Only enhance questions about Northern's service/appointment progression.
     if(kind){
       body={...body,question:question+"\n\n[BOOST WORKFLOW CONTEXT]\n"+context(state)};
@@ -135,7 +137,8 @@ Deno.serve(async req=>{
     let parsed;
     try{parsed=JSON.parse(raw)}catch{}
     if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed)){
-      if(upstream.ok&&kind)parsed.answer=answer(question,kind,state);
+      // Preserve upstream safety handling, error responses, and safety alerts.
+      if(upstream.ok&&kind&&!parsed.safety_alert&&!parsed.safety_alert_status&&!parsed.alert_id&&!parsed.crisis_response)parsed.answer=answer(question,kind,state);
       parsed.northern_workflow_version=VERSION;
       return json(parsed,upstream.status);
     }
