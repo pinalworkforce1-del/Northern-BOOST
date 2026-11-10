@@ -11,6 +11,7 @@ const $=id=>document.getElementById(id);
 const read=(k)=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch{return{}}};
 const industryMap={skilled_trades:{label:'Skilled Trades',url:'Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html',legacy:'skilledTrades'},advanced_manufacturing:{label:'Advanced Manufacturing',url:'Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html',legacy:'advancedManufacturing'},healthcare:{label:'Health Care',url:'Northern_BOOST_Healthcare_Connected_Test_v0.2.html',legacy:'healthcare'},it:{label:'Information Technology',url:'Northern_BOOST_IT_Connected_Test_v0.2.html',legacy:'it'},cdl:{label:'Transportation & Logistics',url:'Northern_BOOST_CDL_Connected_Test_v0.2.html',legacy:'cdl'}};
 const details={
+ coachAppointmentPrep:{name:'Coach Appointment Prep',desc:'Review your Discover evidence and prepare questions for your pre-enrollment Career Coach conversation.',audio:'assets/audio/rosie-map-coach.mp3',url:'preview-v2/coach-appointment-prep.html'},
  module1:{name:'Module 1 — Discover',desc:'Identify your interests, strengths, work drivers, and occupations worth exploring.',audio:'assets/audio/rosie-map-module1.mp3',url:'Northern_BOOST_Module1_PinalFlow_v1.html'},
  module2:{name:'Module 2 — Reality Check',desc:'Compare the careers you chose with wages, hiring, preparation, and how they fit your life.',audio:'assets/audio/rosie-map-module2.mp3',url:'Northern_BOOST_Module2_PinalFlow_v1.html'},
  module3:{name:'Module 3 — Career Mobility',desc:'Explore transferable strengths and see where you could go from your current skills.',audio:'assets/audio/rosie-map-module3.mp3',url:'Northern_BOOST_Module3_Connected_Test_v0.8.html'},
@@ -38,6 +39,7 @@ function done(id){
  const j=cloudOrLocal(),pr=j.progress||{};
  if(pr[id]==='stale')return false;
  if(id==='module1')return pr.module1==='complete';
+ if(id==='coachAppointmentPrep')return pr.coachAppointmentPrep==='complete'&&!!j.modules?.coachAppointmentPrep?.readyAt;
  if(id==='module2')return pr.module2==='complete'||!!j.module2?.careers?.length;
  if(id==='module3')return pr.module3==='complete'||!!j.module3?.careers?.length;
  if(id==='module4'){const m=j.module4||j.modules?.module4||{};return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}
@@ -69,6 +71,7 @@ function stale(id){
 }
 function available(id){
  if(id==='module1')return true;
+ if(id==='coachAppointmentPrep')return done('module1');
  if(!done('module1'))return false;
  if(id==='module2'||id==='skillmobility')return true;
  const order=orders[selected]||[],index=order.indexOf(id);
@@ -77,7 +80,7 @@ function available(id){
  return done(order[index-1]);
 }
 function labelFor(id){const rec=id==='industry'?recommendedIndustry():null;return rec&&industryMap[rec]?industryMap[rec].label+' — Applied Experience':details[id]?.name||id}
-function nextId(){if(!done('module1'))return'module1';const order=orders[selected]||[];return order.find(id=>!done(id))||null;}
+function nextId(){if(!done('module1'))return'module1';if(!done('coachAppointmentPrep'))return'coachAppointmentPrep';const order=orders[selected]||[];return order.find(id=>!done(id))||null;}
 function setVisible(){
  const yes=!!user;
  $('authGate').hidden=yes;$('appShell').hidden=!yes;$('signOut').hidden=!yes;
@@ -101,20 +104,29 @@ function render(){
  $('ajcState').className='micro-status'+(portal.visited?.ajc?' done':'');
  $('discoverState').textContent=done('module1')?'✓ Completed':cloudOrLocal().progress?.module1==='in_progress'?'In progress':'Ready to start';
  $('discoverState').className='micro-status'+(done('module1')?' done':'');
+ const prepReady=done('module1'),prepDone=done('coachAppointmentPrep');
+ $('coachPrepButton').disabled=!prepReady;
+ $('coachPrepButton').textContent=prepDone?'Review Coach Prep →':'Open Coach Prep →';
+ $('coachPrepIcon').textContent=prepDone?'✓':'04';
+ $('coachBridge').classList.toggle('complete',prepDone);
+ $('coachBridge').classList.toggle('locked',!prepReady);
+ $('coachPrepState').textContent=prepDone?'✓ Preparation reviewed and saved':prepReady?'● Available — prepare for enrollment conversation':'🔒 Available after Discover';
  const all=['module1',...(orders[selected]||[])];
  const completed=all.filter(done).length,total=all.length;
  const percent=Math.round(completed/total*100);
  $('progressPercent').textContent=percent+'%';
  $('progressCaption').textContent=completed+' of '+total+' completed';
  $('progressFill').style.width=percent+'%';$('progressTrack').setAttribute('aria-valuenow',String(percent));
- $('progressMessage').textContent=!selected?'Complete Discover, then choose a pathway to see your next steps.':(completed===total?'All required steps in this pathway are marked complete.':'Your next required step is '+labelFor(nextId()||'module1')+'.');
+ const pendingCoach=done('module1')&&!done('coachAppointmentPrep');
+ $('progressMessage').textContent=pendingCoach?'Coach Appointment Prep is ready before enrollment. This recommended step does not block Northern pathway activities.':(!selected?'Complete Discover, then choose a pathway to see your next steps.':(completed===total?'All required steps in this pathway are marked complete.':'Your next required step is '+labelFor(nextId()||'module1')+'.'));
+
  $('journeySection').hidden=!selected;
  if(!selected)return;
  $('selectedEyebrow').textContent=selected==='career'?'CAREER EXPLORATION & DEVELOPMENT':'RAPID EMPLOYMENT';
  $('journeyTitle').textContent=selected==='career'?'Explore, validate, and decide':'Move forward with a focused plan';
  const next=nextId();const n=$('nextStep');n.replaceChildren();
  const info=document.createElement('div');const k=document.createElement('small'),strong=document.createElement('strong'),para=document.createElement('p');
- k.textContent=next?'NEXT REQUIRED STEP':'PATHWAY PROGRESS';strong.textContent=next?labelFor(next):'All required steps complete';para.textContent=next?(details[next]?.desc||'Continue your BOOST journey.'):'You can reopen completed activities or speak with your career coach.';
+ k.textContent=next==='coachAppointmentPrep'?'PRE-ENROLLMENT PREPARATION':next?'NEXT REQUIRED STEP':'PATHWAY PROGRESS';strong.textContent=next?labelFor(next):'All required steps complete';para.textContent=next?(details[next]?.desc||'Continue your BOOST journey.'):'You can reopen completed activities or speak with your career coach.';
  info.append(k,strong,para);n.append(info);
  if(next&&available(next)){const b=document.createElement('button');b.className='btn primary';b.textContent='Open next step →';b.onclick=()=>launch(next);n.append(b);}
  const stepList=$('stepList');stepList.replaceChildren();
@@ -212,6 +224,7 @@ function install(){
  $('chooseArea').onclick=()=>showDialog('areaDialog');$('meetRosie').onclick=()=>showDialog('rosieDialog');
  $('resumeBtn').onclick=()=>{if(!user){$('authGate').scrollIntoView({behavior:'smooth'});return;}if(!selected){$('pathwaySection').scrollIntoView({behavior:'smooth'});return;}const id=nextId();if(id)launch(id);else $('journeySection').scrollIntoView({behavior:'smooth'});};
  $('discoverBtn').onclick=()=>launch('module1');
+ $('coachPrepButton').onclick=()=>launch('coachAppointmentPrep');
  $('ajcLink').addEventListener('click',()=>{portal=read(PORTAL_KEY);portal.visited=portal.visited||{};portal.visited.ajc=true;localStorage.setItem(PORTAL_KEY,JSON.stringify(portal));render();});
  $('switchPathway').onclick=()=>{$('pathwaySection').scrollIntoView({behavior:'smooth',block:'start'})};
  document.querySelectorAll('[data-path-choice]').forEach(b=>b.onclick=()=>choosePath(b.dataset.pathChoice));
