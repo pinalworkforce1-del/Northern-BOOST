@@ -14,7 +14,7 @@ const focusProfiler=()=>{
  try{focusTarget.focus({preventScroll:true})}catch(_){focusTarget.focus()}
 };
 document.addEventListener('click',event=>{
- const button=event.target.closest('#profileBtn, #miniProfilerJump');
+ const button=event.target.closest('#profileBtn');
  if(!button||!document.getElementById('onet'))return;
  event.preventDefault();event.stopImmediatePropagation();
  // The original mindmap button saved inputs before jumping to the legacy score
