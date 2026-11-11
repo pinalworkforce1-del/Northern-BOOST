@@ -16,6 +16,20 @@
   const {data:enrolled,error:enrollError}=await client.rpc('boost_northern_ready2work_enrolled');
   if(enrollError){say('Northern staff enrollment verification is unavailable. Please contact your career coach.');return;}
   if(enrolled!==true){say('Ready 2 Work opens after Northern staff approve your enrollment in TalentSync. Your BOOST pathway progress is unchanged.');return;}
+  // The shared app uses a fixed local key; swap its value to a per-user
+  // Northern namespace before any application code can load.
+  const localKey='boost-northern-r2w-v1',ownerKey='boost-northern-r2w-current-owner',scopedKey=localKey+':'+identity.user.id;
+  try{
+   const previousOwner=localStorage.getItem(ownerKey);
+   if(previousOwner&&previousOwner!==identity.user.id){
+    const previous=localStorage.getItem(localKey);
+    if(previous)localStorage.setItem(localKey+':'+previousOwner,previous);
+   }
+   const scoped=localStorage.getItem(scopedKey);
+   if(scoped)localStorage.setItem(localKey,scoped);
+   else localStorage.removeItem(localKey);
+   localStorage.setItem(ownerKey,identity.user.id);
+  }catch(e){say('Browser storage is unavailable. Open Ready 2 Work in a standard browser window.');return;}
   window.NORTHERN_R2W={client,userId:identity.user.id,verified:true,region:'Northern Arizona'};
   const scripts=[
     base+'course-data.js',
