@@ -41,10 +41,10 @@ def build(occupations, job_titles):
         code = (row.get("O*NET-SOC Code") or "").strip()
         if code not in valid_codes:
             continue
-        for title in ((row.get("Job Title") or "").strip(), (row.get("Short Title") or "").strip()):
+        for title in ((row.get("Alternate Title") or "").strip(), (row.get("Short Title") or "").strip()):
             if title:
                 aliases.add((title, code))
-    if len(aliases) < 45000:
+    if len(aliases) < 20000:
         raise RuntimeError(f"Expected O*NET alternate job titles; received only {len(aliases)}")
     return {
         "version": "31.0",
@@ -56,7 +56,7 @@ def build(occupations, job_titles):
 
 
 def main():
-    data = build(get_rows("occupation_data.csv"), get_rows("job_titles.csv"))
+    data = build(get_rows("occupation_data.csv"), get_rows("alternate_titles.csv"))
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"O*NET {data['version']}: {len(data['occupations'])} occupations, {len(data['jobTitles'])} alternate job titles; {OUT.stat().st_size} bytes")
