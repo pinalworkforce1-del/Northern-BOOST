@@ -39,7 +39,7 @@ function load(){
 function fallback(){
  return (window.R2WOccupationTitles?.entries||[]).map(x=>({
   code:'',title:x.title,onetTitle:x.onetTitle,description:'',kind:'occupation',
-  normalized:normalize(x.title),occupationNormalized:normalize(x.onetTitle)
+  normalized:normalize(x.title),occupationNormalized:normalize(x.onetTitle),aliasNormalized:(x.aliases||[]).map(normalize)
  }));
 }
 function search(query,limit=9){
@@ -56,6 +56,7 @@ function search(query,limit=9){
   else if(words.every(w=>title.includes(w)))score=450;
   else if(occupation.startsWith(q))score=350;
   else if(words.every(w=>occupation.includes(w)))score=250;
+  else if((record.aliasNormalized||[]).some(alias=>alias===q||alias.startsWith(q)))score=500;
   if(!score)continue;
   if(record.kind==='occupation')score+=8;
   if(title.length>65)score-=10;
