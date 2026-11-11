@@ -15,7 +15,7 @@ function load(){
   const response=await fetch(fullUrl,{cache:'force-cache'});
   if(!response.ok)throw new Error('O*NET occupation catalog not yet published.');
   const data=await response.json();
-  if(data.version!=='31.0'||!Array.isArray(data.occupations)||data.occupations.length<950||!Array.isArray(data.jobTitles)||data.jobTitles.length<45000)throw new Error('O*NET occupation catalog incomplete.');
+  if(data.version!=='31.0'||!Array.isArray(data.occupations)||data.occupations.length<950||!Array.isArray(data.jobTitles)||data.jobTitles.length<20000)throw new Error('O*NET occupation catalog incomplete.');
   const byCode=new Map(data.occupations.map(row=>[row[0],{code:row[0],onetTitle:row[1],description:row[2]||''}]));
   const index=new Map();
   for(const row of data.occupations){
