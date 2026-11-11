@@ -172,3 +172,8 @@
 .r2w-stage p{font-size:12px;line-height:1.5;color:#547184;margin:0}
 @media(max-width:990px){.r2w-stages{grid-template-columns:1fr}.r2w-stage-icon{height:85px}.r2w-intro{grid-template-columns:minmax(0,1fr) 32%}}
 @media(max-width:650px){.r2w-section{padding-top:34px}.r2w-intro{grid-template-columns:1fr}.r2w-intro-copy{padding:23px}.r2w-intro>img{height:155px;object-position:center 42%}.r2w-intro h3{font-size:23px}.r2w-stage{padding:12px}.r2w-stage-icon{width:75px;flex-basis:75px}}
+
+/* Northern Ready2Work stage links route through server-verified enrollment gate. */
+.r2w-stage-link{display:inline-flex;margin-top:9px;font-size:12px;font-weight:800;color:#145c77;text-decoration:underline;text-underline-offset:3px}
+.r2w-stage-link:focus-visible{outline:2px solid #1c6d8c;outline-offset:3px;border-radius:2px}
+.r2w-intro a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-top:12px}
