@@ -28,6 +28,36 @@ jobs:
         with:
           path: site
           name: northern-boost-pages-${{ github.run_attempt }}
+      # Artifact uploads can complete before GitHub's run-artifacts API indexes them.
+      # deploy-pages fails with "Found 0 artifact(s)" if it runs during that gap.
+      - name: Wait for Pages artifact indexing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: northern-boost-pages-${{ github.run_attempt }}
+        run: |
+          for attempt in $(seq 1 15); do
+            response=$(curl --fail --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100") || {
+                echo "Artifact API not ready (attempt ${attempt}/15)"
+                sleep 5
+                continue
+              }
+            if jq -e --arg name "${ARTIFACT_NAME}" '.artifacts | any(.name == $name and .expired == false)' <<< "${response}" > /dev/null; then
+              echo "Pages artifact ${ARTIFACT_NAME} is discoverable."
+              break
+            fi
+            if [ "${attempt}" -eq 15 ]; then
+              echo "::error::Pages artifact ${ARTIFACT_NAME} did not become discoverable."
+              exit 1
+            fi
+            echo "Waiting for artifact indexing (attempt ${attempt}/15)"
+            sleep 5
+          done
+          # Give the Pages deployment API a moment to observe the indexed artifact.
+          sleep 3
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
