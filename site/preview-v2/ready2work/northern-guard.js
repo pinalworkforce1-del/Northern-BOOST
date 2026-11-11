@@ -74,6 +74,7 @@
     base+'course-data.js',
     'resume-evidence-review-v1.js',
     'resume-occupation-titles-v1.js',
+    'resume-occupation-search-v1.js',
     'resume-format-v1.js',
     'app.js',
     'resume-polish-v1.js',

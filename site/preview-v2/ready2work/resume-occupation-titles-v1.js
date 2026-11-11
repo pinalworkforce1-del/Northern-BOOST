@@ -42,7 +42,7 @@
       if(result.matched){
         if(version.target!==result.title){version.target=result.title;changed=true;}
         if(version.onetOccupationTitle!==result.onetTitle){version.onetOccupationTitle=result.onetTitle;changed=true;}
-      }else if(version.onetOccupationTitle){
+      }else if(version.onetOccupationTitle&&!version.onetOccupationConfirmed){
         // A custom job title must not carry a stale occupational reference.
         version.onetOccupationTitle='';changed=true;
       }
@@ -60,5 +60,5 @@
     }
     return changed;
   }
-  window.R2WOccupationTitles={resolve,migrate,entries:entries.map(({title,onet})=>({title,onetTitle:onet}))};
+  window.R2WOccupationTitles={resolve,migrate,entries:entries.map(({title,onet,aliases})=>({title,onetTitle:onet,aliases:aliases.slice()}))};
 })();
