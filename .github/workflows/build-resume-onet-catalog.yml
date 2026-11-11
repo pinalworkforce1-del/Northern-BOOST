@@ -1,0 +1,32 @@
+name: Build Northern résumé O*NET occupation catalog
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_resume_onet_catalog.py'
+      - '.github/workflows/build-resume-onet-catalog.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build catalog from O*NET 31.0
+        run: python tools/build_resume_onet_catalog.py
+      - name: Commit validated static catalog
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/preview-v2/ready2work/onet-occupation-catalog-v31.json
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+            exit 0
+          fi
+          git commit -m 'Build Northern résumé O*NET occupation catalog'
+          git push
