@@ -66,12 +66,36 @@
       }catch(e){reportPersistence('Could not read one saved progress copy: '+e.message);}
     }
   }
+  let lastResumeSnapshot='';
+  const resumeFingerprint=rb=>{
+    if(!rb||typeof rb!=='object')return '{}';
+    const {lastEditedAt,...content}=rb;
+    return JSON.stringify(content);
+  };
   function saveState(){
+    const currentResume=resumeFingerprint(state.resumeBuilder);
+    if(lastResumeSnapshot&&currentResume!==lastResumeSnapshot&&state.resumeBuilder){
+      state.resumeBuilder.lastEditedAt=new Date().toISOString();
+    }
+    lastResumeSnapshot=currentResume;
     const payload=JSON.stringify({...state,savedAt:new Date().toISOString()});
-    let verified=false;
-    try{localStorage.setItem(STORAGE_KEY,payload);verified=localStorage.getItem(STORAGE_KEY)===payload;}catch(e){}
+    let verified=false,stored=payload;
+    try{
+      localStorage.setItem(STORAGE_KEY,payload);
+      // The résumé polish layer normalizes version labels on write. A successful
+      // normalized write is still persistent even when the bytes differ.
+      stored=localStorage.getItem(STORAGE_KEY)||'';
+      verified=!!stored&&!!JSON.parse(stored);
+    }catch(e){verified=false}
     if(verified){
-      try{sessionStorage.setItem(BACKUP_KEY,payload);}catch(e){}
+      try{
+        sessionStorage.setItem(BACKUP_KEY,stored);
+        const owner=window.NORTHERN_R2W?.userId;
+        if(owner){
+          localStorage.setItem(STORAGE_KEY+':'+owner,stored);
+          localStorage.setItem(STORAGE_KEY+':'+owner+':backup',stored);
+        }
+      }catch(e){}
       if(persistenceMessage)reportPersistence('');
     }else{
       try{sessionStorage.setItem(STORAGE_KEY,payload);verified=sessionStorage.getItem(STORAGE_KEY)===payload;}catch(e){}
@@ -218,7 +242,7 @@
 
 
   let resumeStep=0;
-  function resumeData(){ state.resumeBuilder=state.resumeBuilder||{step:0,target:'',summary:'',experience:'',evidence:'',skills:'',education:'',integrity:false,ready:false,complete:false}; const d=state.resumeBuilder;d.contact=d.contact||{name:'',email:'',phone:'',location:''};d.jobDescription=d.jobDescription||'';d.resumeFormat=d.resumeFormat||'hybrid';if(!Array.isArray(d.experiences))d.experiences=[];if(d.experiences.length===0&&(String(d.experience||'').trim()||String(d.evidence||'').trim()))d.experiences.push({role:'',employer:'',startDate:'',endDate:'',experience:d.experience||'',evidence:d.evidence||'',bullets:d.evidence?[d.evidence]:[]});if(!Number.isInteger(d.activeExperience))d.activeExperience=0;if(!d.careerTarget)d.careerTarget=d.target||'';if(!Array.isArray(d.versions)||!d.versions.length)d.versions=[{name:'Résumé 1',target:d.target||'',jobDescription:d.jobDescription||'',summary:'',format:d.resumeFormat||'hybrid'}];if(!Number.isInteger(d.activeVersion)||d.activeVersion<0||d.activeVersion>=d.versions.length)d.activeVersion=0;const v=d.versions[d.activeVersion];v.name=v.name||('Résumé '+(d.activeVersion+1));v.target=v.target||'';v.jobDescription=v.jobDescription||'';v.summary=v.summary||'';v.format=v.format||d.resumeFormat||'hybrid';v.visualStyle=v.visualStyle||'modern';if(!d.studioVersion||d.studioVersion<3){d.summary='';v.summary='';d.studioVersion=3;saveState()}d.target=v.target;d.jobDescription=v.jobDescription;d.summary=v.summary;d.resumeFormat=v.format;if(!v.alignment&&d.alignment&&d.alignment.jobDescription===v.jobDescription)v.alignment=d.alignment;d.alignment=v.alignment||null;return d; }
+  function resumeData(){ state.resumeBuilder=state.resumeBuilder||{step:0,target:'',summary:'',experience:'',evidence:'',skills:'',education:'',integrity:false,ready:false,complete:false}; const d=state.resumeBuilder;d.contact=d.contact||{name:'',email:'',phone:'',location:''};d.jobDescription=d.jobDescription||'';d.resumeFormat=d.resumeFormat||'hybrid';if(!Array.isArray(d.experiences))d.experiences=[];if(d.experiences.length===0&&(String(d.experience||'').trim()||String(d.evidence||'').trim()))d.experiences.push({role:'',employer:'',startDate:'',endDate:'',experience:d.experience||'',evidence:d.evidence||'',bullets:d.evidence?[d.evidence]:[]});if(!Number.isInteger(d.activeExperience))d.activeExperience=0;if(!d.careerTarget)d.careerTarget=d.target||'';if(!Array.isArray(d.versions)||!d.versions.length)d.versions=[{name:'Résumé 1',target:d.target||'',jobDescription:d.jobDescription||'',summary:'',format:d.resumeFormat||'hybrid'}];if(!Number.isInteger(d.activeVersion)||d.activeVersion<0||d.activeVersion>=d.versions.length)d.activeVersion=0;const v=d.versions[d.activeVersion];v.name=v.name||('Résumé '+(d.activeVersion+1));v.target=v.target||'';v.jobDescription=v.jobDescription||'';v.summary=v.summary||'';v.format=v.format||d.resumeFormat||'hybrid';v.visualStyle=v.visualStyle||'modern';if(!d.studioVersion||d.studioVersion<3){if(!v.summary&&d.versions.length===1)v.summary=d.summary||'';d.studioVersion=3;saveState()}d.target=v.target;d.jobDescription=v.jobDescription;d.summary=v.summary;d.resumeFormat=v.format;if(!v.alignment&&d.alignment&&d.alignment.jobDescription===v.jobDescription)v.alignment=d.alignment;d.alignment=v.alignment||null;return d; }
   function syncActiveExperience(d){if(!Array.isArray(d.experiences))d.experiences=[];const has=String(d.experience||'').trim()||String(d.evidence||'').trim();if(has){const i=d.activeExperience||0,x=d.experiences[i]||{};d.experiences[i]={...x,role:d.role||x.role||'',employer:d.employer||x.employer||'',startDate:d.startDate||x.startDate||'',endDate:d.endDate||x.endDate||'',experience:d.experience||'',evidence:d.evidence||'',bullets:Array.isArray(x.bullets)?x.bullets:[]};}}
   function loadExperience(d,i){syncActiveExperience(d);const x=d.experiences[i]||{experience:'',evidence:''};d.activeExperience=i;d.role=x.role||'';d.employer=x.employer||'';d.startDate=x.startDate||'';d.endDate=x.endDate||'';d.experience=x.experience||'';d.evidence=x.evidence||'';saveState();renderResumeBuilder();}
   function addResumeExperience(){const d=resumeData();syncActiveExperience(d);d.experiences.push({role:'',employer:'',startDate:'',endDate:'',experience:'',evidence:'',bullets:[]});d.activeExperience=d.experiences.length-1;d.role='';d.employer='';d.startDate='';d.endDate='';d.experience='';d.evidence='';saveState();renderResumeBuilder();$('rbExperience')?.focus();}
@@ -418,6 +442,19 @@
     $('printCertificateBtn').disabled=!earned;
   }
 
+  // Restore saved progress BEFORE any résumé control calls resumeData().
+  // Previously the version-button setup initialized and saved an empty résumé
+  // before loadState() ran, overwriting the participant's saved progress.
+  loadState();
+  lastResumeSnapshot=resumeFingerprint(state.resumeBuilder);
+  window.addEventListener('boost-r2w-external-update',event=>{
+    const incoming=event.detail?.progress;
+    if(!incoming?.resumeBuilder)return;
+    state.resumeBuilder=incoming.resumeBuilder;
+    saveState();
+    if(location.hash==='#resume-builder')renderResumeBuilder();
+  });
+
   document.addEventListener('click',e=>{
     const r=e.target.closest('[data-route]'); if(r){ e.preventDefault(); route(r.dataset.route); }
     const s=e.target.closest('[data-stage]'); if(s){ e.preventDefault(); const stage=s.dataset.stage; if(stageUnlocked(stage)) route('stage',{stage}); }
@@ -516,7 +553,7 @@
     else if(hash==='#resume-builder')renderResumeBuilder();
     else route('map');
   });
-  loadState(); recalcScores(); updateOverall();
+  recalcScores(); updateOverall();
   const hash=location.hash||'#map';
   if(hash.startsWith('#scene-')){ const id=Number(hash.split('-')[1]); const idx=scenes.findIndex(s=>s.id===id); route('scene',{index:idx>=0?idx:0}); }
   else if(hash==='#certificate') route('certificate');
