@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>Northern BOOST 2.0 | Staging Preview</title>
 <base href="../">
-<link rel="stylesheet" href="preview-v2/preview-v2.css?v=art-20261110-1">
+<link rel="stylesheet" href="preview-v2/preview-v2.css?v=r2w-20261110-1">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="preview-v2/preview-config.js?v=1" defer></script>
 <script src="preview-v2/preview-v2.js?v=art-20261110-1" defer></script>
@@ -74,6 +74,28 @@
     <div class="section-heading"><div><span class="overline" id="selectedEyebrow">YOUR PATHWAY</span><h2 id="journeyTitle">Your next steps</h2></div><button id="switchPathway" type="button" class="ghost dark">Switch pathway</button></div>
     <div class="next-step" id="nextStep" role="status"></div>
     <div class="step-list" id="stepList"></div>
+  </section>
+  <section id="ready2workSection" class="r2w-section" aria-labelledby="r2wHeading">
+    <div class="section-heading">
+      <div><span class="overline">AFTER ENROLLMENT · WORK READINESS</span><h2 id="r2wHeading">Ready 2 Work</h2></div>
+      <p class="heading-copy">A separate work-readiness experience. Your existing Northern BOOST progression stays unchanged.</p>
+    </div>
+    <div class="r2w-intro">
+      <div class="r2w-intro-copy">
+        <span class="overline">SOFT SKILLS · RÉSUMÉ · INTERVIEW</span>
+        <h3>Put your career plan into practice.</h3>
+        <p>Explore real-world workplace decisions, build an employer-ready résumé, and practice interviewing with AI-enhanced support.</p>
+        <p class="r2w-status" id="r2wAccessStatus" role="status" aria-live="polite">Northern Ready 2 Work integration is in staging. Staff enrollment verification and regional progress storage must be connected before participant launch.</p>
+        <button class="btn primary" type="button" id="r2wLaunch" disabled aria-disabled="true">Launch after integration testing</button>
+        <p class="r2w-safe-note">No Pinal participant records or shared Ready2Work progress are accessed from this staging card.</p>
+      </div>
+      <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-pathway-map.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    </div>
+    <div class="r2w-stages" aria-label="Ready 2 Work experiences">
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-base-camp-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>01 · WORKPLACE JUDGMENT</span><h3>Soft Skills Synergy</h3><p>Explore decisions involving communication, teamwork, professionalism, and problem-solving.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-resume-retreat-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>02 · EMPLOYER-READY EVIDENCE</span><h3>Resume Rise</h3><p>Build and refine your résumé with AI-enhanced guidance.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-interview-landing-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>03 · INTERVIEW PRACTICE</span><h3>Interview Intelligence</h3><p>Practice presenting your experience and learn from interview feedback.</p></div></article>
+    </div>
   </section>
   <div class="bottom-note"><strong>Keep your work.</strong> Your Northern BOOST modules and saved career evidence continue to use the existing Northern progression system. <span id="syncStatus">Checking cloud status…</span></div>
 </section>
