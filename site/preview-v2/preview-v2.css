@@ -149,3 +149,26 @@
  .path-art-mosaic img,.step-card{transition:none}
  .pathway-choice:hover .path-art-mosaic img{transform:none}
 }
+
+
+/* Northern Ready2Work staging: visual-only, no enabled launch or cloud writes */
+.r2w-section{padding:50px 0 28px;border-top:1px solid #d2e2e9;margin-top:34px}
+.r2w-section .section-heading{margin-bottom:18px}
+.r2w-intro{background:linear-gradient(115deg,#0d354f 0%,#1b5267 100%);color:white;border-radius:19px;display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,38%);gap:24px;overflow:hidden;align-items:stretch;min-height:275px;box-shadow:0 12px 26px #0c395318}
+.r2w-intro-copy{padding:31px 0 28px 32px;position:relative;z-index:1}
+.r2w-intro .overline{color:#f3c36b}
+.r2w-intro h3{font-size:28px;line-height:1.2;margin:12px 0}
+.r2w-intro p{font-size:14px;line-height:1.6;max-width:580px;color:#d8e9f1}
+.r2w-intro>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.r2w-intro .r2w-status{padding:11px 13px;background:#e9f5fa;color:#19455b;border-radius:10px;border-left:4px solid #f3c36b;font-size:13px;font-weight:700}
+.r2w-intro .r2w-safe-note{font-size:11px;color:#c6dce6;margin:8px 0 0}
+.r2w-intro .btn[disabled]{opacity:.7;cursor:not-allowed;filter:grayscale(.15)}
+.r2w-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.r2w-stage{display:flex;gap:13px;align-items:flex-start;padding:14px;background:#fff;border:1px solid #d1e1e9;border-radius:15px;min-width:0;box-shadow:0 5px 14px #153a5110}
+.r2w-stage-icon{width:88px;height:94px;flex:0 0 88px;border-radius:10px;background:#e4f1f6;overflow:hidden}
+.r2w-stage-icon img{width:100%;height:100%;display:block;object-fit:cover}
+.r2w-stage span{font-size:10px;font-weight:900;letter-spacing:.06em;color:#a47926}
+.r2w-stage h3{font-size:16px;color:#153c55;margin:7px 0 6px}
+.r2w-stage p{font-size:12px;line-height:1.5;color:#547184;margin:0}
+@media(max-width:990px){.r2w-stages{grid-template-columns:1fr}.r2w-stage-icon{height:85px}.r2w-intro{grid-template-columns:minmax(0,1fr) 32%}}
+@media(max-width:650px){.r2w-section{padding-top:34px}.r2w-intro{grid-template-columns:1fr}.r2w-intro-copy{padding:23px}.r2w-intro>img{height:155px;object-position:center 42%}.r2w-intro h3{font-size:23px}.r2w-stage{padding:12px}.r2w-stage-icon{width:75px;flex-basis:75px}}
