@@ -28,6 +28,8 @@
    const scoped=localStorage.getItem(scopedKey);
    if(scoped)localStorage.setItem(localKey,scoped);
    else localStorage.removeItem(localKey);
+   // Never fall back to a different participant's tab-only backup.
+   if(previousOwner!==identity.user.id){sessionStorage.removeItem(localKey);sessionStorage.removeItem(localKey+'-backup');}
    localStorage.setItem(ownerKey,identity.user.id);
   }catch(e){say('Browser storage is unavailable. Open Ready 2 Work in a standard browser window.');return;}
   window.NORTHERN_R2W={client,userId:identity.user.id,verified:true,region:'Northern Arizona'};
