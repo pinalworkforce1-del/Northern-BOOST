@@ -60,7 +60,9 @@
     catch (_) { return {}; }
   }
   function writeState(data) {
+    if(data.resumeBuilder)data.resumeBuilder.lastEditedAt=new Date().toISOString();
     nativeSetItem.call(localStorage, STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new CustomEvent('boost-r2w-external-update',{detail:{progress:data}}));
   }
   function resumeState(data = readState()) {
     data.resumeBuilder = data.resumeBuilder || {};
