@@ -4,7 +4,7 @@
   const AI_URL='https://dxcajwarqojvmbteroco.supabase.co/functions/v1/ready2work-resume-ai';
   const $=id=>document.getElementById(id);
   function state(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(_){return {}}}
-  function save(s){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}catch(_){}}
+  function save(s){try{if(s.resumeBuilder)s.resumeBuilder.lastEditedAt=new Date().toISOString();localStorage.setItem(STORAGE_KEY,JSON.stringify(s));window.dispatchEvent(new CustomEvent('boost-r2w-external-update',{detail:{progress:s}}))}catch(_){}}
   function rb(){const s=state();s.resumeBuilder=s.resumeBuilder||{};return {s,d:s.resumeBuilder}}
   function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
   async function ask(body){const r=await fetch(AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d?.message||d?.error||'Rosie could not complete the recommendation.');return d}
