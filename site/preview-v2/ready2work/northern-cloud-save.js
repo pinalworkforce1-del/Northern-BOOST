@@ -30,6 +30,11 @@
   // the most recently edited résumé is authoritative.
   if(rs===0&&ls>0)return local;
   if(ls===0&&rs>0)return remote;
+  // Reload-time migration or a stale browser mirror can acquire a fresh
+  // timestamp without containing the participant's actual résumé work.
+  // Preserve the significantly richer résumé even when its timestamp is older.
+  if(rs>=ls+8)return remote;
+  if(ls>=rs+8)return local;
   if(rt&&lt&&rt!==lt)return rt>lt?remote:local;
   if(rt&&!lt)return remote;
   if(lt&&!rt)return local;
