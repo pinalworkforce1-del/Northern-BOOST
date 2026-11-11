@@ -19,7 +19,7 @@
     button.classList.toggle('locked',!unlocked);
     button.disabled=!unlocked;
     button.innerHTML='<span class="card-kicker">REQUIRED • STEP 2</span><strong>Mock Interview</strong><small>'+(!unlocked?'Complete the five interview decisions to unlock.':finished?'Jacqueline mock interview complete ✓':'Practice five employer-style questions with Jacqueline in a live mock interview.')+'</small><span class="card-arrow">'+(finished?'✓':'→')+'</span>';
-    button.onclick=()=>{if(unlocked)window.location.assign('../')};
+    button.onclick=()=>{if(unlocked)window.alert('Jacqueline integration is being validated for Northern BOOST. Your interview scenario progress is saved, but the live mock interview is not yet available.');};
     const status=$('stageHomeProgress'),path=$('requiredPathTitle'),meta=$('requiredPathMeta');
     if(path)path.textContent=unlocked?'Review Interview Decision Trail':'Continue Interview Decision Trail';
     if(meta)meta.textContent=done+' of '+scenes.length+' decisions complete • Mock Interview '+(finished?'complete':unlocked?'unlocked':'locked');
