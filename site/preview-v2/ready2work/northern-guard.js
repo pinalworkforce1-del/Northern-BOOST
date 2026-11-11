@@ -33,6 +33,24 @@
    localStorage.setItem(ownerKey,identity.user.id);
   }catch(e){say('Browser storage is unavailable. Open Ready 2 Work in a standard browser window.');return;}
   window.NORTHERN_R2W={client,userId:identity.user.id,verified:true,region:'Northern Arizona'};
+  // Course data is hosted by Pinal, but its media references are relative.
+  // Northern has no local /ready2work/assests/ directory, so resolve every
+  // scenario image, prompt, impact audio and caption to the published source.
+  // This changes only Northern's in-memory course data, never Pinal files.
+  function resolveCourseMedia(){
+   const course=window.R2W_COURSE;
+   if(!course?.scenes?.length)throw new Error('Ready 2 Work course data unavailable');
+   const visit=value=>{
+    if(Array.isArray(value)){value.forEach(visit);return;}
+    if(!value||typeof value!=='object')return;
+    for(const [key,item] of Object.entries(value)){
+     if(typeof item==='string'&&item.startsWith('assests/')){
+      value[key]=new URL(item,base).href;
+     }else if(item&&typeof item==='object')visit(item);
+    }
+   };
+   visit(course);
+  }
   const scripts=[
     base+'course-data.js',
     'app.js',
@@ -47,6 +65,7 @@
     const el=document.createElement('script');el.src=src;el.onload=resolve;el.onerror=()=>reject(new Error('Could not load '+src));
     document.body.append(el);
    });
+   if(src===base+'course-data.js')resolveCourseMedia();
   }
   gate.hidden=true;
  }catch(err){say('Ready 2 Work could not be opened safely. Please return to Northern BOOST and try again.');}
