@@ -37,7 +37,7 @@
   }catch(e){queued=true;say('Northern cloud sync pending — saved on this device')}
   finally{busy=false;if(queued)timer=setTimeout(flush,4500)}
  }
- window.addEventListener('boost-r2w-saved',()=>{if(ready)schedule()});
+ window.addEventListener('boost-r2w-saved',()=>{const current=read();if(current)try{localStorage.setItem(KEY+':'+ctx.userId,JSON.stringify(current))}catch(e){}if(ready)schedule()});
  window.addEventListener('online',()=>{if(ready)schedule()});
  (async()=>{
   try{
