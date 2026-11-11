@@ -60,5 +60,5 @@
     }
     return changed;
   }
-  window.R2WOccupationTitles={resolve,migrate,entries:entries.map(({title,onet})=>({title,onetTitle:onet}))};
+  window.R2WOccupationTitles={resolve,migrate,entries:entries.map(({title,onet,aliases})=>({title,onetTitle:onet,aliases:aliases.slice()}))};
 })();
