@@ -455,6 +455,7 @@
     if(location.hash==='#resume-builder')renderResumeBuilder();
   });
 
+  window.addEventListener('boost-r2w-format-changed',()=>{renderResumePreview();});
   document.addEventListener('click',e=>{
     const r=e.target.closest('[data-route]'); if(r){ e.preventDefault(); route(r.dataset.route); }
     const s=e.target.closest('[data-stage]'); if(s){ e.preventDefault(); const stage=s.dataset.stage; if(stageUnlocked(stage)) route('stage',{stage}); }
