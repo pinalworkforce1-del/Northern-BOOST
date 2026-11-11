@@ -26,8 +26,27 @@
     if(previous)localStorage.setItem(localKey+':'+previousOwner,previous);
    }
    const scoped=localStorage.getItem(scopedKey);
-   if(scoped)localStorage.setItem(localKey,scoped);
-   else localStorage.removeItem(localKey);
+   const existing=localStorage.getItem(localKey);
+   if(scoped){
+     // A prior save may have updated the main key before the per-user mirror.
+     // Preserve whichever copy contains the most recent meaningful résumé.
+     const parse=raw=>{try{return JSON.parse(raw||'null')}catch{return null}};
+     const score=x=>{
+       const rb=x?.resumeBuilder||{},exp=Array.isArray(rb.experiences)?rb.experiences:[],v=Array.isArray(rb.versions)?rb.versions:[];
+       return exp.filter(e=>e&&(e.role||e.employer||e.evidence||(e.bullets||[]).length)).length*10+
+         v.filter(z=>z&&(z.target||z.jobDescription||z.summary||z.alignment)).length*3+
+         (rb.alignment?.explored?.length||0)*5+(rb.jobDescription?4:0)+(rb.summary?2:0);
+     };
+     const main=parse(existing),mirror=parse(scoped);
+     const sameOwner=previousOwner===identity.user.id;
+     const useMain=sameOwner&&main&&(score(main)>score(mirror)||
+       (score(main)===score(mirror)&&Date.parse(main.savedAt||'')>Date.parse(mirror?.savedAt||'')));
+     if(useMain)localStorage.setItem(scopedKey,existing);
+     else localStorage.setItem(localKey,scoped);
+   }else if(previousOwner===identity.user.id&&existing){
+     // Do not erase a valid same-owner save merely because the mirror is missing.
+     localStorage.setItem(scopedKey,existing);
+   }else localStorage.removeItem(localKey);
    // Never fall back to a different participant's tab-only backup.
    if(previousOwner!==identity.user.id){sessionStorage.removeItem(localKey);sessionStorage.removeItem(localKey+'-backup');}
    localStorage.setItem(ownerKey,identity.user.id);
