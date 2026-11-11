@@ -53,6 +53,7 @@
   }
   const scripts=[
     base+'course-data.js',
+    'resume-evidence-review-v1.js',
     'app.js',
     'resume-polish-v1.js',
     base+'resume-step-arrival-v1.js',
