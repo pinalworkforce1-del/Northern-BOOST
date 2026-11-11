@@ -14,8 +14,8 @@
   const {data:identity,error:identityError}=await client.auth.getUser();
   if(identityError||!identity?.user){say('Could not verify your Northern BOOST identity. Return to BOOST and sign in again.');return;}
   const {data:enrolled,error:enrollError}=await client.rpc('boost_northern_ready2work_enrolled');
-  if(enrollError){say('Northern staff enrollment verification is unavailable. Please contact your career coach.');return;}
-  if(enrolled!==true){say('Ready 2 Work opens after Northern staff approve your enrollment in TalentSync. Your BOOST pathway progress is unchanged.');return;}
+  if(enrollError){say('Northern Ready 2 Work access verification is unavailable. Please contact your career coach.');return;}
+  if(enrolled!==true){say('Ready 2 Work is not enabled for your account. Ask your Northern BOOST career coach to enable access in Coach View. Your existing BOOST progress is unchanged.');return;}
   // The shared app uses a fixed local key; swap its value to a per-user
   // Northern namespace before any application code can load.
   const localKey='boost-northern-r2w-v1',ownerKey='boost-northern-r2w-current-owner',scopedKey=localKey+':'+identity.user.id;
