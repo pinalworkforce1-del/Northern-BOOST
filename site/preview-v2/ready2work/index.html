@@ -32,7 +32,10 @@
 #viewCertificate #certificateLocalLogo{display:block;width:100%;max-width:none;max-height:none;height:auto;object-fit:unset;object-position:top center;filter:none;mix-blend-mode:multiply}
 #viewCertificate .northern-cert-lockup[data-region="coconino"]{height:clamp(90px,9vw,132px);width:min(570px,48vw)}
 #viewCertificate .northern-cert-lockup[data-region="agn"]{height:clamp(94px,10.2vw,138px);width:min(570px,48vw)}
-#viewCertificate .northern-cert-lockup[data-region="agn"] #certificateLocalLogo{mix-blend-mode:multiply}
+/* NEAZ has an actual alpha-transparent logo: show the complete regional lockup,
+   rather than clipping a full-sized raster with CSS blend modes. */
+#viewCertificate .northern-cert-lockup[data-region="agn"]{overflow:visible}
+#viewCertificate .northern-cert-lockup[data-region="agn"] #certificateLocalLogo{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center center;mix-blend-mode:normal;filter:none}
 #viewCertificate .northern-cert-lockup[data-region="coconino"] #certificateLocalLogo{mix-blend-mode:normal}
 #viewCertificate #certificateLogoRegion{display:none!important}
 @media(max-width:900px){
