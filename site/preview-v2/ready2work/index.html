@@ -13,37 +13,73 @@
 <link rel="stylesheet" href="resume-format-v1.css">
 <link rel="stylesheet" href="resume-occupation-search-v1.css">
 <style>
-/* Northern certificate presentation: isolated from shared Pinal CSS. */
-#viewCertificate .certificate-area-choice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin:13px auto;padding:12px 16px;background:#e8f1f5;border:1px solid #a7c4d4;border-radius:12px;color:#17344d;max-width:920px}
+/* Northern BOOST certificate v3: regional artwork, prominent logos, balanced layout. */
+#viewCertificate .certificate-area-choice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin:13px auto 19px;padding:12px 18px;background:#edf3f5;border:1px solid #afc6ce;border-radius:12px;color:#17344d;max-width:920px}
 #viewCertificate .certificate-area-choice label{font-weight:800;font-size:14px}
 #viewCertificate .certificate-area-choice select{max-width:100%;min-width:245px;padding:10px;border:1px solid #799aaf;border-radius:8px;background:#fff;color:#17344d;font:inherit}
-#viewCertificate .certificate-area-choice p{width:100%;font-size:12px;margin:0;text-align:center}
-#viewCertificate .certificate-sheet{background:#fdf5e6}
-#viewCertificate .certificate-bg{object-fit:fill}
-#viewCertificate .cert-brand-row{display:flex;justify-content:center;align-items:center;min-height:30px}
-#viewCertificate .northern-cert-lockup{background:#fff9edec;padding:6px 18px;border-radius:6px;display:flex;flex-direction:column;text-align:center;gap:2px;color:#273679}
-#viewCertificate .northern-cert-lockup strong{font-size:clamp(14px,1.65vw,23px);letter-spacing:.045em;font-weight:900}
-#viewCertificate .northern-cert-lockup span{font-size:clamp(9px,.9vw,14px);font-weight:900;letter-spacing:.13em;color:#262224}
-#viewCertificate .cert-footer .signature small{font-size:clamp(8px,.8vw,13px);letter-spacing:.01em}
-#viewCertificate .certificate-content{inset:4% 7% 6%;gap:clamp(4px,.6vw,9px)}
-#viewCertificate .certificate-skills{background:#fff9efda}
+#viewCertificate .certificate-area-choice p{width:100%;font-size:12px;margin:0;text-align:center;color:#49616b}
+#viewCertificate .certificate-sheet{position:relative;isolation:isolate;aspect-ratio:16/9;min-height:0;max-width:1500px;margin:auto;background:#fcf4e6;overflow:hidden;border-radius:8px;box-shadow:0 15px 34px rgba(8,30,48,.24)}
+#viewCertificate .certificate-bg{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill;z-index:0}
+#viewCertificate .certificate-content{position:absolute;inset:5.1% 7.8% 6.8%;display:grid;grid-template-rows:minmax(70px,1.15fr) auto auto auto minmax(95px,1.5fr) auto auto;justify-items:center;align-content:space-between;gap:clamp(5px,.5vw,9px);z-index:1;color:#17344d}
+#viewCertificate .certificate-content > *{min-width:0}
+#viewCertificate .cert-brand-row{display:flex;justify-content:center;align-items:center;margin:0 auto;width:100%;min-height:0}
+#viewCertificate .northern-cert-lockup{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;max-width:100%;padding:0;background:transparent;border:0;border-radius:0;text-align:center;color:#253879}
+#viewCertificate #certificateLocalLogo{display:block;width:auto;max-width:min(440px,37vw);height:auto;max-height:clamp(64px,7.8vw,116px);object-fit:contain;filter:drop-shadow(0 1px 1px rgba(255,249,235,.65))}
+#viewCertificate #certificateLocalLogo[hidden],#viewCertificate #certificateBrandFallback[hidden],#viewCertificate #certificateLogoRegion[hidden]{display:none!important}
+#viewCertificate #certificateBrandFallback{display:flex;flex-direction:column;gap:2px}
+#viewCertificate #certificateBrandFallback strong{font-size:clamp(17px,2.4vw,33px);font-weight:950;letter-spacing:.045em}
+#viewCertificate #certificateBrandFallback span,#viewCertificate #certificateLogoRegion{font-size:clamp(10px,1.1vw,15px);font-weight:900;letter-spacing:.15em;color:#253879}
+#viewCertificate .cert-title{width:min(1050px,96%);max-width:96%;margin:0 auto;text-align:center}
+#viewCertificate .cert-title>span{font-size:clamp(9px,.95vw,13px);letter-spacing:.2em;color:#193b51}
+#viewCertificate .cert-title h1{font-size:clamp(29px,3.3vw,52px);line-height:1.08;margin:5px auto 8px;max-width:100%;text-wrap:balance;color:#17344d}
+#viewCertificate .cert-title p{max-width:800px;font-size:clamp(10px,.98vw,15px);line-height:1.45;color:#2e4e63}
+#viewCertificate .name-block{width:100%;text-align:center}
+#viewCertificate .name-block label{font-size:clamp(9px,.8vw,12px);letter-spacing:.16em}
+#viewCertificate .name-block input{font-size:clamp(28px,3.35vw,49px);width:min(720px,90%);font-weight:700;line-height:1.12;min-height:1.24em}
+#viewCertificate .mastery-title{text-align:center;align-self:end;font-size:clamp(11px,1.03vw,16px);letter-spacing:.12em;color:#153951}
+#viewCertificate .certificate-skills{width:min(940px,86%);margin:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 22px;padding:clamp(8px,.8vw,13px) clamp(12px,1.4vw,24px);background:rgba(255,252,245,.92);border:1px solid rgba(166,126,70,.32);border-radius:12px;box-shadow:0 3px 9px rgba(91,66,36,.07)}
+#viewCertificate .cert-skill{font-size:clamp(10px,.9vw,13px);padding:5px 6px;color:#163a52}
+#viewCertificate .cert-skill strong:last-child{color:#93611d}
+#viewCertificate .readiness-row{width:min(940px,86%);display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:auto}
+#viewCertificate .readiness-row>div{background:rgba(255,252,245,.92);border:1px solid rgba(166,126,70,.25);font-size:clamp(9px,.85vw,13px);font-weight:750}
+#viewCertificate .cert-footer{width:min(980px,91%);margin:auto;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:16px;align-items:center;padding:clamp(7px,.7vw,11px) clamp(12px,1.2vw,22px);background:rgba(255,252,245,.94);border:1px solid rgba(166,126,70,.30);border-radius:9px;font-size:clamp(9px,.75vw,12px);color:#17344d}
+#viewCertificate .cert-footer .signature small{font-size:clamp(9px,.78vw,12px);letter-spacing:.025em;color:#17344d}
+#viewCertificate .cert-footer strong{overflow-wrap:anywhere}
 #viewCertificate #certificateLock.show{z-index:8}
-@media (max-width:700px){
- #viewCertificate .certificate-sheet{min-height:740px;aspect-ratio:1.294/1}
- #viewCertificate .certificate-content{inset:5% 5% 6%;gap:7px}
- #viewCertificate .northern-cert-lockup strong{font-size:15px}
- #viewCertificate .northern-cert-lockup span{font-size:10px}
+@media (max-width:900px){
+ #viewCertificate .certificate-sheet{aspect-ratio:16/10;min-height:690px}
+ #viewCertificate .certificate-content{inset:5% 6.4% 6%;grid-template-rows:auto auto auto auto auto auto auto;gap:9px}
+ #viewCertificate #certificateLocalLogo{max-width:min(450px,58vw);max-height:103px}
+ #viewCertificate .cert-title h1{font-size:clamp(25px,4.5vw,39px)}
+ #viewCertificate .certificate-skills{width:95%;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #viewCertificate .readiness-row{width:95%}
+ #viewCertificate .cert-footer{width:97%}
+}
+@media (max-width:600px){
+ #viewCertificate .certificate-sheet{aspect-ratio:auto;min-height:790px}
+ #viewCertificate .certificate-content{inset:6% 5.8% 6%;align-content:space-between}
+ #viewCertificate #certificateLocalLogo{max-width:min(320px,74vw);max-height:95px}
+ #viewCertificate .cert-title h1{font-size:clamp(25px,6vw,34px)}
+ #viewCertificate .cert-title p{font-size:11px}
+ #viewCertificate .name-block input{font-size:clamp(24px,6vw,34px)}
+ #viewCertificate .certificate-skills{width:98%;grid-template-columns:1fr;gap:1px;padding:7px 9px}
+ #viewCertificate .cert-skill{font-size:11px;padding:3px}
+ #viewCertificate .readiness-row{width:98%;gap:5px}
+ #viewCertificate .readiness-row>div{font-size:10px;padding:6px}
+ #viewCertificate .cert-footer{width:98%;grid-template-columns:1fr 1fr;gap:5px 9px;padding:7px 9px;font-size:10px}
+ #viewCertificate .cert-footer .signature{grid-column:1/-1;text-align:center}
 }
 @media print{
  @page{size:landscape;margin:0}
+ html,body{margin:0!important;padding:0!important}
  #viewCertificate .certificate-area-choice{display:none!important}
- #viewCertificate .certificate-sheet{width:100%!important;height:auto!important;aspect-ratio:16/9!important;break-inside:avoid!important}
- #viewCertificate .certificate-content{inset:4% 7% 6%}
+ #viewCertificate .certificate-sheet{width:100%!important;max-width:none!important;height:auto!important;min-height:0!important;aspect-ratio:16/9!important;overflow:hidden!important;box-shadow:none!important;border-radius:0!important;page-break-inside:avoid!important;break-inside:avoid!important}
+ #viewCertificate .certificate-content{inset:5.1% 7.8% 6.8%;grid-template-rows:minmax(70px,1.15fr) auto auto auto minmax(95px,1.5fr) auto auto;gap:clamp(4px,.5vw,9px)}
+ #viewCertificate .certificate-skills{grid-template-columns:repeat(2,minmax(0,1fr));width:86%}
+ #viewCertificate .cert-footer{grid-template-columns:1fr 1fr 1.2fr;width:91%}
+ #viewCertificate .cert-footer .signature{grid-column:auto}
  #viewCertificate .certificate-bg{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
-#viewCertificate #certificateLocalLogo{max-height:48px;max-width:clamp(200px,35vw,390px);width:auto;height:auto;object-fit:contain}
-#viewCertificate .northern-cert-lockup:has(#certificateLocalLogo:not([hidden])){padding:3px 12px}
-#viewCertificate #certificateLogoRegion{font-size:clamp(9px,.8vw,13px);font-weight:900;letter-spacing:.12em;color:#273679}
 </style>
 </head>
 <body><div id="northernGate" role="status" aria-live="polite"><div class="inner"><h1>Northern Ready 2 Work</h1><p id="northernGateText">Verifying your Northern BOOST session and enrollment…</p><p><a href="../">← Return to Northern BOOST</a></p></div></div>
@@ -137,7 +173,7 @@
 <select id="certificateArea" aria-describedby="certificateAreaHelp"><option value="">Choose your service area</option><option value="agn">Northeastern Arizona</option><option value="coconino">Coconino County</option></select>
 <p id="certificateAreaHelp">Your certificate will display the organization for your selected service area.</p></div>
 <section id="readinessProgress" class="readiness-progress"><div><span class="eyebrow">WORK READINESS PROGRESS</span><h2 id="readinessProgressTitle">Your progress so far</h2><p id="readinessProgressMeta"></p></div><div class="readiness-progress-track"><i id="readinessProgressBar"></i></div><div id="readinessStageStatus" class="readiness-stage-status"></div></section>
-    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="northern-certificate-landscape.svg?v=20261117" alt=""><div class="certificate-content"><div class="cert-brand-row"><div class="northern-cert-lockup" aria-label="Arizona at Work Northern region">
+    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="northern-certificate-landscape.svg?v=20261117-v3" alt=""><div class="certificate-content"><div class="cert-brand-row"><div class="northern-cert-lockup" aria-label="Arizona at Work Northern region">
 <img id="certificateLocalLogo" alt="" hidden>
 <div id="certificateBrandFallback"><strong>ARIZONA@WORK</strong><span id="certificateRegionLabel">NORTHERN ARIZONA</span></div>
 <span id="certificateLogoRegion" hidden></span>
