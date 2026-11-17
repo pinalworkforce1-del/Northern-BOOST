@@ -30,8 +30,12 @@ function pageLabel(){
  if(path.includes('/preview-v2/discover'))return'Northern BOOST 2.0 — Discover: Career Mindmap and embedded 30-activity interest profiler';
  return'Northern BOOST 2.0 — Pathway dashboard (Career Exploration or Rapid Employment)';
 }
-function isMap(){return location.pathname.toLowerCase().includes('/preview-v2/index.html')||location.pathname.toLowerCase().endsWith('/preview-v2/')}
-function eligiblePage(){return location.pathname.toLowerCase().includes('/preview-v2/')}
+function isMap(){
+  // Works for the production root and the original /preview-v2/ QA page.
+  // Use the actual Northern 2.0 dashboard rather than relying on a staging path.
+  return !!(document.getElementById('stepList')&&document.getElementById('resumeBtn'));
+}
+function eligiblePage(){return isMap()||location.pathname.toLowerCase().includes('/preview-v2/')}
 
 async function ensureMaster(){
   if(window.NORTHERN_OCC_MASTER?.load)return window.NORTHERN_OCC_MASTER.load();
