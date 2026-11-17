@@ -2,108 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Northern Arizona BOOST — Pathways</title>
-<style>
-:root{--navy:#0d2741;--paper:#f8f3e7;--gold:#e4a72b;--green:#2f7d4c;--blue:#245e91;--rapid:#4c8b3d;--career:#225f91;--line:#d8e1e7}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;background:#10243a;color:#17202a}.shell{min-height:100vh;background:linear-gradient(180deg,#10243a,#152f49)}
-.nav{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:11px 16px;background:#0b2237f5;color:#fff;border-bottom:1px solid #ffffff20}.chip{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid #ffffff36;border-radius:999px;background:#ffffff12;color:#fff;text-decoration:none;font-weight:800;font-size:13px}.navTitle{font-weight:900;font-size:14px}.progress{display:flex;gap:9px;align-items:center;margin-top:5px}.track{height:8px;flex:1;background:#ffffff25;border-radius:999px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#e9bd58,#f6d983);transition:.25s}.count{font-size:12px;color:#d8e6f2;white-space:nowrap}
-.wrap{padding:16px}.intro{max-width:1648px;margin:0 auto 12px;color:#eef6fb;background:#ffffff12;border:1px solid #ffffff20;border-radius:12px;padding:11px 14px;font-size:14px;line-height:1.45}.stage{position:relative;max-width:1648px;margin:auto;border-radius:18px;overflow:hidden;box-shadow:0 18px 45px #0000003d;background:#0b1d2f;aspect-ratio:1648/928}.stage>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.hot{position:absolute;z-index:4;display:block;border-radius:16px;text-decoration:none;background:#ffffff00;outline:2px solid transparent;transition:.16s;pointer-events:auto}.hot:hover,.hot:focus-visible{outline-color:#ffdd78eb;background:#ffe38b1c;box-shadow:0 0 0 4px #ffd65e2e,0 8px 26px #0004;transform:translateY(-1px)}.hot.pulse:after{content:"";position:absolute;inset:7px;border-radius:13px;animation:pulse 2.4s ease-out infinite}.hot.done:before{content:'✓';position:absolute;right:5px;top:5px;width:24px;height:24px;border-radius:50%;background:#2e8a50;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;box-shadow:0 3px 9px #0004}.hot.review-needed{outline-color:#e4a72b!important;box-shadow:0 0 0 5px #e4a72b30}.hot.review-needed:before{content:'↻';position:absolute;right:5px;top:5px;width:26px;height:26px;border-radius:50%;background:#e4a72b;color:#17324d;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;box-shadow:0 3px 9px #0004}.hot.waiting-review{opacity:.78;filter:saturate(.75);outline:2px dashed #c39a3c}.hot.waiting-review:before{content:'↻';position:absolute;right:5px;top:5px;width:26px;height:26px;border-radius:50%;background:#7b8790;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;box-shadow:0 3px 9px #0004}.hot.current{outline-color:#2aa7e8;box-shadow:0 0 0 5px #2aa7e833}.hot.current:after{content:'YOU ARE HERE';position:absolute;left:6px;top:6px;padding:4px 8px;border-radius:999px;background:#155b8d;color:#fff;border:2px solid #fff;font-size:10px;font-weight:900;letter-spacing:.03em}.hot.rec{box-shadow:inset 0 0 0 3px #e4a72bdd}.hot.rec .rec{display:block}.rec{display:none;position:absolute;left:6px;bottom:6px;padding:4px 7px;border-radius:999px;background:#e4a72b;color:#17324d;border:2px solid #fff;font-size:10px;font-weight:900}
-.tip{position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);display:none;width:max-content;max-width:230px;padding:7px 9px;border-radius:8px;background:#081a2af5;color:#fff;font-size:11px;font-weight:800;text-align:center;box-shadow:0 5px 18px #0005;pointer-events:none}.hot:hover .tip,.hot:focus-visible .tip{display:block}@keyframes pulse{0%{box-shadow:0 0 0 0 #ffdc6f9e}70%,100%{box-shadow:0 0 0 14px #ffdc6f00}}
-.modal{position:fixed;inset:0;z-index:50;background:#03101bc7;display:none;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modalCard{width:min(760px,96vw);background:var(--paper);border-radius:20px;overflow:hidden;box-shadow:0 30px 90px #0008}.modalHead{background:linear-gradient(90deg,#102d49,#1f587f);color:#fff;padding:18px 20px}.modalHead h2{margin:0}.modalBody{padding:20px}.choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice{border:0;border-radius:16px;padding:18px;text-align:left;color:#fff;font:inherit;cursor:pointer}.choice strong{display:block;font-size:18px;margin-bottom:7px}.choice small{line-height:1.45}.rapid{background:linear-gradient(135deg,#356f39,#5d964b)}.career{background:linear-gradient(135deg,#174e7b,#2d78ad)}.close{margin-top:14px;border:1px solid #bdcbd4;background:#fff;border-radius:999px;padding:8px 13px;font-weight:800;cursor:pointer}.toast{position:fixed;left:50%;bottom:18px;z-index:60;transform:translate(-50%,18px);opacity:0;background:#0b2237;color:#fff;padding:11px 15px;border-radius:12px;font-size:13px;font-weight:800;box-shadow:0 12px 30px #0005;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:900px){.nav{grid-template-columns:1fr auto}.navCenter{grid-column:1/-1;grid-row:2}.wrap{padding:9px}.choiceGrid{grid-template-columns:1fr}}@media(max-width:640px){.nav{padding:9px}.intro{font-size:12px}.wrap{padding:5px}}
-.chip{cursor:pointer;font-family:inherit}.navActions{display:flex;gap:8px;align-items:center}.rosieWelcome,.rosieExperience{position:absolute;inset:0;z-index:15;display:none}.rosieWelcome.show,.rosieExperience.show{display:block}.rosieWelcome{background:#04121f99}.welcomeCard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,90%);padding:25px;border-radius:20px;background:#0b2237f2;color:#fff;border:2px solid #e4a72b;box-shadow:0 22px 70px #0009;text-align:center}.welcomeCard h2{margin:0 0 9px;font-size:clamp(24px,3vw,38px)}.welcomeCard p{margin:0 auto 18px;max-width:430px;line-height:1.5}.welcomeActions,.rosieControls{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.rosieBtn{border:1px solid #ffffff55;border-radius:999px;background:#123a5c;color:#fff;padding:10px 15px;font:800 14px Inter,Arial,sans-serif;cursor:pointer}.rosieBtn.primary{background:#e4a72b;color:#10243a;border-color:#f6d983}.rosieExperience{background:#03101b45}.rosieVideoWrap{position:absolute;left:2.5%;bottom:3%;height:91%;aspect-ratio:9/16;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 15px 45px #0009;border:2px solid #e4a72b}.rosieVideoWrap video{width:100%;height:100%;display:block;object-fit:contain}.rosieControls{position:absolute;right:2.5%;top:2.5%;padding:8px;border-radius:999px;background:#061827d9;box-shadow:0 8px 25px #0006}.rosieCaption{position:absolute;left:31%;right:3%;bottom:4%;min-height:58px;display:flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;background:#000c;color:#fff;font-size:clamp(17px,2vw,27px);font-weight:800;line-height:1.3;text-align:center;text-shadow:0 2px 4px #000}.rosieCaption:empty{display:none}@media(max-width:900px){.rosieVideoWrap{height:78%;left:2%;bottom:12%}.rosieCaption{left:30%;right:2%;bottom:3%}.rosieControls{right:2%;top:2%}}@media(max-width:640px){.navActions{gap:5px}.chip{padding:7px 9px;font-size:11px}.rosieVideoWrap{height:65%;left:2%;bottom:18%}.rosieCaption{left:2%;right:2%;bottom:2%;font-size:15px;min-height:48px}.rosieControls{left:2%;right:2%;top:2%;border-radius:14px}.rosieBtn{padding:8px 10px;font-size:12px}}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/boost-config.js?v=20260911mapfix3"></script>
-<script src="assets/js/boost-cloud.js?v=20260908b"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b243b">
+<meta name="description" content="Northern BOOST helps you explore career pathways, prepare for your next step, and build work-ready skills with your career coach.">
+<title>Northern BOOST 2.0 | Career Pathways</title>
+<base href="./">
+<link rel="stylesheet" href="preview-v2/preview-v2.css?v=r2w-20261117-imagefit-1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="preview-v2/preview-config.js?v=1" defer></script>
+<script src="preview-v2/preview-v2.js?v=production-20261117-1" defer></script>
+<script src="preview-v2/rosie-guide-v2.js?v=production-20261117-1" defer></script>
 </head>
-<body><main class="shell">
-<header class="nav"><div><span class="chip">Northern BOOST Pathways</span></div><div class="navCenter"><div class="navTitle"><span id="pathLabel">Pathway not selected</span> • Your BOOST Progress</div><div class="progress"><div class="track"><div class="fill" id="fill"></div></div><span class="count" id="count">0 of 0</span></div></div><div class="navActions"><button class="chip" type="button" id="rosieReplay">Play Rosie Intro</button><a class="chip" href="#" id="chooseTop">Choose Pathway</a><button class="chip" type="button" id="startBoostOver">Start BOOST Over</button></div></header>
-<div class="wrap"><div class="intro"><strong>Start at the top of the map.</strong> Complete your local BOOST start form, which includes the orientation video and interest questions, then set up Arizona Job Connection and complete Module 1. Both pathways begin together, branch after Module 1, and reconnect through shared career-readiness steps on the way to employment.</div>
-<div class="stage" aria-label="Interactive Northern Arizona BOOST pathways map">
-<img src="assets/images/boost-home-mountain-outcomes-v3.webp" alt="BOOST pathways map in a Northern Arizona mountain landscape surrounded by health care, advanced manufacturing, information technology, skilled trades, and transportation and logistics workplaces">
-<section class="rosieWelcome" id="rosieWelcome" role="dialog" aria-modal="true" aria-labelledby="rosieWelcomeTitle">
-  <div class="welcomeCard"><h2 id="rosieWelcomeTitle">Meet Rosie</h2><p>Rosie is your guide to BOOST. Listen to her short welcome and learn how the pathways can help you plan your next move. Captions will appear over the map.</p><div class="welcomeActions"><button class="rosieBtn primary" type="button" id="meetRosie">▶ Meet Rosie</button><button class="rosieBtn" type="button" id="skipRosieWelcome">Continue to the Map</button></div></div>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Northern BOOST home"><span class="brand-mark">B</span><span><strong>BOOST</strong><small>NORTHERN ARIZONA</small></span></a>
+  <div class="top-actions"><span id="identity" class="identity">Checking secure sign-in…</span><button id="signOut" type="button" class="ghost" hidden>Sign out</button><a class="ghost" href="staff-login.html">Coach sign-in</a></div>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">ARIZONA@WORK · NORTHERN ARIZONA</div>
+    <h1>Build your next move.</h1>
+    <p>Explore careers, test what works in the real world, and prepare for your next step with evidence you and your Career Coach can use.</p>
+    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button><button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie · Pathway Introductions</button></div>
+  </div>
+  <div class="hero-figure"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp" alt="Rosie, your BOOST career guide" onerror="this.onerror=null;this.src='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp'"></div>
 </section>
-<section class="rosieExperience" id="rosieExperience" aria-label="Rosie BOOST introduction">
-  <div class="rosieVideoWrap"><video id="rosieVideo" playsinline preload="metadata"><source src="assets/video/rosie-boost-intro-web.mp4?v=20260910rosiefix1" type="video/mp4"><track kind="captions" srclang="en" label="English" src="assets/captions/rosie-boost-intro.vtt" default></video></div>
-  <div class="rosieControls" aria-label="Rosie introduction controls"><button class="rosieBtn" type="button" id="rosiePlayPause">❚❚ Pause</button><button class="rosieBtn" type="button" id="rosieMute">🔊 Audio on</button><button class="rosieBtn" type="button" id="rosieRestart">↻ Replay</button><button class="rosieBtn" type="button" id="rosieSkip">≫ Skip intro</button></div>
-  <div class="rosieCaption" id="rosieCaption" aria-live="off"></div>
+<section class="app-shell" id="appShell" hidden>
+  <div class="section-heading"><div><span class="overline">YOUR BOOST JOURNEY</span><h2>Your progress, all in one place.</h2></div><div class="progress-total"><strong id="progressPercent">0%</strong><small id="progressCaption">Getting started</small></div></div>
+  <div class="progress-track" role="progressbar" aria-label="BOOST pathway completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><div id="progressFill"></div></div>
+  <p class="progress-message" id="progressMessage" role="status" aria-live="polite"></p>
+  <div class="getting-started">
+    <div class="section-heading tight"><div><span class="overline">START HERE</span><h2>Get ready for your pathway.</h2></div><span class="subtle">Both Northern pathways begin with Discover</span></div>
+    <div class="starter-grid">
+      <article class="starter-card"><div class="starter-num">01</div><div><h3>Orientation &amp; Interest Form</h3><p>Start with your local area, orientation video, and interest questions.</p><button id="chooseArea" type="button" class="inline-btn">Choose my service area →</button><span id="startAreaState" class="micro-status"></span></div></article>
+      <article class="starter-card"><div class="starter-num">02</div><div><h3>Arizona Job Connection</h3><p>Set up or access your account before working with your Career Coach.</p><a id="ajcLink" class="inline-btn" href="https://www.azjobconnection.gov/" target="_blank" rel="noopener noreferrer">Open Arizona Job Connection ↗</a><span id="ajcState" class="micro-status"></span></div></article>
+      <article class="starter-card featured art-discover"><div class="starter-num">03</div><div><h3>Module 1 — Discover</h3><p>Explore your interests and work drivers with the new embedded 30-activity Mini Interest Profiler.</p><button id="discoverBtn" type="button" class="inline-btn">Open Discover →</button><span id="discoverState" class="micro-status"></span></div></article>
+    </div>
+  </div>
+  <section class="coach-bridge" id="coachBridge" aria-label="Coach appointment preparation">
+    <div class="coach-bridge-icon" id="coachPrepIcon" aria-hidden="true">04</div>
+    <div class="coach-bridge-media" aria-hidden="true"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/coach-preparation.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+    <div class="coach-bridge-content"><span class="overline">AFTER DISCOVER · BEFORE ENROLLMENT</span><h3>Coach Appointment Prep</h3><p>Bring your saved interests, career choices, and questions to your Career Coach. The Northern team determines enrollment and next services.</p><span id="coachPrepState" class="coach-prep-state">Complete Discover to prepare</span></div>
+    <button id="coachPrepButton" class="btn primary" type="button" disabled>Open Coach Prep →</button>
+  </section>
+  <div class="pathway-section" id="pathwaySection">
+    <div class="section-heading"><div><span class="overline">PICK YOUR ROUTE</span><h2>Two pathways. One stronger next step.</h2></div><p class="heading-copy">Your path branches after Discover. Changing routes doesn't erase completed work.</p></div>
+    <div class="pathway-grid">
+      <button class="pathway-choice" type="button" data-path-choice="career"><div class="path-visual career">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/discover.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/validate.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/decide.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">EXPLORE YOUR OPTIONS</span>
+  <span class="path-art-caption" aria-hidden="true">DISCOVER · COMPARE · DECIDE</span>
+</div><div class="path-card-body"><small>PATHWAY 01</small><h3>Career Exploration &amp; Development</h3><p>Test your career ideas, compare opportunities and mobility, decide on a direction, and experience the work.</p><span class="choice-action">View career pathway →</span></div><span class="selection-pill" data-path-tag="career"></span></button>
+      <button class="pathway-choice" type="button" data-path-choice="rapid"><div class="path-visual rapid">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/career-mobility.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/48-hour-job-search.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/financial-habits.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">MOVE TOWARD WORK</span>
+  <span class="path-art-caption" aria-hidden="true">SKILLS · JOB SEARCH · NEXT STEPS</span>
+</div><div class="path-card-body"><small>PATHWAY 02</small><h3>Rapid Employment</h3><p>Discover your transferable skills, make a focused job-search plan, and prepare for your conversation with a coach.</p><span class="choice-action">View rapid pathway →</span></div><span class="selection-pill" data-path-tag="rapid"></span></button>
+    </div>
+  </div>
+  <section id="journeySection" class="journey-section" aria-label="Selected BOOST pathway" hidden>
+    <div class="section-heading"><div><span class="overline" id="selectedEyebrow">YOUR PATHWAY</span><h2 id="journeyTitle">Your next steps</h2></div><button id="switchPathway" type="button" class="ghost dark">Switch pathway</button></div>
+    <div class="next-step" id="nextStep" role="status"></div>
+    <div class="step-list" id="stepList"></div>
+  </section>
+  <section id="ready2workSection" class="r2w-section" aria-labelledby="r2wHeading">
+    <div class="section-heading">
+      <div><span class="overline">YOUR NEXT STEP · WORK READINESS</span><h2 id="r2wHeading">Ready 2 Work</h2></div>
+      <p class="heading-copy">Three experiences to strengthen your skills, résumé, and interview confidence.</p>
+    </div>
+    <div class="r2w-intro">
+      <div class="r2w-intro-copy">
+        <span class="overline">SOFT SKILLS · RÉSUMÉ · INTERVIEW</span>
+        <h3>Put your career plan into practice.</h3>
+        <p>Explore real-world workplace decisions, build an employer-ready résumé, and practice interviewing with AI-enhanced support.</p>
+        <p class="r2w-status" id="r2wAccessStatus" role="status" aria-live="polite">Ready to take the next step? Your career coach can help you get started with Ready 2 Work.</p>
+        <a class="btn primary" id="r2wLaunch" href="preview-v2/ready2work/index.html">Enter Ready 2 Work →</a>
+        <p class="r2w-safe-note">Your work is saved along the way, so you can return and keep building your skills.</p>
+      </div>
+      <img class="r2w-feature-art" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-pathway-map.webp" alt="Ready 2 Work illustrated journey featuring Soft Skills Base Camp, Resume Retreat, and Interview Landing" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    </div>
+    <div class="r2w-stages" aria-label="Ready 2 Work experiences">
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-base-camp-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>01 · WORKPLACE JUDGMENT</span><h3>Soft Skills Base Camp</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-soft-skills-base-camp">Open stage →</a><p>Explore decisions involving communication, teamwork, professionalism, and problem-solving.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-resume-retreat-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>02 · EMPLOYER-READY EVIDENCE</span><h3>Resume Retreat</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-resume-retreat">Open stage →</a><p>Build and refine your résumé with AI-enhanced guidance.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-interview-landing-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>03 · INTERVIEW PRACTICE</span><h3>Interview Landing</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-interview-landing">Open stage →</a><p>Practice presenting your experience and learn from interview feedback.</p></div></article>
+    </div>
+  </section>
+  <div class="bottom-note"><strong>Keep your work.</strong> Your Northern BOOST modules and saved career evidence continue to use the existing Northern progression system. <span id="syncStatus">Checking cloud status…</span></div>
 </section>
-<!-- Shared launch sequence -->
-<a class="hot pulse" data-start-area style="left:21.1%;top:7.2%;width:23.6%;height:18.1%" href="#start-area"><span class="tip">Start Here — Orientation + Interest Form</span></a>
-<a class="hot" data-visit="ajc" style="left:46.0%;top:7.2%;width:9.7%;height:18.0%" href="https://www.azjobconnection.gov/" target="_blank" rel="noopener"><span class="tip">Create / Access Arizona Job Connection</span></a>
-<a class="hot pulse" data-core="module1" style="left:58.0%;top:7.1%;width:10.9%;height:18.1%" href="Northern_BOOST_Module1_PinalFlow_v1.html"><span class="tip">Module 1 • Discover / Career Direction</span></a>
-<!-- Rapid Employment -->
-<a class="hot" data-rapid="skillmobility" style="left:21.6%;top:40.5%;width:13.1%;height:10.8%" href="https://pinalworkforce1-del.github.io/BOOST-Job_Mobility/" target="_blank" rel="noopener"><span class="tip">Finding Yourself in Work / Skill Mobility</span></a>
-<a class="hot" data-rapid="jobsearch" style="left:21.8%;top:55.5%;width:14.4%;height:14.9%" href="https://pinalworkforce1-del.github.io/48_hour_job_search/" target="_blank" rel="noopener"><span class="tip">48-Hour Job Search Strategy</span></a>
-<!-- Shared convergence steps -->
-<a class="hot" data-shared="financial" style="left:40.9%;top:56.0%;width:14.7%;height:14.8%" href="https://pinalworkforce1-del.github.io/Financial_Assessment/" target="_blank" rel="noopener"><span class="tip">Build Strong Financial Habits</span></a>
-<a class="hot" data-shared="ai" style="left:41.6%;top:69.8%;width:14.4%;height:13.5%" href="https://pinalworkforce1-del.github.io/AI_Literacy/" target="_blank" rel="noopener"><span class="tip">AI &amp; You</span></a>
-<!-- Career Exploration -->
-<a class="hot" data-core="module2" style="left:62.4%;top:30.5%;width:13.3%;height:11.7%" href="Northern_BOOST_Module2_PinalFlow_v1.html"><span class="tip">Module 2 • Career Reality Check</span></a>
-<a class="hot" data-core="module3" style="left:65.1%;top:40.4%;width:11.2%;height:10.8%" href="Northern_BOOST_Module3_Connected_Test_v0.8.html"><span class="tip">Module 3 • Career Mobility</span></a>
-<a class="hot" data-core="module4" style="left:65.4%;top:50.2%;width:10.9%;height:9.4%" href="Northern_BOOST_Module4_Connected_Test_v0.6.html"><span class="tip">Module 4 • Decide</span></a>
-<a class="hot" data-industry-choice style="left:65.0%;top:58.3%;width:12.2%;height:11.2%" href="#industry"><span class="tip">Choose Your Applied Career Experience</span></a>
-<!-- Applied Career Experiences -->
-<a class="hot" data-applied="skilled_trades" style="left:81.4%;top:40.8%;width:18.3%;height:7.5%" href="Northern_BOOST_Skilled_Trades_Connected_Test_v0.4.html"><span class="tip">Skilled Trades</span><span class="rec">RECOMMENDED</span></a>
-<a class="hot" data-applied="advanced_manufacturing" style="left:81.4%;top:48.2%;width:18.3%;height:7.6%" href="Northern_BOOST_Advanced_Manufacturing_Connected_Test_v0.2.html"><span class="tip">Advanced Manufacturing</span><span class="rec">RECOMMENDED</span></a>
-<a class="hot" data-applied="healthcare" style="left:81.4%;top:55.7%;width:18.3%;height:7.6%" href="Northern_BOOST_Healthcare_Connected_Test_v0.2.html"><span class="tip">Health Care</span><span class="rec">RECOMMENDED</span></a>
-<a class="hot" data-applied="it" style="left:81.4%;top:63.2%;width:18.3%;height:7.6%" href="Northern_BOOST_IT_Connected_Test_v0.2.html"><span class="tip">Information Technology</span><span class="rec">RECOMMENDED</span></a>
-<a class="hot" data-applied="cdl" style="left:81.4%;top:70.3%;width:18.3%;height:9.0%;z-index:45;cursor:pointer" href="Northern_BOOST_CDL_Connected_Test_v0.2.html"><span class="tip">Transportation &amp; Logistics</span><span class="rec">RECOMMENDED</span></a>
-</div></div></main>
-<div class="modal" id="modal"><div class="modalCard"><div class="modalHead"><h2>Choose Your BOOST Pathway</h2></div><div class="modalBody"><p>Both pathways lead toward employment. Use the evidence you and your Career Coach have reviewed to choose the route that fits what you need next.</p><div class="choiceGrid"><button class="choice rapid" data-pick="rapid"><strong>Rapid Employment Pathway</strong><small>Focus on barriers, transferable skills, AI literacy, and a focused job-search strategy.</small></button><button class="choice career" data-pick="career"><strong>Career Exploration &amp; Development</strong><small>Validate career options, compare mobility, decide a direction, and experience the work before the next investment or employment step.</small></button></div><button class="close" id="close">Close</button></div></div></div>
-<div class="modal" id="areaModal"><div class="modalCard"><div class="modalHead"><h2>Choose Your Area</h2></div><div class="modalBody"><p>Choose the area where you live or will receive workforce services. Your local BOOST start form includes the orientation video and interest questions.</p><div class="choiceGrid"><button class="choice career" data-area="coconino"><strong>Coconino County</strong><small>Open the Coconino BOOST Priority of Service Application.</small></button><button class="choice rapid" data-area="agn"><strong>Apache, Gila &amp; Navajo Counties</strong><small>Open the Northeastern Arizona BOOST Priority of Service Application.</small></button></div><button class="close" id="closeAreaModal">Close</button></div></div></div>
-<div class="toast" id="toast"></div>
-<script>
-const JK='boost_naz_journey_v1',PK='boost_naz_portal_progress_v1',PATH='boost_naz_pathway_v1',ROSIE_KEY='boost_naz_rosie_intro_seen_v1',AREA_KEY='boost_naz_service_area_v1';
-const LABELS={rapid:'Rapid Employment Pathway',career:'Career Exploration & Development'};
-const AREA_FORMS={agn:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNE1NN1o0RUNFMUI1OENHSUlTTVJKUURMTi4u',coconino:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNFFNVjFYS0dRNEU5UFRBR1JERVEyQkJNTi4u'};
-const AREA_LABELS={agn:'Apache, Gila & Navajo Counties',coconino:'Coconino County'};
-const AP={skilled_trades:'skilledTrades',advanced_manufacturing:'advancedManufacturing',healthcare:'healthcare',it:'it',cdl:'cdl',customer_service:'customerService'};
-const areaModal=document.getElementById('areaModal');
-function journey(){try{return JSON.parse(localStorage.getItem(JK)||'{}')}catch(e){return{}}}
-function portal(){try{return JSON.parse(localStorage.getItem(PK)||'{}')}catch(e){return{visited:{},rapid:{},career:{}}}}
-function savePortal(p){localStorage.setItem(PK,JSON.stringify(p))}
-function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(window.__t);window.__t=setTimeout(()=>toast.classList.remove('show'),2200)}
-function path(){return localStorage.getItem(PATH)||''}
-function setPath(p){localStorage.setItem(PATH,p);modal.classList.remove('show');render();showToast(LABELS[p]+' selected.')}
-function getArea(){return localStorage.getItem(AREA_KEY)||''}
-function setArea(area){localStorage.setItem(AREA_KEY,area)}
-function openAreaForm(area){if(!AREA_FORMS[area])return;setArea(area);const p=portal();p.visited=p.visited||{};p.visited.orientation=true;p.visited.interest=true;p.visited.startarea=true;p.serviceArea=area;savePortal(p);render();areaModal.classList.remove('show');showToast(AREA_LABELS[area]+' selected.');window.open(AREA_FORMS[area],'_blank','noopener')}
-function coreDone(j,id){const p=j.progress||{};if(p[id]==='stale')return false;if(id==='module1')return p.module1==='complete';if(id==='module2')return p.module2==='complete'||!!j.module2?.careers?.length;if(id==='module3')return p.module3==='complete'||!!j.module3?.careers?.length;if(id==='module4')return p.module4==='complete'||!!j.module4;return false}
-function reviewState(j){const progress=j.progress||{},ids=new Set(Object.entries(progress).filter(([,v])=>v==='stale').map(([id])=>id));Object.keys(j.staleModules||{}).forEach(id=>{if(progress[id]!=='complete')ids.add(id)});const order=['module3','module4'];const first=order.find(id=>ids.has(id))||'';return{ids,first,reason:id=>j.staleModules?.[id]?.reason||''}}
-function currentCareerStep(j){if(!coreDone(j,'module1'))return'module1';if(!coreDone(j,'module2'))return'module2';if(!coreDone(j,'module3'))return'module3';if(!coreDone(j,'module4'))return'module4';const prog=j.progress||{};if(!Object.values(AP).some(k=>prog[k]==='complete'))return'applied';return'complete'}
-function render(){const j=journey(),p=portal(),selectedPath=path(),prog=j.progress||{},review=reviewState(j),current=currentCareerStep(j),rec=j.module4?.appliedExperienceRecommendation?.key||null,sel=j.module4?.appliedExperienceSelected?.key||null;pathLabel.textContent=selectedPath?LABELS[selectedPath]:'Pathway not selected';document.querySelectorAll('[data-visit]').forEach(e=>e.classList.toggle('done',!!p.visited?.[e.dataset.visit]));document.querySelectorAll('[data-start-area]').forEach(e=>{const done=!!p.visited?.startarea||(!!p.visited?.orientation&&!!p.visited?.interest);e.classList.toggle('done',done);e.setAttribute('aria-label',(done?'Reopen ':'Open ')+'Orientation and Interest Form')});document.querySelectorAll('[data-rapid]').forEach(e=>e.classList.toggle('done',!!p.rapid?.[e.dataset.rapid]));document.querySelectorAll('[data-shared]').forEach(e=>{const id=e.dataset.shared;e.classList.toggle('done',!!p.rapid?.[id]||!!p.career?.[id])});document.querySelectorAll('[data-core]').forEach(e=>{const id=e.dataset.core,isReview=review.ids.has(id),isFirst=review.first===id;e.classList.toggle('done',coreDone(j,id));e.classList.toggle('review-needed',isReview&&isFirst);e.classList.toggle('waiting-review',isReview&&!isFirst);e.classList.toggle('current',selectedPath!=='rapid'&&current===id);const tip=e.querySelector('.tip');if(tip){if(!tip.dataset.baseText)tip.dataset.baseText=tip.textContent;tip.textContent=isReview?(isFirst?'↻ Review Needed — ':'Waiting on Earlier Review — ')+tip.dataset.baseText:tip.dataset.baseText}e.setAttribute('aria-label',isReview?((isFirst?'Review needed. ':'Waiting for an earlier review. ')+(review.reason(id)||'Earlier career information changed.')):((coreDone(j,id)?'Review completed ':'Open ')+(tip?.textContent||id)))});document.querySelectorAll('[data-applied]').forEach(e=>{const k=e.dataset.applied;e.classList.toggle('done',prog[AP[k]]==='complete');e.classList.toggle('rec',k===sel||k===rec);e.classList.toggle('current',selectedPath!=='rapid'&&current==='applied'&&(k===sel||(!sel&&k===rec)))});let total=0,done=0;if(selectedPath==='rapid'){total=4;done=['skillmobility','jobsearch','financial','ai'].filter(x=>p.rapid?.[x]).length}else if(selectedPath==='career'){total=5;done=['module1','module2','module3','module4'].filter(x=>coreDone(j,x)).length+(Object.values(AP).some(k=>prog[k]==='complete')?1:0)}else{total=3;done=((p.visited?.startarea||(p.visited?.orientation&&p.visited?.interest))?1:0)+(p.visited?.ajc?1:0)+(coreDone(j,'module1')?1:0)}fill.style.width=(total?Math.min(100,Math.round(done/total*100)):0)+'%';count.textContent=done+' of '+total}
-document.querySelectorAll('[data-visit]').forEach(e=>e.addEventListener('click',()=>{const p=portal();p.visited=p.visited||{};p.visited[e.dataset.visit]=true;savePortal(p);render()}));document.querySelectorAll('[data-start-area]').forEach(e=>e.addEventListener('click',ev=>{ev.preventDefault();areaModal.classList.add('show')}));document.querySelectorAll('[data-area]').forEach(e=>e.addEventListener('click',()=>openAreaForm(e.dataset.area)));document.getElementById('closeAreaModal').addEventListener('click',()=>areaModal.classList.remove('show'));areaModal.addEventListener('click',e=>{if(e.target===areaModal)areaModal.classList.remove('show')});document.querySelectorAll('[data-rapid]').forEach(e=>e.addEventListener('click',()=>{const p=portal();p.rapid=p.rapid||{};p.rapid[e.dataset.rapid]=true;savePortal(p);if(path()!=='rapid')localStorage.setItem(PATH,'rapid');render()}));document.querySelectorAll('[data-choose],#chooseTop').forEach(e=>e.addEventListener('click',ev=>{ev.preventDefault();modal.classList.add('show')}));document.querySelectorAll('[data-pick]').forEach(e=>e.addEventListener('click',()=>setPath(e.dataset.pick)));document.getElementById('close').addEventListener('click',()=>modal.classList.remove('show'));modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show')});document.querySelector('[data-industry-choice]').addEventListener('click',e=>{e.preventDefault();showToast('Choose the applied career experience highlighted by Module 4, or another option you and your Career Coach want to explore.')});
-document.querySelectorAll('[data-shared]').forEach(e=>e.addEventListener('click',()=>{const p=portal(),selected=path()==='career'?'career':'rapid';p[selected]=p[selected]||{};p[selected][e.dataset.shared]=true;savePortal(p);if(!path())localStorage.setItem(PATH,selected);render()}));
-document.getElementById('startBoostOver').addEventListener('click',async()=>{
-  if(!confirm('Start BOOST over from the beginning? Your participant sign-in will be kept, but your saved pathway, module progress, completion markers, and certificate completion will be cleared.'))return;
-  const old=journey(),participant=old.participant?JSON.parse(JSON.stringify(old.participant)):null,region=old.region||'Northern Arizona';
-  const fresh={schema_version:old.schema_version||2,region,participant:participant||undefined,progress:{},modules:{},updatedAt:new Date().toISOString()};
-  localStorage.setItem(JK,JSON.stringify(fresh));
-  localStorage.removeItem(PK);localStorage.removeItem(PATH);
-  localStorage.removeItem('boost_certificate_prompted_v1');
-  Object.keys(localStorage).filter(k=>k.startsWith('boost_naz_completion_nonce:')).forEach(k=>localStorage.removeItem(k));
-  try{await window.BOOSTCloud?.flush?.()}catch(_){}
-  location.reload();
-});
-const stage=document.querySelector('.stage'),rosieVideo=document.getElementById('rosieVideo'),rosieWelcome=document.getElementById('rosieWelcome'),rosieExperience=document.getElementById('rosieExperience'),rosieCaption=document.getElementById('rosieCaption'),rosieReplay=document.getElementById('rosieReplay'),rosiePlayPause=document.getElementById('rosiePlayPause'),rosieMute=document.getElementById('rosieMute');
-function markRosieSeen(){localStorage.setItem(ROSIE_KEY,'1');rosieReplay.textContent='Replay Rosie'}
-function syncRosieButtons(){rosiePlayPause.textContent=rosieVideo.paused?'▶ Play':'❚❚ Pause';rosieMute.textContent=rosieVideo.muted?'🔇 Audio off':'🔊 Audio on'}
-function showRosieWelcome(){rosieVideo.pause();rosieExperience.classList.remove('show');rosieCaption.textContent='';rosieWelcome.classList.add('show');stage.classList.add('introActive');document.getElementById('meetRosie').focus()}
-function playRosie(restart=true){markRosieSeen();rosieWelcome.classList.remove('show');rosieExperience.classList.add('show');stage.classList.add('introActive');if(restart)rosieVideo.currentTime=0;const attempt=rosieVideo.play();if(attempt)attempt.catch(()=>{syncRosieButtons();showToast('Select Play to begin Rosie’s welcome.')});syncRosieButtons()}
-function closeRosie(){markRosieSeen();rosieVideo.pause();rosieExperience.classList.remove('show');rosieWelcome.classList.remove('show');rosieCaption.textContent='';stage.classList.remove('introActive');syncRosieButtons();rosieReplay.focus()}
-function connectRosieCaptions(){const track=rosieVideo.textTracks&&rosieVideo.textTracks[0];if(!track)return;track.mode='hidden';track.addEventListener('cuechange',()=>{rosieCaption.textContent=Array.from(track.activeCues||[]).map(c=>c.text).join(' ')})}
-function restoreMapInteractivity(){if(!rosieWelcome.classList.contains('show')&&!rosieExperience.classList.contains('show'))stage.classList.remove('introActive');document.querySelectorAll('.hot').forEach(e=>e.style.pointerEvents='auto')}
-document.getElementById('meetRosie').addEventListener('click',()=>playRosie(true));document.getElementById('skipRosieWelcome').addEventListener('click',closeRosie);rosieReplay.addEventListener('click',()=>playRosie(true));rosiePlayPause.addEventListener('click',()=>{if(rosieVideo.paused)rosieVideo.play().catch(()=>{});else rosieVideo.pause();syncRosieButtons()});rosieMute.addEventListener('click',()=>{rosieVideo.muted=!rosieVideo.muted;syncRosieButtons()});document.getElementById('rosieRestart').addEventListener('click',()=>playRosie(true));document.getElementById('rosieSkip').addEventListener('click',closeRosie);rosieVideo.addEventListener('play',syncRosieButtons);rosieVideo.addEventListener('pause',syncRosieButtons);rosieVideo.addEventListener('ended',closeRosie);rosieVideo.addEventListener('loadedmetadata',connectRosieCaptions,{once:true});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(rosieWelcome.classList.contains('show')||rosieExperience.classList.contains('show')))closeRosie();if(e.key==='Escape'&&areaModal.classList.contains('show'))areaModal.classList.remove('show')});
-window.addEventListener('pageshow',()=>{restoreMapInteractivity();render()});
-render();restoreMapInteractivity();if(localStorage.getItem(ROSIE_KEY)){rosieReplay.textContent='Replay Rosie'}else{showRosieWelcome()}
-</script>
-<script src="assets/js/northern-applied-map-click-v1.js?v=20260911mapfix3"></script>
-<script src="assets/js/boost-certificate.js?v=20260924-cert1"></script>
-<!-- Optional staged return bridge: no effect unless a preview launch marker exists. -->
-<script src="assets/js/northern-v2-return-bridge.js?v=20261109a" defer></script>
-</body></html>
+<section class="gate" id="authGate" aria-label="Sign in to Northern BOOST">
+  <div class="gate-copy"><div class="overline">SECURE ACCESS</div><h2>Sign in to Northern BOOST</h2><p>Use your email to securely continue your career journey. Your saved activities and progress will be available after sign-in.</p></div>
+  <form id="authForm" class="auth-form"><label for="email">Email address</label><input type="email" id="email" autocomplete="email" required placeholder="you@example.com"><button type="submit" class="btn primary" id="emailSend">Send secure sign-in email</button><div class="code-row" id="codeRow" hidden><label for="code">Verification code</label><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code"><button type="button" class="btn secondary" id="verifyCode">Verify code</button></div><p id="authStatus" role="status" aria-live="polite"></p></form>
+</section>
+</main>
+<footer>BOOST · Northern Arizona · Career exploration and work readiness. <a href="staff-login.html">Coach access</a></footer>
+<div class="overlay" id="areaDialog" hidden role="dialog" aria-modal="true" aria-labelledby="areaTitle"><div class="dialog"><button class="close" type="button" data-close="areaDialog" aria-label="Close">×</button><div class="overline">GET STARTED</div><h2 id="areaTitle">Choose your Northern Arizona service area</h2><p>Each form includes your orientation video and interest questions.</p><div class="dialog-options"><button type="button" data-area="coconino"><strong>Coconino County</strong><span>Open the local BOOST Priority of Service Application</span></button><button type="button" data-area="agn"><strong>Apache, Gila &amp; Navajo Counties</strong><span>Open the northeastern Arizona BOOST Priority of Service Application</span></button></div></div></div>
+
+<div class="overlay" id="rosieDialog" hidden role="presentation">
+ <section class="dialog video-dialog rosie-video-dialog" role="dialog" aria-modal="true" aria-labelledby="rosieTitle" aria-describedby="rosieContext">
+  <button class="close" type="button" data-close="rosieDialog" aria-label="Close Rosie introduction">×</button>
+  <div class="rosie-video-heading">
+   <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, your BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'">
+   <div><div class="overline">YOUR NORTHERN BOOST GUIDE</div><h2 id="rosieTitle">Meet Rosie</h2><p>Discover your pathway with Rosie’s updated BOOST 2.0 introductions and recorded narration.</p></div>
+  </div>
+  <p id="rosieContext" class="rosie-local-note"><strong>Northern Arizona:</strong> Begin with Module 1 — Discover, prepare for your initial Career Coach / enrollment review, and then work through your assigned pathway. Your coach confirms appointments and enrollment.</p>
+  <div class="rosie-intro-choices" role="group" aria-label="Choose a pathway introduction">
+    <button id="rosieCareerIntro" type="button" data-rosie-intro="career" aria-pressed="false"><strong>Career Exploration &amp; Development</strong><span>Explore careers and test the evidence</span></button>
+    <button id="rosieRapidIntro" type="button" data-rosie-intro="rapid" aria-pressed="false"><strong>Rapid Employment</strong><span>Build on existing skills and move toward work</span></button>
+  </div>
+  <div id="rosieVideoStage" class="rosie-video-stage" hidden>
+    <h3 id="rosieVideoTitle">Pathway introduction</h3>
+    <video id="rosieVideo" controls playsinline preload="metadata" poster="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp"></video>
+    <p class="rosie-intro-status" id="rosieVideoStatus" role="status" aria-live="polite">Choose Play to hear Rosie introduce this pathway.</p>
+    <a id="rosieVideoFallback" href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/video/rosie-boost2-career-exploration.mp4" target="_blank" rel="noopener noreferrer" hidden>Open recording in a new tab ↗</a>
+  </div>
+  <details id="rosieOverview" class="rosie-overview">
+    <summary><span>Listen to Rosie explain both BOOST pathways</span><small>Optional recorded overview · about 1½ minutes</small></summary>
+    <div class="rosie-overview-body">
+      <p>Before selecting a route, hear how Rapid Employment and Career Exploration both support employment. Your Northern Arizona journey begins with Discover and an initial Career Coach conversation. This recorded overview explains the two pathways you may follow.</p>
+      <audio id="rosieOverviewAudio" controls preload="none" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/audio/boost-pathways.mp3" aria-label="Rosie explaining the two BOOST pathways"></audio>
+      <p class="source-note"><a href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/captions/boost-pathways-en-US.vtt" target="_blank" rel="noopener noreferrer">Read the recorded narration captions ↗</a></p>
+    </div>
+  </details>
+  <div class="rosie-modal-actions"><button class="btn secondary" type="button" data-close="rosieDialog">Continue to my BOOST journey →</button></div>
+ </section>
+</div>
+<div class="overlay" id="stepDialog" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><div class="dialog"><button class="close" type="button" data-close="stepDialog" aria-label="Close">×</button><div class="rosie-dialog-head"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'"><div><div class="overline">ROSIE EXPLAINS</div><h2 id="stepTitle">Your next step</h2></div></div><p id="stepDescription"></p><p id="stepRequirement" class="requirement"></p><audio id="stepAudio" preload="none"></audio><div class="dialog-actions"><button class="btn secondary" id="playStepAudio" type="button">▶ Watch Rosie Introduce the Pathway</button><button class="btn secondary" id="askStepRosie" type="button">Ask Rosie a question</button><button class="btn primary" id="openStep" type="button" hidden>Open this step →</button></div><p id="audioStatus" class="subtle"></p></div></div>
+<script>document.documentElement.classList.add('js');</script>
+</body>
+</html>
