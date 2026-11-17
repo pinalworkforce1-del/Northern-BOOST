@@ -481,6 +481,29 @@
     if(areaPicker)areaPicker.value=selectedArea;
     $('certificateRegionLabel').textContent=areaDef?.short||'SELECT YOUR SERVICE AREA';
     $('certificateOrganization').textContent=areaDef?.name||'Select a Northern service area';
+    // Original logo files can be added at these paths without changing the renderer.
+    // The accurate regional text remains visible if an asset has not been installed.
+    const regionalLogo=$('certificateLocalLogo');
+    const fallback=$('certificateBrandFallback');
+    const logoRegion=$('certificateLogoRegion');
+    const src=selectedArea==='agn'?'northern-neaz-logo.png':
+      selectedArea==='coconino'?'northern-azwork-logo.png':'';
+    if(regionalLogo.dataset.area!==selectedArea){
+      regionalLogo.dataset.area=selectedArea;
+      regionalLogo.hidden=true;fallback.hidden=false;logoRegion.hidden=true;
+      regionalLogo.onload=()=>{
+        if(regionalLogo.dataset.area!==selectedArea)return;
+        regionalLogo.hidden=false;fallback.hidden=true;
+        logoRegion.hidden=selectedArea!=='coconino';
+        logoRegion.textContent=selectedArea==='coconino'?'COCONINO COUNTY':'';
+      };
+      regionalLogo.onerror=()=>{
+        if(regionalLogo.dataset.area!==selectedArea)return;
+        regionalLogo.hidden=true;fallback.hidden=false;logoRegion.hidden=true;
+      };
+      if(src)regionalLogo.src=src;
+      else regionalLogo.removeAttribute('src');
+    }
     const earned=allComplete(), n=answeredCount(), total=scenes.length;
     $('readinessProgressTitle').textContent=earned?'Work Ready Certificate earned':'Your progress so far';
     $('readinessProgressMeta').textContent=earned?`${total} of ${total} scenarios complete • all Ready 2 Work areas complete`:`${n} of ${total} scenarios complete • your skill profile updates with every decision`;
