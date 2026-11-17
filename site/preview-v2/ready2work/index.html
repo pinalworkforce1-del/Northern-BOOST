@@ -12,6 +12,36 @@
 <link rel="stylesheet" href="resume-evidence-review-v1.css">
 <link rel="stylesheet" href="resume-format-v1.css">
 <link rel="stylesheet" href="resume-occupation-search-v1.css">
+<style>
+/* Northern certificate presentation: isolated from shared Pinal CSS. */
+#viewCertificate .certificate-area-choice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin:13px auto;padding:12px 16px;background:#e8f1f5;border:1px solid #a7c4d4;border-radius:12px;color:#17344d;max-width:920px}
+#viewCertificate .certificate-area-choice label{font-weight:800;font-size:14px}
+#viewCertificate .certificate-area-choice select{max-width:100%;min-width:245px;padding:10px;border:1px solid #799aaf;border-radius:8px;background:#fff;color:#17344d;font:inherit}
+#viewCertificate .certificate-area-choice p{width:100%;font-size:12px;margin:0;text-align:center}
+#viewCertificate .certificate-sheet{background:#fdf5e6}
+#viewCertificate .certificate-bg{object-fit:fill}
+#viewCertificate .cert-brand-row{display:flex;justify-content:center;align-items:center;min-height:30px}
+#viewCertificate .northern-cert-lockup{background:#fff9edec;padding:6px 18px;border-radius:6px;display:flex;flex-direction:column;text-align:center;gap:2px;color:#273679}
+#viewCertificate .northern-cert-lockup strong{font-size:clamp(14px,1.65vw,23px);letter-spacing:.045em;font-weight:900}
+#viewCertificate .northern-cert-lockup span{font-size:clamp(9px,.9vw,14px);font-weight:900;letter-spacing:.13em;color:#262224}
+#viewCertificate .cert-footer .signature small{font-size:clamp(8px,.8vw,13px);letter-spacing:.01em}
+#viewCertificate .certificate-content{inset:4% 7% 6%;gap:clamp(4px,.6vw,9px)}
+#viewCertificate .certificate-skills{background:#fff9efda}
+#viewCertificate #certificateLock.show{z-index:8}
+@media (max-width:700px){
+ #viewCertificate .certificate-sheet{min-height:740px;aspect-ratio:1.294/1}
+ #viewCertificate .certificate-content{inset:5% 5% 6%;gap:7px}
+ #viewCertificate .northern-cert-lockup strong{font-size:15px}
+ #viewCertificate .northern-cert-lockup span{font-size:10px}
+}
+@media print{
+ @page{size:landscape;margin:0}
+ #viewCertificate .certificate-area-choice{display:none!important}
+ #viewCertificate .certificate-sheet{width:100%!important;height:auto!important;aspect-ratio:16/9!important;break-inside:avoid!important}
+ #viewCertificate .certificate-content{inset:4% 7% 6%}
+ #viewCertificate .certificate-bg{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
+</style>
 </head>
 <body><div id="northernGate" role="status" aria-live="polite"><div class="inner"><h1>Northern Ready 2 Work</h1><p id="northernGateText">Verifying your Northern BOOST session and enrollment…</p><p><a href="../">← Return to Northern BOOST</a></p></div></div>
 <div class="app-shell">
@@ -99,10 +129,13 @@
   </main>
 
   <main id="viewCertificate" class="view certificate-view" hidden>
-    <section class="certificate-toolbar"><button class="ghost-btn dark" data-route="map">← Ready 2 Work map</button><div><span class="eyebrow">FINAL MILESTONE</span><strong id="certificateStatus"></strong></div><button id="printCertificateBtn" class="primary-btn" type="button" disabled title="Northern certificate branding pending verification">Print / Save PDF</button></section>
-    <section id="readinessProgress" class="readiness-progress"><div><span class="eyebrow">WORK READINESS PROGRESS</span><h2 id="readinessProgressTitle">Your progress so far</h2><p id="readinessProgressMeta"></p></div><div class="readiness-progress-track"><i id="readinessProgressBar"></i></div><div id="readinessStageStatus" class="readiness-stage-status"></div></section>
-    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-certificate-bg.webp" alt=""><div class="certificate-content"><div class="cert-brand-row"><img class="cert-aw-logo" style="display:none" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/azwork_logo_from_eps_cropped.png?v=20261025-eps" alt="ARIZONA@WORK Pinal County"></div><div class="cert-title"><span>CERTIFICATE OF WORK READINESS</span><h1>BOOST Work Ready Certificate</h1><p>This recognizes demonstrated work-readiness evidence across soft skills, resume readiness, and interview readiness.</p></div><div class="name-block"><label for="participantName">Presented to</label><input id="participantName" type="text" autocomplete="name" placeholder="Participant Name"></div><div class="mastery-title" id="masteryProfileTitle">Soft Skill Mastery Profile</div><div id="certificateSkills" class="certificate-skills"></div><div class="readiness-row"><div><strong>Resume Readiness</strong><span id="resumeReadiness"></span></div><div><strong>Interview Readiness</strong><span id="interviewReadiness"></span></div></div><div class="cert-footer"><div><small>Completion date</small><strong id="certificateDate"></strong></div><div><small>Certificate ID</small><strong id="certificateId"></strong></div><div class="signature"><span></span><small>ARIZONA@WORK Pinal County</small></div></div><div id="certificateLock" class="certificate-lock"><strong>Certificate Locked</strong><span id="certificateLockText"></span></div></div></section>
-    <p class="certificate-note">Northern Arizona certificate branding and employer recognition are pending regional validation. This is a staging preview and is not an issued credential.</p>
+    <section class="certificate-toolbar"><button class="ghost-btn dark" data-route="map">← Ready 2 Work map</button><div><span class="eyebrow">FINAL MILESTONE</span><strong id="certificateStatus"></strong></div><button id="printCertificateBtn" class="primary-btn" type="button" disabled title="Print your Northern BOOST Work Ready Certificate">Print / Save PDF</button></section>
+    <div class="certificate-area-choice" id="certificateAreaChoice"><label for="certificateArea">Your Northern Arizona service area</label>
+<select id="certificateArea" aria-describedby="certificateAreaHelp"><option value="">Choose your service area</option><option value="agn">Northeastern Arizona</option><option value="coconino">Coconino County</option></select>
+<p id="certificateAreaHelp">Your certificate will display the organization for your selected service area.</p></div>
+<section id="readinessProgress" class="readiness-progress"><div><span class="eyebrow">WORK READINESS PROGRESS</span><h2 id="readinessProgressTitle">Your progress so far</h2><p id="readinessProgressMeta"></p></div><div class="readiness-progress-track"><i id="readinessProgressBar"></i></div><div id="readinessStageStatus" class="readiness-stage-status"></div></section>
+    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="northern-certificate-landscape.svg?v=20261117" alt=""><div class="certificate-content"><div class="cert-brand-row"><div class="northern-cert-lockup" role="img" aria-label="Arizona at Work regional certificate"><strong>ARIZONA@WORK</strong><span id="certificateRegionLabel">NORTHERN ARIZONA</span></div></div><div class="cert-title"><span>CERTIFICATE OF WORK READINESS</span><h1>BOOST Work Ready Certificate</h1><p>This recognizes demonstrated work-readiness evidence across soft skills, resume readiness, and interview readiness.</p></div><div class="name-block"><label for="participantName">Presented to</label><input id="participantName" type="text" autocomplete="name" placeholder="Participant Name"></div><div class="mastery-title" id="masteryProfileTitle">Soft Skill Mastery Profile</div><div id="certificateSkills" class="certificate-skills"></div><div class="readiness-row"><div><strong>Resume Readiness</strong><span id="resumeReadiness"></span></div><div><strong>Interview Readiness</strong><span id="interviewReadiness"></span></div></div><div class="cert-footer"><div><small>Completion date</small><strong id="certificateDate"></strong></div><div><small>Certificate ID</small><strong id="certificateId"></strong></div><div class="signature"><span></span><small id="certificateOrganization">ARIZONA@WORK Northern Arizona</small></div></div><div id="certificateLock" class="certificate-lock"><strong>Certificate Locked</strong><span id="certificateLockText"></span></div></div></section>
+    <p class="certificate-note">Your certificate displays your selected Northern Arizona service area and demonstrated work-readiness progress. It is a record of completed learning, not a professional license.</p>
   </main>
 </div>
 
