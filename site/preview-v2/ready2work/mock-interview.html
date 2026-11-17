@@ -43,6 +43,14 @@ function startInterviewTimer(maxSeconds){
 const NORTHERN_KEY='boost-northern-r2w-v1';
 const roomKey=id=>'boost-northern-jacqueline-room:'+id;
 // A signed, evaluated interview tied to the Northern launch room is required.
+async function northernInterviewRecord(client,userId){
+ const room=localStorage.getItem(roomKey(userId));
+ if(!room)return null;
+ const {data,error}=await client.from('boost_live_interview_sessions')
+  .select('id,room_name,status').eq('participant_id',userId).eq('room_name',room).maybeSingle();
+ if(error)throw Error('Could not retrieve your Northern interview.');
+ return data||null;
+}
 async function verifyNorthernInterview(client,cfg,id){
  const room=localStorage.getItem(roomKey(id));
  if(!room)return false;
@@ -73,7 +81,7 @@ async function verifyNorthernInterview(client,cfg,id){
 }
 async function closeInterview(client,cfg){if(closing||!activeRoomName)return;closing=true;try{const {data:{session}}=await client.auth.getSession();if(!session)return;const response=await fetch(cfg.url+'/functions/v1/boost-northern-live-interview-gateway',{method:'POST',headers:{authorization:'Bearer '+session.access_token,apikey:cfg.key,'content-type':'application/json'},body:JSON.stringify({mode:'client_ended',room_name:activeRoomName})});const result=await response.json();if(!response.ok)throw Error(result.error||'Session close failed');notice.textContent='Interview ended. Preparing your Jacqueline evaluation…';
   try{
-    const evaluationResponse=await fetch(cfg.url+'/functions/v1/boost-rosie-live-evaluation',{method:'POST',headers:{authorization:'Bearer '+session.access_token,apikey:cfg.key,'content-type':'application/json'},body:JSON.stringify({mode:'evaluate'})});
+    const evaluationResponse=await fetch(cfg.url+'/functions/v1/boost-rosie-live-evaluation',{method:'POST',headers:{authorization:'Bearer '+session.access_token,apikey:cfg.key,'content-type':'application/json'},body:JSON.stringify({mode:'evaluate',session_id:(await northernInterviewRecord(client,session.user.id))?.id||null})});
     const evaluated=await evaluationResponse.json();
     if(!evaluationResponse.ok)throw Error(evaluated.error||'Evaluation pending');
     if(evaluated.latest?.status==='completed'&&evaluated.latest?.evaluation){
@@ -100,8 +108,16 @@ document.querySelector('main').appendChild(document.getElementById('feedbackActi
     try{
       const {data:{session:auth}}=await client.auth.getSession();
       if(!auth)throw Error('Sign in to BOOST again.');
+      const {data:{user:verifiedUser}}=await client.auth.getUser();
+      if(!verifiedUser)throw Error('Please sign in again.');
+      const northernSession=await northernInterviewRecord(client,verifiedUser.id);
+      if(!northernSession){
+        report.textContent='No Northern Jacqueline practice interview is saved yet. Start a practice interview here to create your Northern feedback.';
+        notice.textContent='Your earlier interview practice from other pathways is kept separate.';
+        return;
+      }
       const call=async(mode)=>{
-        const response=await fetch(cfg.url+'/functions/v1/boost-rosie-live-evaluation',{method:'POST',headers:{authorization:'Bearer '+auth.access_token,apikey:cfg.key,'content-type':'application/json'},body:JSON.stringify({mode})});
+        const response=await fetch(cfg.url+'/functions/v1/boost-rosie-live-evaluation',{method:'POST',headers:{authorization:'Bearer '+auth.access_token,apikey:cfg.key,'content-type':'application/json'},body:JSON.stringify({mode,session_id:northernSession.id})});
         const result=await response.json();if(!response.ok)throw Error(result.error||'Evaluation unavailable');return result;
       };
       let result=await call('latest');
@@ -129,8 +145,7 @@ document.querySelector('main').appendChild(document.getElementById('feedbackActi
       }
       const evaluation=result.latest?.evaluation;
       if(result.latest?.status==='completed'&&evaluation){
-        const {data:{user:verifiedUser}}=await client.auth.getUser();
-        if(verifiedUser)await verifyNorthernInterview(client,cfg,verifiedUser.id);
+        await verifyNorthernInterview(client,cfg,verifiedUser.id);
       }
             report.replaceChildren();
       if(!evaluation){report.textContent='No completed interview transcript is ready yet.';return;}
