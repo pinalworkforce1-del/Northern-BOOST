@@ -56,7 +56,7 @@ async function open(id,rows){
   const evidence=Object.keys(answered).sort((a,b)=>Number(a)-Number(b)).map(k=>'<tr><th>'+esc(sceneNames[k]||'Scenario '+k)+'</th><td>'+esc(answered[k])+'</td></tr>').join('');
   const resume=p.resume||{};
   const experiences=Array.isArray(resume.experiences)?resume.experiences:[];
-  let html=section('Progress','<p><b>'+count+'/22</b> scenarios · Soft Skills Base Camp: <b>'+Number(st.softskills||0)+'/12</b> · Resume Retreat: <b>'+Number(st.resume||0)+'/5</b> · Interview Landing: <b>'+Number(st.interview||0)+'/5</b></p><p>Résumé: <b>'+(p.resume_complete?'Complete':'Pending')+'</b> · Jacqueline Mock Interview: <b>'+(p.interview_complete?'Verified':'Pending')+'</b> · Certificate: <b>Not yet issued</b></p><p class="notice">Last cloud save: '+esc(fmt(p.updated_at))+'</p>');
+  let html=section('Progress','<p><b>'+count+'/22</b> scenarios · Soft Skills Base Camp: <b>'+Number(st.softskills||0)+'/12</b> · Resume Retreat: <b>'+Number(st.resume||0)+'/5</b> · Interview Landing: <b>'+Number(st.interview||0)+'/5</b></p><p>Résumé: <b>'+(p.resume_complete?'Complete':'Pending')+'</b> · Jacqueline Mock Interview: <b>'+(p.interview_complete?'Verified':'Pending')+'</b> · Certificate: <b>'+(p.certificate_earned?'Available':p.certificate_area?'In progress':'Select service area')+'</b></p><p class="notice">Last cloud save: '+esc(fmt(p.updated_at))+'</p>');
   html+=section('Six Employability Competencies','<p class="notice"><b>'+(count<22?'Provisional learning evidence: ':'Learning evidence: ')+'</b>Scores reflect points accumulated across the complete 22-scenario framework. Levels shown below use the Pinal Coach View thresholds (Advanced 85–100%, Strong 68–84%, Demonstrated 48–67%, Developing below 48%). Until all scenarios are complete, these are not final competency levels. These are learning indicators, not standardized employment assessments.</p><table class="r2wTable"><thead><tr><th>Competency</th><th>Evidence score</th><th>Mastery level</th></tr></thead><tbody>'+scores+'</tbody></table>');
   html+=section('Scenario Evidence','<p>'+Object.keys(answered).length+' saved decisions. Choices document learning activity and should be discussed with the participant, not used as a standalone hiring score.</p>'+(evidence?'<table class="r2wTable"><thead><tr><th>Scenario</th><th>Selected option</th></tr></thead><tbody>'+evidence+'</tbody></table>':'<p>No scenario decisions saved.</p>'));
   html+=section('Resume Retreat',p.resume_complete?'<p><b>Target:</b> '+esc(resume.target||'—')+'</p><p><b>Summary:</b> '+esc(resume.summary||'—')+'</p><p><b>Skills:</b> '+esc(resume.skills||'—')+'</p><p><b>Education:</b> '+esc(resume.education||'—')+'</p>'+experiences.map(e=>'<p><b>'+esc([e.role,e.employer].filter(Boolean).join(' — '))+'</b> '+esc([e.startDate,e.endDate].filter(Boolean).join(' to '))+' '+esc((e.bullets||[]).join('; ')||e.evidence||'')+'</p>').join(''):'<p>Résumé not yet verified complete.</p>');
@@ -91,7 +91,12 @@ async function open(id,rows){
     interviewHtml+='<p class="notice">No verified Northern-specific Jacqueline evaluation is linked to this participant yet. Earlier Pinal interview feedback is intentionally excluded.</p>';
   }
   html+=section('Jacqueline Mock Interview',interviewHtml);
-  html+=section('Certificate','<p>Northern Ready 2 Work certificate issuance remains in validation.</p>');
+  const org=p.certificate_area==='agn'?'ARIZONA@WORK Northeastern Arizona':
+    p.certificate_area==='coconino'?'ARIZONA@WORK Coconino County':'';
+  html+=section('Certificate',p.certificate_earned?
+    '<p><b>BOOST Work Ready Certificate:</b> Available</p><p><b>Organization:</b> '+esc(org)+'</p><p class="notice">The participant may print or save their certificate from Northern Ready 2 Work.</p>':
+    p.certificate_area?'<p>The certificate becomes available after all Ready 2 Work requirements are completed.</p>':
+    '<p>The participant must select Northeastern Arizona or Coconino County to finalize the regional certificate.</p>');
   html+=section('Coach discussion','<p class="coachNote">Review decisions with the participant. Ask for examples of how they would apply these skills at work, identify areas to practice, and agree on a next action. Do not interpret incomplete competency scores as final results.</p>');
   body.innerHTML=html;
  }catch(e){body.innerHTML='<div class="notice">'+esc(e.message)+'</div>'}
