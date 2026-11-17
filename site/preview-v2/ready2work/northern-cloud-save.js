@@ -45,6 +45,8 @@
   local=local&&typeof local==='object'?local:{};
   return {...remote,...local,
    sceneSelections:{...(remote.sceneSelections||{}),...(local.sceneSelections||{})},
+   certificateArea:['agn','coconino'].includes(local.certificateArea)?local.certificateArea:
+      (['agn','coconino'].includes(remote.certificateArea)?remote.certificateArea:''),
    resumeBuilder:combineResume(remote.resumeBuilder,local.resumeBuilder),
    jacquelineInterview:remote.jacquelineInterview?.verifiedComplete?remote.jacquelineInterview:(local.jacquelineInterview||remote.jacquelineInterview||{})
   };
