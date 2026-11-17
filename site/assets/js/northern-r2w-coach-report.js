@@ -60,7 +60,37 @@ async function open(id,rows){
   html+=section('Six Employability Competencies','<p class="notice"><b>'+(count<22?'Provisional learning evidence: ':'Learning evidence: ')+'</b>Scores reflect points accumulated across the complete 22-scenario framework. Levels shown below use the Pinal Coach View thresholds (Advanced 85–100%, Strong 68–84%, Demonstrated 48–67%, Developing below 48%). Until all scenarios are complete, these are not final competency levels. These are learning indicators, not standardized employment assessments.</p><table class="r2wTable"><thead><tr><th>Competency</th><th>Evidence score</th><th>Mastery level</th></tr></thead><tbody>'+scores+'</tbody></table>');
   html+=section('Scenario Evidence','<p>'+Object.keys(answered).length+' saved decisions. Choices document learning activity and should be discussed with the participant, not used as a standalone hiring score.</p>'+(evidence?'<table class="r2wTable"><thead><tr><th>Scenario</th><th>Selected option</th></tr></thead><tbody>'+evidence+'</tbody></table>':'<p>No scenario decisions saved.</p>'));
   html+=section('Resume Retreat',p.resume_complete?'<p><b>Target:</b> '+esc(resume.target||'—')+'</p><p><b>Summary:</b> '+esc(resume.summary||'—')+'</p><p><b>Skills:</b> '+esc(resume.skills||'—')+'</p><p><b>Education:</b> '+esc(resume.education||'—')+'</p>'+experiences.map(e=>'<p><b>'+esc([e.role,e.employer].filter(Boolean).join(' — '))+'</b> '+esc([e.startDate,e.endDate].filter(Boolean).join(' to '))+' '+esc((e.bullets||[]).join('; ')||e.evidence||'')+'</p>').join(''):'<p>Résumé not yet verified complete.</p>');
-  html+=section('Interview Landing','<p>'+(p.interview_complete?'Jacqueline interview completion verified.':'Jacqueline live interview not yet verified complete.')+'</p><p class="notice">Detailed interview feedback will appear when the Northern callback integration is validated.</p>');
+  // This section only renders feedback attached to a Northern-tagged interview room.
+  // The staff reporting endpoint deliberately excludes unlinked Pinal sessions.
+  const feedback=p.interview_feedback||null;
+  const showList=(items)=>Array.isArray(items)&&items.length?'<ul>'+items.map(v=>'<li>'+esc(v)+'</li>').join('')+'</ul>':'<p class="notice">No additional feedback recorded.</p>';
+  let interviewHtml='<p><b>Status:</b> '+(p.interview_complete?'Complete':'Pending')+'</p>';
+  if(feedback){
+    interviewHtml+='<p><b>Interview:</b> '+esc(feedback.occupation||'General employment')+
+      ' · <b>Completed:</b> '+esc(fmt(feedback.completed_at))+'</p>';
+    if(feedback.summary)interviewHtml+='<p><b>Summary:</b> '+esc(feedback.summary)+'</p>';
+    interviewHtml+='<h4>Strengths demonstrated</h4>'+showList(feedback.strengths)+
+      '<h4>Development priorities</h4>'+showList(feedback.development_priorities)+
+      '<h4>Recommended next steps</h4>'+showList(feedback.next_steps);
+    const questions=Array.isArray(feedback.question_feedback)?feedback.question_feedback:[];
+    if(questions.length)interviewHtml+='<h4>Question-by-question evaluation</h4>'+questions.map((q,i)=>
+      '<div class="notice"><b>Question '+(i+1)+(Number.isFinite(q.score)?' · '+q.score+'/5':'')+
+      '</b>'+((q.strengths||[]).length?'<p><b>What worked:</b> '+esc(q.strengths.join(' '))+'</p>':'')+
+      (q.development?'<p><b>Development opportunity:</b> '+esc(q.development)+'</p>':'')+
+      (q.practice_prompt?'<p><b>Practice:</b> '+esc(q.practice_prompt)+'</p>':'')+'</div>'
+    ).join('');
+    const followups=Array.isArray(feedback.followup_feedback)?feedback.followup_feedback:[];
+    if(followups.length)interviewHtml+='<h4>Follow-up coaching feedback</h4>'+followups.map((q,i)=>
+      '<div class="notice"><b>Follow-up '+(i+1)+'</b>'+
+      (q.question_text?'<p>'+esc(q.question_text)+'</p>':'')+
+      ((q.strengths||[]).length?'<p><b>What worked:</b> '+esc(q.strengths.join(' '))+'</p>':'')+
+      (q.development?'<p><b>Improve:</b> '+esc(q.development)+'</p>':'')+'</div>'
+    ).join('');
+    interviewHtml+='<p class="notice">Coaching evidence from this participant\'s Northern BOOST interview only. Scores support practice and development; they are not hiring assessments.</p>';
+  }else{
+    interviewHtml+='<p class="notice">No verified Northern-specific Jacqueline evaluation is linked to this participant yet. Earlier Pinal interview feedback is intentionally excluded.</p>';
+  }
+  html+=section('Jacqueline Mock Interview',interviewHtml);
   html+=section('Certificate','<p>Northern Ready 2 Work certificate issuance remains in validation.</p>');
   html+=section('Coach discussion','<p class="coachNote">Review decisions with the participant. Ask for examples of how they would apply these skills at work, identify areas to practice, and agree on a next action. Do not interpret incomplete competency scores as final results.</p>');
   body.innerHTML=html;
