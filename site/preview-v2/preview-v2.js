@@ -166,7 +166,7 @@ function render(){
 function choosePath(p){
  if(!validPath(p))return;
  if(!done('module1')){sessionStorage.setItem(PICK_KEY,p);render();$('progressMessage').textContent='You chose a pathway. Complete Module 1 — Discover before opening its next activities.';document.getElementById('progressTrack').scrollIntoView({behavior:'smooth',block:'center'});return;}
- if(selected&&selected!==p&&!window.confirm('Switch your preview to the other pathway? This keeps existing saved records; the selection will be made active when you open a module.'))return;
+ if(selected&&selected!==p&&!window.confirm('Switch to the other pathway? Your existing saved work will remain available.'))return;
  sessionStorage.setItem(PICK_KEY,p);render();$('journeySection').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function explainStep(id){
@@ -212,7 +212,7 @@ async function loadJourney(){
   const c=getClient(),{data,error}=await c.rpc('boost_load_my_journey_for_region',{p_region:'Northern Arizona'});
   if(error)throw error;
   journey=(data&&typeof data==='object')?data:{};
-  lastCloudMessage=Object.keys(journey).length?'Northern authenticated journey loaded (read-only preview).':'No Northern cloud journey found for this test account.';
+  lastCloudMessage=Object.keys(journey).length?'Your saved Northern BOOST journey is ready.':'No saved Northern BOOST journey was found yet.';
  }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
  render();
  const noticeRaw=sessionStorage.getItem(RETURN_NOTICE_KEY);
