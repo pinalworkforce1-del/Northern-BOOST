@@ -25,6 +25,26 @@
 #viewCertificate .cert-brand-row{display:flex;justify-content:center;align-items:center;margin:0 auto;width:100%;min-height:0}
 #viewCertificate .northern-cert-lockup{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;max-width:100%;padding:0;background:transparent;border:0;border-radius:0;text-align:center;color:#253879}
 #viewCertificate #certificateLocalLogo{display:block;width:auto;max-width:min(440px,37vw);height:auto;max-height:clamp(64px,7.8vw,116px);object-fit:contain;filter:drop-shadow(0 1px 1px rgba(255,249,235,.65))}
+/* Northern logo polish: render the original logos larger and crop unused raster margins.
+   The NEAZ white field visually blends with parchment (multiply); the partner
+   tagline is outside the cropped lockup. Both logos carry their own region. */
+#viewCertificate .northern-cert-lockup{display:block;position:relative;width:min(570px,48vw);height:clamp(98px,10.5vw,140px);max-width:100%;overflow:hidden;padding:0!important;background:transparent!important}
+#viewCertificate #certificateLocalLogo{display:block;width:100%;max-width:none;max-height:none;height:auto;object-fit:unset;object-position:top center;filter:none;mix-blend-mode:multiply}
+#viewCertificate .northern-cert-lockup[data-region="coconino"]{height:clamp(90px,9vw,132px);width:min(570px,48vw)}
+#viewCertificate .northern-cert-lockup[data-region="agn"]{height:clamp(94px,10.2vw,138px);width:min(570px,48vw)}
+#viewCertificate .northern-cert-lockup[data-region="agn"] #certificateLocalLogo{mix-blend-mode:multiply}
+#viewCertificate .northern-cert-lockup[data-region="coconino"] #certificateLocalLogo{mix-blend-mode:normal}
+#viewCertificate #certificateLogoRegion{display:none!important}
+@media(max-width:900px){
+ #viewCertificate .northern-cert-lockup{width:min(510px,62vw)!important;height:clamp(85px,12vw,128px)!important}
+}
+@media(max-width:600px){
+ #viewCertificate .northern-cert-lockup{width:min(390px,82vw)!important;height:clamp(65px,17vw,105px)!important}
+}
+@media print{
+ #viewCertificate .northern-cert-lockup{width:min(570px,48vw)!important;height:clamp(98px,10.5vw,140px)!important}
+}
+
 #viewCertificate #certificateLocalLogo[hidden],#viewCertificate #certificateBrandFallback[hidden],#viewCertificate #certificateLogoRegion[hidden]{display:none!important}
 #viewCertificate #certificateBrandFallback{display:flex;flex-direction:column;gap:2px}
 #viewCertificate #certificateBrandFallback strong{font-size:clamp(17px,2.4vw,33px);font-weight:950;letter-spacing:.045em}
@@ -173,7 +193,7 @@
 <select id="certificateArea" aria-describedby="certificateAreaHelp"><option value="">Choose your service area</option><option value="agn">Northeastern Arizona</option><option value="coconino">Coconino County</option></select>
 <p id="certificateAreaHelp">Your certificate will display the organization for your selected service area.</p></div>
 <section id="readinessProgress" class="readiness-progress"><div><span class="eyebrow">WORK READINESS PROGRESS</span><h2 id="readinessProgressTitle">Your progress so far</h2><p id="readinessProgressMeta"></p></div><div class="readiness-progress-track"><i id="readinessProgressBar"></i></div><div id="readinessStageStatus" class="readiness-stage-status"></div></section>
-    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="northern-certificate-landscape.svg?v=20261117-v3" alt=""><div class="certificate-content"><div class="cert-brand-row"><div class="northern-cert-lockup" aria-label="Arizona at Work Northern region">
+    <section id="certificate" class="certificate-sheet"><img class="certificate-bg" src="northern-certificate-landscape.svg?v=20261117-v4" alt=""><div class="certificate-content"><div class="cert-brand-row"><div class="northern-cert-lockup" aria-label="Arizona at Work Northern region">
 <img id="certificateLocalLogo" alt="" hidden>
 <div id="certificateBrandFallback"><strong>ARIZONA@WORK</strong><span id="certificateRegionLabel">NORTHERN ARIZONA</span></div>
 <span id="certificateLogoRegion" hidden></span>
