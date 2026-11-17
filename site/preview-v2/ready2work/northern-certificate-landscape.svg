@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Northern Arizona mountains, pine forests and high country sunrise">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#fff9e9"/><stop offset=".65" stop-color="#fff5e3"/><stop offset="1" stop-color="#f8e6c9"/></linearGradient>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#ffefcc"/><stop offset=".6" stop-color="#f1d6b2"/><stop offset="1" stop-color="#d3c7b2"/></linearGradient>
+ <linearGradient id="blue" x2="0" y2="1"><stop stop-color="#456d85"/><stop offset="1" stop-color="#133b57"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffdf8a"/><stop offset=".45" stop-color="#bc8134"/><stop offset="1" stop-color="#f1c873"/></linearGradient>
+ <linearGradient id="fade" x2="0" y2="1"><stop stop-color="#fff8e7" stop-opacity="1"/><stop offset=".47" stop-color="#fff8e7" stop-opacity=".98"/><stop offset=".76" stop-color="#fff8e7" stop-opacity=".85"/><stop offset="1" stop-color="#fff8e7" stop-opacity=".12"/></linearGradient>
+ <pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M8 12l5 2 M61 34l9-2 M24 61l5-1" stroke="#aa8b65" opacity=".1" stroke-width="2"/></pattern>
+ <g id="pine"><path d="M0 0V118" stroke="#493c2d" stroke-width="8"/><path d="M0-5l-26 52h13l-25 36h19l-20 25h78l-20-25h19L13 47h13Z" fill="#294e45"/><path d="M0 4L-21 47H-4L-23 82H0Z" fill="#44705a" opacity=".8"/></g>
+</defs>
+<rect width="1600" height="900" fill="#102c48"/>
+<rect x="22" y="22" width="1556" height="856" rx="18" fill="url(#gold)"/>
+<rect x="31" y="31" width="1538" height="838" rx="14" fill="url(#sky)"/>
+<path d="M31 676L140 610 245 645 362 568 477 629 566 537 697 621 816 532 948 608 1055 481 1157 586 1302 520 1420 602 1569 533V869H31Z" fill="#9eacb3"/>
+<path d="M31 732L166 625 292 690 435 592 573 701 687 597 809 693 944 573 1025 648 1140 563 1246 647 1371 546 1569 675V869H31Z" fill="#637e8a"/>
+<path d="M742 641l309-241 292 261-154-82-89-95-45 16-30-18-85 104Z" fill="#416378"/>
+<path d="M907 530l144-130 134 119-49-19-37-35-45 12-35-19-36 33Z" fill="#e8eceb"/>
+<path d="M31 779C239 690 372 774 562 727S911 689 1141 751s328-38 428-37V869H31Z" fill="#375969"/>
+<path d="M31 827C260 739 511 788 760 754S1182 730 1569 799V869H31Z" fill="#234c57"/>
+<g opacity=".92"><use href="#pine" x="76" y="711" transform="translate(76 711) scale(1.45) translate(-76 -711)"/><use href="#pine" x="220" y="748"/><use href="#pine" x="321" y="773"/><use href="#pine" x="413" y="752"/><use href="#pine" x="1234" y="746"/><use href="#pine" x="1334" y="730"/><use href="#pine" x="1460" y="718"/><use href="#pine" x="1540" y="705"/></g>
+<rect x="32" y="32" width="1536" height="836" fill="url(#fade)"/>
+<rect x="34" y="34" width="1532" height="832" fill="url(#grain)"/>
+<rect x="45" y="45" width="1510" height="810" rx="7" fill="none" stroke="#fff0ca" stroke-width="5"/>
+<rect x="54" y="54" width="1492" height="792" rx="5" fill="none" stroke="#bd8d42" stroke-width="3"/>
+<path d="M54 125V54h72 M1474 54h72v72 M54 775v71h72 M1474 846h72v-71" fill="none" stroke="#234964" stroke-width="10"/>
+</svg>
