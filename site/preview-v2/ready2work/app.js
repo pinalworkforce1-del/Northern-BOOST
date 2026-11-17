@@ -486,7 +486,7 @@
     const regionalLogo=$('certificateLocalLogo');
     const fallback=$('certificateBrandFallback');
     const logoRegion=$('certificateLogoRegion');
-    const src=selectedArea==='agn'?'northern-neaz-logo.png':
+    const src=selectedArea==='agn'?'northern-neaz-logo-transparent.svg?v=20261117':
       selectedArea==='coconino'?'northern-azwork-logo.png':'';
     const logoFrame=regionalLogo.closest('.northern-cert-lockup');
     // Both official logo files already include their own regional treatment.
