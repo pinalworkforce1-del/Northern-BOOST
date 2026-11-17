@@ -284,7 +284,7 @@ function install(){
  window.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay:not([hidden])').forEach(x=>closeDialog(x.id))});
  document.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{
    const k=b.dataset.area;if(!AREA_FORMS[k])return;
-   localStorage.setItem(AREA_KEY,k);portal=read(PORTAL_KEY);portal.visited=portal.visited||{};portal.visited.startarea=true;portal.serviceArea=k;localStorage.setItem(PORTAL_KEY,JSON.stringify(portal));render();
+   localStorage.setItem(AREA_KEY,k);if(user?.id)localStorage.setItem(AREA_KEY+':'+user.id,k);portal=read(PORTAL_KEY);portal.visited=portal.visited||{};portal.visited.startarea=true;portal.serviceArea=k;localStorage.setItem(PORTAL_KEY,JSON.stringify(portal));render();
    closeDialog('areaDialog');window.open(AREA_FORMS[k],'_blank','noopener');
  });
  $('rosieVideo').addEventListener('ended',()=>{$('rosieVideoStatus').textContent='Introduction complete. Continue to your Northern BOOST journey whenever you are ready.';});
