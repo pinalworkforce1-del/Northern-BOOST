@@ -488,18 +488,24 @@
     const logoRegion=$('certificateLogoRegion');
     const src=selectedArea==='agn'?'northern-neaz-logo.png':
       selectedArea==='coconino'?'northern-azwork-logo.png':'';
+    const logoFrame=regionalLogo.closest('.northern-cert-lockup');
+    // Both official logo files already include their own regional treatment.
+    // Keep the extra label hidden to avoid rendering "Coconino County" twice.
+    logoRegion.hidden=true;
+    logoRegion.textContent='';
+    if(logoFrame)logoFrame.dataset.region=selectedArea;
     if(regionalLogo.dataset.area!==selectedArea){
       regionalLogo.dataset.area=selectedArea;
-      regionalLogo.hidden=true;fallback.hidden=false;logoRegion.hidden=true;
+      regionalLogo.hidden=true;fallback.hidden=false;
       regionalLogo.onload=()=>{
         if(regionalLogo.dataset.area!==selectedArea)return;
         regionalLogo.hidden=false;fallback.hidden=true;
-        logoRegion.hidden=selectedArea!=='coconino';
-        logoRegion.textContent=selectedArea==='coconino'?'COCONINO COUNTY':'';
+        logoRegion.hidden=true;
       };
       regionalLogo.onerror=()=>{
         if(regionalLogo.dataset.area!==selectedArea)return;
-        regionalLogo.hidden=true;fallback.hidden=false;logoRegion.hidden=true;
+        regionalLogo.hidden=true;fallback.hidden=false;
+        logoRegion.hidden=true;
       };
       if(src)regionalLogo.src=src;
       else regionalLogo.removeAttribute('src');
