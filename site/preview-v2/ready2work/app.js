@@ -36,6 +36,7 @@
     sceneSelections: {},
     skillScores: {COM:0,PRO:0,PSA:0,TEAM:0,TIME:0,QUAL:0},
     participantName: '',
+    certificateArea: '',
     firstOpened: new Date().toISOString(),
     resumeBuilder: {step:0,target:'',summary:'',experience:'',evidence:'',skills:'',education:'',integrity:false,ready:false,complete:false}
   };
@@ -441,16 +442,45 @@
     if(state.audioOn && im.file){ impactAudio.src=im.file; impactAudio.play().catch(()=>{}); }
   }
 
+  const CERT_REGIONS={
+    agn:{name:'ARIZONA@WORK Northeastern Arizona',short:'NORTHEASTERN ARIZONA',prefix:'NEAZ'},
+    coconino:{name:'ARIZONA@WORK Coconino County',short:'COCONINO COUNTY',prefix:'COCONINO'}
+  };
+  function certificateRegion(){
+    const selected=String(state.certificateArea||'').toLowerCase();
+    const uid=window.NORTHERN_R2W?.userId;
+    let candidate=selected;
+    // Migrate the existing named Northern area selection only for the signed-in participant.
+    if(!CERT_REGIONS[candidate]&&uid){
+      try{candidate=localStorage.getItem('boost_naz_service_area_v1:'+uid)||''}catch(_){}
+    }
+    if(CERT_REGIONS[candidate]&&candidate!==selected){
+      state.certificateArea=candidate;
+      // Saved progress is not reset when choosing or restoring a service area.
+      saveState();
+    }
+    return CERT_REGIONS[candidate]?candidate:'';
+  }
   function certificateId(){
-    const key=`${state.participantName||'participant'}|${state.firstOpened||''}|BOOST-R2W`;
-    let h=2166136261; for(let i=0;i<key.length;i++){h^=key.charCodeAt(i);h=Math.imul(h,16777619)}
-    return `PINAL-R2W-${(h>>>0).toString(36).toUpperCase().padStart(7,'0')}`;
+    const area=certificateRegion();
+    if(!area)return 'Choose your service area';
+    const owner=window.NORTHERN_R2W?.userId||state.participantName||'participant';
+    const key=owner+'|'+String(state.firstOpened||'')+'|NORTHERN-R2W|'+area;
+    let h=2166136261;
+    for(let i=0;i<key.length;i++){h^=key.charCodeAt(i);h=Math.imul(h,16777619);}
+    return CERT_REGIONS[area].prefix+'-R2W-'+(h>>>0).toString(36).toUpperCase().padStart(7,'0');
   }
   function renderCertificate(){
     updateOverall(); recalcScores();
     const certificateName=(state.participantName||state.resumeBuilder?.contact?.name||'').trim();
     if(certificateName&&!state.participantName){state.participantName=certificateName;saveState();}
     $('participantName').value=certificateName;
+    const selectedArea=certificateRegion();
+    const areaDef=CERT_REGIONS[selectedArea]||null;
+    const areaPicker=$('certificateArea');
+    if(areaPicker)areaPicker.value=selectedArea;
+    $('certificateRegionLabel').textContent=areaDef?.short||'SELECT YOUR SERVICE AREA';
+    $('certificateOrganization').textContent=areaDef?.name||'Select a Northern service area';
     const earned=allComplete(), n=answeredCount(), total=scenes.length;
     $('readinessProgressTitle').textContent=earned?'Work Ready Certificate earned':'Your progress so far';
     $('readinessProgressMeta').textContent=earned?`${total} of ${total} scenarios complete • all Ready 2 Work areas complete`:`${n} of ${total} scenarios complete • your skill profile updates with every decision`;
@@ -468,7 +498,8 @@
     $('certificateLock').classList.toggle('show',!earned);
     $('certificateLock').querySelector('strong').textContent='Certificate in Progress';
     $('certificateLockText').textContent=`Keep building your work-readiness evidence. ${n} of ${total} scenarios are complete. Your current skill profile is shown above; the final credential unlocks when all Ready 2 Work requirements are complete.`;
-    $('printCertificateBtn').disabled=!earned;
+    $('printCertificateBtn').disabled=!earned||!areaDef;
+    $('printCertificateBtn').title=!areaDef?'Choose your Northern Arizona service area first':earned?'Print or save your certificate':'Complete Ready 2 Work to print';
   }
 
   // Restore saved progress BEFORE any résumé control calls resumeData().
@@ -567,7 +598,22 @@
   $('impactClose').onclick=closeImpact; $('impactContinue').onclick=closeImpact;
   $('impactDialog').addEventListener('click',e=>{ if(e.target===$('impactDialog')) closeImpact(); });
   $('participantName').addEventListener('input',e=>{ state.participantName=e.target.value; saveState(); $('certificateId').textContent=certificateId(); });
-  $('printCertificateBtn').onclick=()=>window.print();
+  $('certificateArea').onchange=e=>{
+    const area=e.target.value;
+    if(area&&!CERT_REGIONS[area])return;
+    if(state.certificateArea&&area!==state.certificateArea
+       &&!confirm('Change the certificate service area? The organization name and certificate ID will update.')){
+      e.target.value=state.certificateArea;return;
+    }
+    state.certificateArea=area;
+    const uid=window.NORTHERN_R2W?.userId;
+    if(uid)try{
+      if(area)localStorage.setItem('boost_naz_service_area_v1:'+uid,area);
+      else localStorage.removeItem('boost_naz_service_area_v1:'+uid);
+    }catch(_){}
+    saveState();renderCertificate();
+  };
+  $('printCertificateBtn').onclick=()=>{if(allComplete()&&certificateRegion())window.print();};
   $('resetBtn').onclick=()=>{ if(confirm('Start Ready 2 Work over on this device? This clears decisions, skill evidence, and certificate progress.')){ localStorage.removeItem(STORAGE_KEY); location.hash='#map'; location.reload(); } };
 
   window.addEventListener('boost-r2w-cloud-restored',event=>{
