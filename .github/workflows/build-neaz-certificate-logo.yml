@@ -1,0 +1,37 @@
+name: Produce transparent Northern NEAZ certificate logo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/build_neaz_certificate_logo.py'
+      - '.github/workflows/build-neaz-certificate-logo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert-logo:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image processing dependencies
+        run: python -m pip install --disable-pip-version-check pillow numpy
+      - name: Remove white pixels and crop the Northeastern Arizona certificate logo
+        run: python tools/build_neaz_certificate_logo.py
+      - name: Commit transparent logo to Northern staging
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/preview-v2/ready2work/northern-neaz-logo-clean.png
+          if git diff --cached --quiet; then
+            echo 'Northern certificate logo already current.'
+            exit 0
+          fi
+          git commit -m 'Publish clean transparent Northeastern Arizona certificate logo'
+          git push
