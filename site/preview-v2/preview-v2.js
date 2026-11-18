@@ -18,8 +18,8 @@ const details={
  module4:{name:'Module 4 — Decide',desc:'Bring your evidence together and decide the most realistic next step.',audio:'assets/audio/rosie-map-module4.mp3',url:'Northern_BOOST_Module4_Connected_Test_v0.6.html'},
  industry:{name:'Applied Career Experience',desc:'Explore the industry related to the occupation you selected in Decide.',audio:'assets/audio/rosie-map-applied.mp3'},
  skillmobility:{name:'Finding Yourself in Work',desc:'Connect your existing skills to opportunities you could pursue now.',audio:'assets/audio/rosie-map-skillmobility.mp3',url:'rapid-employment.html'},
- jobsearch:{name:'48-Hour Job Search Strategy',desc:'Build a focused two-day plan with specific job search actions and contacts.',audio:'assets/audio/rosie-map-jobsearch.mp3',url:'https://pinalworkforce1-del.github.io/48_hour_job_search/boost.html'},
- financial:{name:'Build Strong Financial Habits',desc:'Consider the financial realities of finding and keeping employment.',audio:'assets/audio/rosie-map-financial.mp3',url:'https://pinalworkforce1-del.github.io/Financial_Assessment/'},
+ jobsearch:{name:'48-Hour Job Search Strategy',desc:'Build a focused two-day plan with specific job search actions and contacts.',audio:'assets/audio/rosie-map-jobsearch.mp3',url:'48-hour-job-search.html'},
+ financial:{name:'Build Strong Financial Habits',desc:'Consider the financial realities of finding and keeping employment.',audio:'assets/audio/rosie-map-financial.mp3',url:'financial-habits.html'},
  ai:{name:'AI & You',desc:'Learn and practice practical AI skills with your own judgment in control.',audio:'assets/audio/rosie-map-ai.mp3',url:'ai-you.html'}
 };
 const orders={career:['module2','module3','module4','industry','financial','ai'],rapid:['skillmobility','jobsearch','financial','ai']};
@@ -253,8 +253,60 @@ function launch(id){
  }));
  window.location.assign(url.toString());
 }
+// Only accept a completed activity when the same Northern browser session
+// initiated it AND the signed-in participant has the saved evidence locally.
+async function consumeNorthernCompletionReturn(){
+ const url=new URL(location.href),id=url.searchParams.get('boost_complete'),received=url.searchParams.get('boost_nonce');
+ if(!id)return null;
+ const supported=['skillmobility','jobsearch','financial','ai'];
+ const expected=id&&sessionStorage.getItem(NONCE_PREFIX+id);
+ const raw=sessionStorage.getItem(RETURN_KEY);
+ let marker=null;try{marker=raw?JSON.parse(raw):null}catch(_){}
+ const clearUrl=()=>{url.searchParams.delete('boost_complete');url.searchParams.delete('boost_nonce');history.replaceState({},'',url.toString())};
+ if(!supported.includes(id)||!expected||!received||expected!==received||
+    marker?.module!==id||marker.version!==1||Date.now()-Number(marker.startedAt)>2*60*60*1000){
+   clearUrl();
+   return 'Completion was not accepted because its Northern session verification was missing. Your saved work was not deleted.';
+ }
+ const local=localJourney(),modules=local.modules||{};
+ const record=id==='ai'?(local.module5||modules.module5):modules[id];
+ const completedAt=record?.completedAt||record?.completed_at;
+ const finished=Boolean(completedAt)&&
+   (id!=='jobsearch'||(record?.activities?.plan===true&&record?.module==='jobsearch'))&&
+   (id!=='financial'||record?.module==='financial')&&
+   (id!=='ai'||record?.snapshot||record?.version);
+ if(!finished){
+   clearUrl();
+   return 'The activity returned, but complete saved evidence was not found. No completion was added.';
+ }
+ const c=getClient();
+ const loaded=await c.rpc('boost_load_my_journey_for_region',{p_region:'Northern Arizona'});
+ if(loaded.error)throw loaded.error;
+ const remote=loaded.data&&typeof loaded.data==='object'?loaded.data:{};
+ const next={...remote,region:'Northern Arizona',
+    modules:{...(remote.modules||{})},progress:{...(remote.progress||{})}};
+ if(id==='ai'){
+   next.module5=record;next.modules.module5=record;
+ }else next.modules[id]=record;
+ next.progress[id]='complete';
+ const now=new Date().toISOString();
+ next.updatedAt=now;next.updated_at=now;
+ const save=await c.rpc('boost_save_my_journey_for_region',{p_region:'Northern Arizona',p_journey:next});
+ if(save.error)throw save.error;
+ // The authenticated cloud save succeeded. Only now accept this completion.
+ localStorage.setItem(JOURNEY_KEY,JSON.stringify(next));
+ const p=read(PORTAL_KEY);p.rapid=p.rapid||{};if(['skillmobility','jobsearch'].includes(id))p.rapid[id]=true;
+ localStorage.setItem(PORTAL_KEY,JSON.stringify(p));
+ sessionStorage.removeItem(NONCE_PREFIX+id);sessionStorage.removeItem(RETURN_KEY);
+ sessionStorage.setItem(RETURN_NOTICE_KEY,JSON.stringify({module:id,at:Date.now()}));
+ clearUrl();
+ return null;
+}
 async function loadJourney(){
  if(!user)return;
+ let completionNotice=null;
+ try{completionNotice=await consumeNorthernCompletionReturn()}
+ catch(err){completionNotice='Your activity is saved locally, but Northern cloud completion could not be confirmed. Please keep this tab and try Refresh Progress. '+(err?.message||'')}
  try{
   const c=getClient(),{data,error}=await c.rpc('boost_load_my_journey_for_region',{p_region:'Northern Arizona'});
   if(error)throw error;
@@ -263,6 +315,7 @@ async function loadJourney(){
   lastCloudMessage=Object.keys(journey).length?'Your saved Northern BOOST journey is ready.':'No saved Northern BOOST journey was found yet.';
  }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
  render();
+ if(completionNotice)$('progressMessage').textContent=completionNotice;
  const noticeRaw=sessionStorage.getItem(RETURN_NOTICE_KEY);
  if(noticeRaw){
    sessionStorage.removeItem(RETURN_NOTICE_KEY);
@@ -285,7 +338,7 @@ async function boot(){
  if(error)throw error;
  user=data?.session?.user||null;authReady=true;setVisible();
  if(user)await loadJourney();
- else{setMessage('Enter your test-account email to receive a secure code.');}
+ else{setMessage('Enter your email to receive a secure sign-in code.');}
 }
 function install(){
  $('chooseArea').onclick=()=>showDialog('areaDialog');
