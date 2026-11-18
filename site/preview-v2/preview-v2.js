@@ -243,8 +243,6 @@ function render(){
 
  $('journeySection').hidden=!selected;
  if(!selected)return;
- const skipNotice=$('appliedSkipNotice');
- if(skipNotice)skipNotice.hidden=!skipUnmappedIndustry();
  $('selectedEyebrow').textContent=selected==='career'?'CAREER EXPLORATION & DEVELOPMENT':'RAPID EMPLOYMENT';
  $('journeyTitle').textContent=selected==='career'?'Explore, validate, and decide':'Move forward with a focused plan';
  const next=nextId();const n=$('nextStep');n.replaceChildren();
@@ -264,18 +262,27 @@ function render(){
    skillmobility:'career-mobility.webp',
    jobsearch:'48-hour-job-search.webp'
  });
- pathwayOrder().forEach((id,i)=>{
-   const complete=done(id),unlocked=available(id),review=stale(id);const article=document.createElement('article');
-   article.className='step-card'+(complete?' completed':'')+(!unlocked?' locked':'');
-   const badge=document.createElement('div');badge.className='step-number';badge.textContent=complete?'✓':String(i+2).padStart(2,'0');
+ // Display every pathway stage, even when an unmatched industry experience
+ // is excluded from the required progression sequence. Match Pinal's
+ // "Not required" card semantics without creating a false completion.
+ orders[selected].forEach((id,i)=>{
+   const notRequired=id==='industry'&&skipUnmappedIndustry();
+   const complete=!notRequired&&done(id),unlocked=!notRequired&&available(id),review=!notRequired&&stale(id);
+   const article=document.createElement('article');
+   article.className='step-card'+(notRequired?' not-required':complete?' completed':!unlocked?' locked':'');
+   const badge=document.createElement('div');badge.className='step-number';badge.textContent=notRequired?'—':complete?'✓':String(i+2).padStart(2,'0');
    const body=document.createElement('div');body.className='step-content';
-   const h=document.createElement('h3');h.textContent=labelFor(id);const p=document.createElement('p');p.textContent=details[id]?.desc||'Continue your Northern BOOST experience';
-   const status=document.createElement('div');status.className='step-status'+(complete?' done':unlocked?' current':'');
-   status.textContent=review?'↻ Review required':complete?'✓ Completed — review again':unlocked?'● Available to start':'🔒 Complete the previous required step';
+   const h=document.createElement('h3');h.textContent=labelFor(id);
+   const p=document.createElement('p');
+   p.textContent=notRequired?'No industry skills experience is mapped to your career selected in Decide. Continue to Financial Habits.':details[id]?.desc||'Continue your Northern BOOST experience';
+   const status=document.createElement('div');status.className='step-status'+(notRequired?' not-required':complete?' done':unlocked?' current':'');
+   status.textContent=notRequired?'Not required for this occupation':review?'↻ Review required':complete?'✓ Completed — review again':unlocked?'● Available to start':'🔒 Complete the previous required step';
    body.append(h,p,status);
    const controls=document.createElement('div');controls.className='step-controls';
-   const explain=document.createElement('button');explain.className='small-btn';explain.textContent='Ask Rosie';explain.onclick=()=>explainStep(id);controls.append(explain);
-   const go=document.createElement('button');go.className='small-btn launch';go.textContent=complete?'Review again →':'Open activity →';go.disabled=!unlocked;go.onclick=()=>launch(id);controls.append(go);
+   const explain=document.createElement('button');explain.className='small-btn';explain.textContent=notRequired?'Why not required?':'Ask Rosie';explain.onclick=()=>explainStep(id);controls.append(explain);
+   const go=document.createElement('button');go.className='small-btn launch';
+   go.textContent=notRequired?'Not required':complete?'Review again →':'Open activity →';
+   go.disabled=notRequired||!unlocked;go.onclick=()=>launch(id);controls.append(go);
    // Decorative art only: preserve original completion state, launch controls and handlers.
    const media=document.createElement('div');media.className='step-art';media.setAttribute('aria-hidden','true');
    const art=document.createElement('img');art.alt='';art.loading='lazy';art.decoding='async';
