@@ -23,16 +23,16 @@ function make(){
  const closeButton=document.createElement('button');closeButton.className='nv-close';closeButton.setAttribute('aria-label','Close career video');closeButton.type='button';closeButton.textContent='×';closeButton.onclick=close;
  const top=document.createElement('div');top.className='stepTag';top.textContent='CAREERONESTOP · CAREER IN ACTION';
  const h=document.createElement('h2');h.id='nvTitle';
- const info=document.createElement('p');info.textContent='Explore an official CareerOneStop occupational video when the source is available. If playback is unavailable here, open CareerOneStop in a separate tab without losing your Discover progress.';
+ const info=document.createElement('p');info.textContent='CareerOneStop publishes career videos and occupation information. Open the official career profile in a new tab to view available video content while keeping your Northern BOOST results here.';
  player=document.createElement('video');player.controls=true;player.playsInline=true;player.preload='metadata';
  const showFallback=()=>{clearTimeout(loadTimer);player.pause();player.hidden=true;dialog.querySelector('.nv-fallback').hidden=false;};
  player.addEventListener('error',showFallback);
  player.addEventListener('loadedmetadata',()=>{clearTimeout(loadTimer);});
  const fallback=document.createElement('div');fallback.className='nv-fallback';fallback.hidden=true;
- fallback.textContent='An embedded video was not available for this occupation. Open its official CareerOneStop profile to watch an available career video and explore the occupation without losing your Northern BOOST progress.';
+ fallback.textContent='The embedded video source could not be verified for this occupation. Use the official CareerOneStop occupation profile to see available videos and career details. Northern BOOST remains open in this tab.';
  const links=document.createElement('div');links.className='nv-links';
  const status=document.createElement('span');status.className='nv-status';status.textContent='Source: U.S. Department of Labor CareerOneStop';
- const link=document.createElement('a');link.target='_blank';link.rel='noopener noreferrer';link.textContent='Open CareerOneStop career video / occupation profile ↗';
+ const link=document.createElement('a');link.target='_blank';link.rel='noopener noreferrer';link.textContent='Explore this career on CareerOneStop ↗';
  links.append(status,link);dialog.append(closeButton,top,h,info,player,fallback,links);overlay.append(dialog);document.body.append(overlay);
  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
  document.addEventListener('keydown',e=>{
@@ -52,15 +52,15 @@ function open(source){
  const soc=wrap.dataset.cosSoc;
  const card=wrap.closest('article,.card,.career-card,.careerCard,.resultCard');
  const title=card?.querySelector('h2,h3,h4,.title')?.textContent?.trim()||'Career video';
- const src=url(soc);
- previousFocus=source;ui.h.textContent=title+' — Career Video';ui.link.href=profile(soc,title);ui.fallback.hidden=true;
- player.hidden=false;overlay.hidden=false;document.body.style.overflow='hidden';ui.closeButton.focus();
- if(!src){player.hidden=true;ui.fallback.hidden=false;return}
- clearTimeout(loadTimer);
- player.src=src;player.load();
- // Some occupations lack a playable CDN asset; never leave an indefinite 0:00 player.
- loadTimer=setTimeout(()=>{if(!overlay.hidden&&player.readyState<1){player.pause();player.hidden=true;ui.fallback.hidden=false;}},9000);
- // User starts playback explicitly; do not suppress autoplay restrictions.
+ // CareerOneStop video codes do not universally equal O*NET/SOC codes.
+ // A guessed CDNs path produced empty players for participants. The official
+ // occupation profile is the verified destination until the published 2026
+ // occupation-to-video crosswalk is integrated and tested.
+ previousFocus=source;ui.h.textContent=title+' — Career Video';
+ ui.link.href=profile(soc,title);
+ ui.fallback.hidden=false;
+ player.hidden=true;player.removeAttribute('src');
+ overlay.hidden=false;document.body.style.overflow='hidden';ui.closeButton.focus();
 }
 document.addEventListener('click',e=>{
  const b=e.target.closest('.cosVideoAction');if(!b)return;
