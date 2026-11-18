@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const frame=document.getElementById('activityFrame');
-const ROSIE='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-master.webp';
+const ROSIE='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp';
 
 function install(){
   let d;
