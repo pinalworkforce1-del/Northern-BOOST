@@ -10,7 +10,7 @@ const PORTAL_KEY='boost_naz_portal_progress_v1';
 const PATH_KEY='boost_naz_pathway_v1';
 const ROSIE_IMG='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp';
 const ROSIE_CHAT_IMG='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-chat-avatar.webp';
-const ROSIE_FALLBACK=new URL('assets/images/rosie-master.webp',document.baseURI).href;
+const ROSIE_FALLBACK='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp';
 const ALIASES={
   'cna':['31-1131'],'certified nursing assistant':['31-1131'],'nursing assistant':['31-1131'],
   'registered nurse':['29-1141'],'rn':['29-1141'],'lpn':['29-2061'],'lvn':['29-2061'],'licensed practical nurse':['29-2061'],
