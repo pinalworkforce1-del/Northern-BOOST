@@ -149,7 +149,12 @@ function done(id){
  if(id==='module2')return pr.module2==='complete'||!!j.module2?.careers?.length;
  if(id==='module3')return pr.module3==='complete'||!!j.module3?.careers?.length;
  if(id==='module4'){const m=j.module4||j.modules?.module4||{};return pr.module4==='complete'||!!m.completedAt||!!((m.careerTarget||m.targetCareer||m.career)&&m.answers)}
- if(id==='industry')return Object.entries(industryMap).some(([k,v])=>pr[v.legacy]==='complete'||pr['industry-'+k]==='complete'||j.appliedModules?.[k]?.completed===true);
+ if(id==='industry'){
+   // Count evidence only for the industry mapped to the current Decide career.
+   // A previous challenge in an unrelated industry must not satisfy this stage.
+   const key=recommendedIndustry(),v=key&&industryMap[key];
+   return !!v&&(pr[v.legacy]==='complete'||pr['industry-'+key]==='complete'||j.appliedModules?.[key]?.completed===true||j.appliedModules?.[v.legacy]?.completed===true);
+ }
  if(id==='ai')return pr.ai==='complete'||pr.careerAi==='complete'||!!j.modules?.ai?.completedAt;
  if(id==='financial')return pr.financial==='complete';
  if(id==='skillmobility'||id==='jobsearch')return pr[id]==='complete'||!!portal.rapid?.[id];
@@ -175,18 +180,28 @@ function recommendedIndustry(){
 function stale(id){
  const j=cloudOrLocal();return j.progress?.[id]==='stale'||(!!j.staleModules?.[id]&&j.progress?.[id]!=='complete');
 }
+function skipUnmappedIndustry(path=selected){
+ // No synthetic completion or cloud mutation: an unmatched applied experience
+ // is simply omitted from this participant's required career sequence.
+ return path==='career'&&done('module4')&&!recommendedIndustry();
+}
+function pathwayOrder(path=selected){
+ const steps=orders[path]||[];
+ return skipUnmappedIndustry(path)?steps.filter(id=>id!=='industry'):steps;
+}
 function available(id){
  if(id==='module1')return true;
  if(id==='coachAppointmentPrep')return done('module1');
  if(!done('module1'))return false;
  if(id==='module2'||id==='skillmobility')return true;
- const order=orders[selected]||[],index=order.indexOf(id);
+ if(id==='industry'&&!recommendedIndustry())return false;
+ const order=pathwayOrder(),index=order.indexOf(id);
  if(index<0)return false;
  if(index===0)return true;
  return done(order[index-1]);
 }
 function labelFor(id){const rec=id==='industry'?recommendedIndustry():null;return rec&&industryMap[rec]?industryMap[rec].label+' — Applied Experience':details[id]?.name||id}
-function nextId(){if(!done('module1'))return'module1';if(!done('coachAppointmentPrep'))return'coachAppointmentPrep';const order=orders[selected]||[];return order.find(id=>!done(id))||null;}
+function nextId(){if(!done('module1'))return'module1';if(!done('coachAppointmentPrep'))return'coachAppointmentPrep';const order=pathwayOrder();return order.find(id=>!done(id))||null;}
 function setVisible(){
  const yes=!!user;
  $('authGate').hidden=yes;$('appShell').hidden=!yes;$('signOut').hidden=!yes;
@@ -217,7 +232,7 @@ function render(){
  $('coachBridge').classList.toggle('complete',prepDone);
  $('coachBridge').classList.toggle('locked',!prepReady);
  $('coachPrepState').textContent=prepDone?'✓ Preparation reviewed and saved':prepReady?'● Available — prepare for enrollment conversation':'🔒 Available after Discover';
- const all=['module1',...(orders[selected]||[])];
+ const all=['module1',...pathwayOrder()];
  const completed=all.filter(done).length,total=all.length;
  const percent=Math.round(completed/total*100);
  $('progressPercent').textContent=percent+'%';
@@ -228,6 +243,8 @@ function render(){
 
  $('journeySection').hidden=!selected;
  if(!selected)return;
+ const skipNotice=$('appliedSkipNotice');
+ if(skipNotice)skipNotice.hidden=!skipUnmappedIndustry();
  $('selectedEyebrow').textContent=selected==='career'?'CAREER EXPLORATION & DEVELOPMENT':'RAPID EMPLOYMENT';
  $('journeyTitle').textContent=selected==='career'?'Explore, validate, and decide':'Move forward with a focused plan';
  const next=nextId();const n=$('nextStep');n.replaceChildren();
@@ -247,7 +264,7 @@ function render(){
    skillmobility:'career-mobility.webp',
    jobsearch:'48-hour-job-search.webp'
  });
- orders[selected].forEach((id,i)=>{
+ pathwayOrder().forEach((id,i)=>{
    const complete=done(id),unlocked=available(id),review=stale(id);const article=document.createElement('article');
    article.className='step-card'+(complete?' completed':'')+(!unlocked?' locked':'');
    const badge=document.createElement('div');badge.className='step-number';badge.textContent=complete?'✓':String(i+2).padStart(2,'0');
@@ -279,16 +296,25 @@ function explainStep(id){
  activeStep=id;const d=details[id];if(!d)return;
  $('stepTitle').textContent=labelFor(id);$('stepDescription').textContent=d.desc;
  const can=available(id);
- $('stepRequirement').textContent=can?'This step is available. Your Northern BOOST progression still applies.':id==='industry'&&!recommendedIndustry()?'The applied experience requires a selected occupation from Decide.':'Complete the earlier step in your Northern BOOST pathway first.';
+ $('stepRequirement').textContent=can?'This step is available. Your Northern BOOST progression still applies.':id==='industry'&&!recommendedIndustry()?'No matching Northern industry skills experience exists for this occupation. BOOST skips this stage and continues to Financial Habits.':'Complete the earlier step in your Northern BOOST pathway first.';
  $('openStep').hidden=!can;
- $('audioStatus').textContent='';$('stepAudio').removeAttribute('src');$('stepAudio').load();showDialog('stepDialog');
+ $('audioStatus').textContent='';$('stepAudio').pause();$('stepAudio').removeAttribute('src');$('stepAudio').removeAttribute('data-module');$('stepAudio').load();$('playStepAudio').textContent='▶ Listen to Rosie explain this step';showDialog('stepDialog');
 }
 function nonce(){const a=new Uint8Array(18);crypto.getRandomValues(a);return [...a].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function launch(id){
  if(!user){$('authGate').scrollIntoView();return}
  if(!available(id)){explainStep(id);return;}
  const d=details[id];if(!d)return;let target=d.url;
- if(id==='industry'){const key=recommendedIndustry();if(!key||!industryMap[key]){explainStep(id);return}target=industryMap[key].url;}
+ if(id==='industry'){
+   const key=recommendedIndustry();
+   if(!key||!industryMap[key]){
+     // Never route an unavailable industry step into Rosie’s pathway-intro video.
+     render();
+     $('journeySection').scrollIntoView({behavior:'smooth',block:'start'});
+     return;
+   }
+   target=industryMap[key].url;
+ }
  if(!target)return;
  // Coach preparation saves its own atomic cloud record; no legacy completion-return marker.
  if(id==='coachAppointmentPrep'){markReturnNavigation(id);sessionStorage.removeItem(RETURN_KEY);window.location.assign(new URL(target,document.baseURI).toString());return;}
@@ -455,7 +481,18 @@ function install(){
    closeDialog('areaDialog');window.open(AREA_FORMS[k],'_blank','noopener');
  });
  $('rosieVideo').addEventListener('ended',()=>{$('rosieVideoStatus').textContent='Introduction complete. Continue to your Northern BOOST journey whenever you are ready.';});
- $('playStepAudio').onclick=()=>{closeDialog('stepDialog');offerIntro(selected==='rapid'?'rapid':'career')};
+ $('playStepAudio').onclick=()=>{
+   const d=details[activeStep],a=$('stepAudio');
+   if(!d?.audio){$('audioStatus').textContent='Narration is not available for this step.';return;}
+   if(a.dataset.module!==activeStep){
+     a.src=new URL(d.audio,document.baseURI).href;
+     a.dataset.module=activeStep;
+   }
+   if(!a.paused){a.pause();$('playStepAudio').textContent='▶ Listen to Rosie explain this step';return;}
+   a.play().then(()=>{$('audioStatus').textContent='Playing Rosie’s step guidance.';$('playStepAudio').textContent='Ⅱ Pause step narration';})
+     .catch(()=>{$('audioStatus').textContent='Narration is unavailable. You can still ask Rosie a question or open this step.';});
+ };
+ $('stepAudio').addEventListener('ended',()=>{$('playStepAudio').textContent='▶ Listen to Rosie explain this step';});
  $('askStepRosie').onclick=()=>{
  const id=activeStep,d=details[id];if(!d)return;
  closeDialog('stepDialog');
