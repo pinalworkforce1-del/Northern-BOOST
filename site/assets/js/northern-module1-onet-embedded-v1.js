@@ -65,9 +65,14 @@ function rosieRead(scores){
 }
 function profileHtml(scores,saved=false){
  const ranked=rankedScores(scores),top=new Set(ranked.slice(0,3).map(x=>x.code)),scaleMax=Math.max(20,...KEYS.map(k=>Number(scores[k])||0)),code=profileCode(scores);
- return `<div class="${saved?'bip-saved':'bip-done'}"><strong>✓ Your ${miniFlag||!saved?'BOOST mini':'previously entered'} interest pattern is ${saved?'saved':'ready'}.</strong><div class="bip-profile-head"><div><h4>Your six-score interest profile</h4><p>The three-letter code is a quick summary. BOOST keeps all six scores for career matching.</p></div><div class="bip-code"><small>TOP 3 CODE</small><b>${code}</b></div></div><div class="bip-score-grid">${KEYS.map(k=>`<div class="bip-score ${top.has(k)?'top':''}"><div class="row"><span class="code">${k}</span><span class="num">${scores[k]}</span></div><span class="label">${LABELS[k]}</span><div class="bar"><i style="width:${Math.min(100,Math.max(0,(Number(scores[k])||0)/scaleMax*100))}%"></i></div></div>`).join('')}</div>${rosieRead(scores)}<p class="bip-profile-note">These six mini-profiler scores are connected to Northern BOOST Discover. Existing full-profiler scores remain available until you intentionally replace them.</p><div class="bip-actions"><button class="primary" id="${saved?'bipSavedContinue':'bipContinue'}">${saved?'Continue with saved results':'Show Careers That Connect to Me'} →</button><button id="${saved?'bipSavedRetake':'bipRetake'}">${saved?(miniFlag?'Retake BOOST Mini Profiler':'Try the 30-Activity BOOST Mini Profiler'):'Retake BOOST Mini Profiler'}</button></div></div>`;
+ return `<div class="${saved?'bip-saved':'bip-done'}"><strong>✓ Your ${miniFlag||!saved?'BOOST mini':'previously entered'} interest pattern is ${saved?'saved':'ready'}.</strong><div class="bip-profile-head"><div><h4>Your six-score interest profile</h4><p>The three-letter code is a quick summary. BOOST keeps all six scores for career matching.</p></div><div class="bip-code"><small>TOP 3 CODE</small><b>${code}</b></div></div><div class="bip-score-grid">${KEYS.map(k=>`<div class="bip-score ${top.has(k)?'top':''}"><div class="row"><span class="code">${k}</span><span class="num">${scores[k]}</span></div><span class="label">${LABELS[k]}</span><div class="bar"><i style="width:${Math.min(100,Math.max(0,(Number(scores[k])||0)/scaleMax*100))}%"></i></div></div>`).join('')}</div>${rosieRead(scores)}<p class="bip-profile-note">These six mini-profiler scores are connected to Northern BOOST Discover. Existing full-profiler scores remain available until you intentionally replace them.</p><div class="bip-actions"><button class="primary" id="${saved?'bipSavedContinue':'bipContinue'}">${saved?'Review my saved interest pattern':'Understand my results and career matches'} →</button><button id="${saved?'bipSavedRetake':'bipRetake'}">${saved?(miniFlag?'Retake BOOST Mini Profiler':'Try the 30-Activity BOOST Mini Profiler'):'Retake BOOST Mini Profiler'}</button></div></div>`;
 }
-function continueCareer(){document.getElementById('surfaceBtn')?.click();document.getElementById('recommendations')?.scrollIntoView({behavior:'smooth',block:'start'})}
+function continueCareer(){
+ // Generate matching careers without skipping the explanation and sorting controls.
+ document.getElementById('surfaceBtn')?.click();
+ const explanation=document.getElementById('scoresPanel');
+ if(explanation){explanation.scrollIntoView({behavior:'smooth',block:'start'});}
+}
 function startRetake(){if(hasSaved&&!window.confirm('Retaking replaces the six interest scores used to compare Northern occupations. Your completed modules will not be reset automatically; previously saved occupation comparisons may need reviewing. Continue?'))return;state.i=0;state.answers={};state.retaking=true;hideInterestSummary();render()}
 function finish(){
  const scores={R:0,I:0,A:0,S:0,E:0,C:0};
@@ -77,6 +82,8 @@ function finish(){
  document.getElementById('surfaceBtn')?.click();
  syncInterestSummary(scores);
  mount.innerHTML=profileHtml(scores,false);
+ // The last question is tall; keep the participant at their newly calculated result.
+ mount.scrollIntoView({behavior:'smooth',block:'start'});
  document.getElementById('bipContinue').onclick=continueCareer;document.getElementById('bipRetake').onclick=startRetake;
 }
 function render(){
