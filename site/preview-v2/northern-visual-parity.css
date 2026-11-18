@@ -155,6 +155,14 @@ body{
 .step-card.completed{border-color:#63c796}
 .step-card:not(.completed):not(.locked){border-color:#f5bf5a;box-shadow:0 0 0 2px #eebd5435,0 13px 26px #001b3157}
 .step-card.locked{background:#edf2f4;border-color:#667e8b;opacity:.76}
+/* Visible but excluded from required completion, matching Pinal behavior. */
+.step-card.not-required{background:#f2f6f8;border-color:#9fb9c7;box-shadow:0 9px 20px #001b3138}
+.step-card.not-required .step-art{filter:saturate(.72);opacity:.78}
+.step-card.not-required .step-number{background:#557889;color:white}
+.step-card.not-required .step-status.not-required{background:#e0ebf0;color:#35596c}
+.step-card.not-required .step-content p{color:#466477}
+.step-card.not-required .step-controls .small-btn.launch:disabled{background:#dce7ec;border-color:#bdcfd7;color:#416076;opacity:1;cursor:default}
+
 .step-card .step-art{
  order:0;width:100%;height:214px;flex:none;
  border:0;border-radius:0;display:block;
