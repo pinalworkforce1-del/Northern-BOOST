@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI & You | Northern BOOST module (scoped copy)</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<style>
+:root{--n:#103b59;--n2:#092b43;--t:#0d918b;--g:#f4bd2f;--i:#233746;--m:#667a87;--l:#d5dfe5;--bg:#eef3f5;--ok:#2f7d4a;--warn:#9b6a00}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--i)}button,textarea{font:inherit}.w{max-width:1120px;margin:auto}.hero{background:linear-gradient(135deg,#092b43,var(--n));color:white;border-bottom:5px solid var(--g);padding:28px 16px}.hero h1{font-size:clamp(38px,7vw,68px);margin:4px 0}.hero p{max-width:860px;line-height:1.5}.goal{padding:12px;background:#ffffff18;border:1px solid #ffffff44;border-radius:12px;max-width:900px}.goal b{color:var(--g)}
+main .w{padding:16px}.p{background:white;border:1px solid var(--l);border-radius:15px;padding:18px;margin:14px 0;box-shadow:0 6px 18px #1232}.step{font-size:11px;font-weight:900;letter-spacing:1.2px;color:var(--t);text-transform:uppercase}h2,h3{color:var(--n)}.sub{color:var(--m);line-height:1.5}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.grid6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card,.sector,.ans{border:1px solid var(--l);border-radius:11px;padding:12px;background:#fafcfd}.card b,.sector b{display:block;color:var(--n);margin:5px 0}.ico{font-size:28px}.ans,.sector{cursor:pointer;text-align:left}.ans:hover,.sector:hover,.sector.sel{border-color:var(--t);background:#eef9f7}.sector.recommended{border:3px solid var(--g);position:relative}.sector.recommended:before{content:"RECOMMENDED FOR YOUR BOOST DIRECTION";display:block;font-size:9px;font-weight:1000;color:#6b5100;margin-bottom:5px}.answers{display:grid;gap:8px}.fb{display:none;margin-top:9px;padding:10px;border-radius:8px;background:#f1f6f8;line-height:1.5}.fb.show{display:block}.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px}.box{border:1px solid var(--l);border-radius:11px;padding:13px;background:#f8fbfc}.clear{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:12px}.ci{background:var(--n);color:white;border:0;border-radius:9px;padding:9px;text-align:center;font-size:11px;cursor:pointer}.ci b{display:block;color:var(--g);font-size:22px}.ci.active{outline:3px solid var(--g)}.clearExplain{display:none;margin-top:10px;border:1px solid var(--l);border-radius:11px;padding:13px;background:#f8fbfc}.clearExplain.show{display:block}.clearCompare{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exampleCard{border-radius:9px;padding:11px;font-size:12px;line-height:1.45}.exampleCard.good{background:#e9f6ed;border:1px solid #b9ddc4}.exampleCard.bad{background:#fff0f0;border:1px solid #e7c2c2}.lab{display:none}.lab.show{display:block}.scenario{background:#eaf7f5;border-left:4px solid var(--t);padding:13px;border-radius:9px;line-height:1.5}textarea{width:100%;min-height:120px;border:1px solid #b9c8d1;border-radius:9px;padding:11px}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:900;cursor:pointer;background:var(--n);color:white}.btn.gold{background:var(--g);color:#24323b}.btn.teal{background:var(--t)}.btn.light{background:#eef4f7;color:var(--n);border:1px solid #b9c8d1}.btn:disabled{opacity:.55;cursor:wait}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.score{display:none}.score.show,.result.show{display:block}
+.celebration{display:none;position:relative;overflow:hidden;margin:-2px 0 18px;padding:26px 18px;border-radius:18px;background:linear-gradient(135deg,#0b3654,#126b72);color:#fff;text-align:center;border:4px solid var(--g);box-shadow:0 16px 38px #092b4340}.celebration.show{display:block}.celebration h2{color:#fff;font-size:clamp(28px,5vw,48px);margin:4px 0}.celebration p{font-size:16px;margin:6px auto;max-width:760px}.celebration .burst{font-size:38px;letter-spacing:12px;animation:burstPulse 1.1s ease-in-out infinite}
+.confettiLayer{position:fixed;inset:0;z-index:2147483000;pointer-events:none;overflow:hidden}.confettiPiece{position:absolute;top:-30px;width:10px;height:18px;border-radius:2px;animation:confettiFall var(--dur) linear forwards;transform:rotate(var(--rot))}.firework{position:fixed;z-index:2147482999;width:10px;height:10px;border-radius:50%;pointer-events:none;box-shadow:0 -42px 0 #f4bd2f,30px -30px 0 #fff,42px 0 0 #49c6d1,30px 30px 0 #f4bd2f,0 42px 0 #fff,-30px 30px 0 #49c6d1,-42px 0 0 #f4bd2f,-30px -30px 0 #fff;animation:fireworkPop .9s ease-out forwards}
+.certificate{display:none;margin:18px 0;padding:34px 30px;border:8px double #d6a52d;background:linear-gradient(135deg,#fffef8,#f7fbfd);text-align:center;box-shadow:0 10px 26px #0002}.certificate.show{display:block}.certificate .certKicker{font-weight:1000;letter-spacing:.16em;color:#7c6320;font-size:12px}.certificate h2{font-size:clamp(30px,5vw,50px);margin:12px 0 4px;color:var(--n)}.certificate .certName{font-size:clamp(25px,4vw,40px);font-weight:1000;color:#0d746f;margin:18px 0;border-bottom:2px solid #b9cbd3;padding-bottom:9px}.certificate .certText{font-size:16px;line-height:1.55;max-width:760px;margin:auto}.certificate .certDate{margin-top:20px;font-weight:900;color:#526773}
+@keyframes burstPulse{50%{transform:scale(1.08)}}@keyframes confettiFall{to{transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rot) + 720deg));opacity:.95}}@keyframes fireworkPop{0%{transform:scale(.1);opacity:0}35%{opacity:1}100%{transform:scale(1.7);opacity:0}}
+@media print{body.printCertificate main .p:not(#result),body.printCertificate #result>*:not(#aiCertificate),body.printCertificate .narratorDock,body.printCertificate #boostCompletionReturn{display:none!important}body.printCertificate #result{display:block!important;border:0!important;box-shadow:none!important;margin:0!important;padding:0!important}body.printCertificate #aiCertificate{display:block!important;box-shadow:none!important;margin:0!important;min-height:9in;padding:1in .65in}body.printCertificate .certificate .certName{font-size:32pt}body.printCertificate .certificate h2{font-size:34pt}}
+.row{display:grid;grid-template-columns:190px 1fr 120px;gap:8px;align-items:center;margin:8px 0}.bar{height:13px;background:#dce5e9;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--t)}.privacy{background:#fff4d6;border-left:4px solid var(--g);padding:10px;border-radius:8px;margin-top:10px;font-size:13px;line-height:1.45}.pilotNote{background:#eef6fb;border-left:4px solid #55c7e8;border-radius:8px;padding:10px;margin-top:10px;font-size:12px;line-height:1.45}.badge{display:inline-block;background:#e7f4f2;border-radius:99px;padding:6px 9px;margin:3px;font-size:11px;font-weight:900}
+.rosie{border:2px solid #78c7c1;background:linear-gradient(135deg,#effaf9,#fff);border-radius:16px;padding:16px;margin:14px 0}.rosieHead{display:flex;gap:12px;align-items:center}.rosieMark{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--t);color:#fff;font-weight:1000;font-size:20px}.rosieText{line-height:1.5}.rosieResponse{display:none;margin-top:12px;padding:12px;border-radius:10px;background:#fff;border:1px solid #bcdad7;white-space:pre-wrap;line-height:1.5}.rosieResponse.show{display:block}.careerChip{display:inline-block;background:#e8f5f3;border:1px solid #add8d4;border-radius:99px;padding:7px 10px;font-size:12px;font-weight:900;color:#155d59}
+.scenarioArt{width:100%;border-radius:12px;border:1px solid #b7c5cd;margin:10px 0;max-height:380px;object-fit:cover}.challengeProgress{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0 16px}.challengeStage{border:1px solid var(--l);border-radius:10px;padding:9px 7px;text-align:center;background:#eef3f5;color:var(--m);font-size:10px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}.challengeStage b{display:block;font-size:13px;color:inherit;margin-bottom:2px}.challengeStage.active{background:#fff5d6;border-color:var(--g);color:var(--n);box-shadow:inset 0 0 0 2px var(--g)}.challengeStage.done{background:#e8f5ec;border-color:#73aa84;color:#356947}.challengeRound{display:none;border:1px solid var(--l);border-radius:13px;padding:13px;margin-top:10px;background:#fbfcfd}.challengeRound.active{display:block}.challengeArt{width:100%;height:auto;display:block;border-radius:10px;border:1px solid #aabac3;box-shadow:0 7px 18px #1233}.challengeInstruction{text-align:center;font-size:13px;font-weight:900;color:var(--n);margin:11px 0 7px}.letterAnswers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:560px;margin:0 auto}.letterAns{border:2px solid var(--l);border-radius:10px;background:#fff;padding:12px 6px;font-weight:1000;font-size:20px;color:var(--n);cursor:pointer}.letterAns:hover{border-color:var(--g);background:#fff9e6}.letterAns.correct{background:#e8f5ec;border-color:#4c9a67;color:#356947}.letterAns.wrong{background:#fff0f0;border-color:#b95050;color:#8d3838}.roundFeedback{display:none;margin:11px auto 0;max-width:760px;padding:11px 13px;border-radius:9px;background:#f1f6f8;line-height:1.45;font-size:13px}.roundFeedback.show{display:block}.roundContinue{display:none;text-align:center;margin-top:10px}.roundContinue.show{display:block}.challengeIntro{background:#eef6fb;border-left:4px solid #55c7e8;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.45}
+.result{display:none}.rh{background:var(--n);color:white;border-radius:13px;padding:17px}.rh h2{color:#fff;margin:4px 0}.snapshotGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.snap{border:1px solid var(--l);border-radius:12px;padding:13px;background:#fafcfd}.snap b{display:block;color:var(--n);margin-bottom:5px}.statusGood{color:var(--ok);font-weight:900}.statusPractice{color:#6e5a00;font-weight:900}.reflection{background:#f7fafb;border:1px solid var(--l);border-radius:12px;padding:13px;margin-top:12px}.saveStatus{font-size:12px;font-weight:800;margin-top:10px;color:#43606f}
+.narrateBtn{border:1px solid #9fc8d6;background:#eef8fb;color:var(--n);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;cursor:pointer;margin:4px 0 10px}.narratorDock{position:fixed;right:14px;bottom:14px;z-index:90;width:min(360px,calc(100vw - 28px));background:#092b43;color:#fff;border:1px solid #3d6680;border-radius:14px;box-shadow:0 14px 34px #0005;padding:11px;display:none}.narratorDock.show{display:block}.narratorTop{display:flex;justify-content:space-between;gap:8px;align-items:center}.narratorTitle{font-size:11px;font-weight:900;letter-spacing:.9px;text-transform:uppercase;color:#a7e7e0}.narratorNow{font-size:13px;font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.narratorControls{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.narratorControls button{border:0;border-radius:7px;padding:7px 9px;font-size:11px;font-weight:900;cursor:pointer}.nPlay{background:var(--g);color:#26343c}.nDark{background:#214b67;color:#fff}.nClose{background:#6d3940;color:#fff}.narratorStatus{font-size:10px;color:#b8cedb;margin-top:7px;line-height:1.35}
+@media(max-width:800px){.grid4,.grid6{grid-template-columns:1fr 1fr}.clear{grid-template-columns:1fr}.compare,.clearCompare,.snapshotGrid{grid-template-columns:1fr}.row{grid-template-columns:1fr}.challengeProgress{grid-template-columns:1fr}}
+@media(max-width:500px){.grid4,.grid6{grid-template-columns:1fr}.letterAnswers{grid-template-columns:1fr 1fr}.hero h1{font-size:44px}}
+@media print{.hero,.content,.actions,.narratorDock,.narrateBtn,.rosie .btn{display:none!important}.result{display:block!important}.p{box-shadow:none;border:0}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="w">
+<div class="step" style="color:#a7e7e0">BOOST • AI & YOU • PRACTICAL AI LITERACY</div>
+<h1>AI & YOU</h1>
+<p><b>Learn it. See it. Try it. Use it.</b> AI is changing how people find jobs and how work gets done. This module helps you practice using AI as a workplace tool—not simply getting answers from it.</p>
+<div class="goal"><b>Your goal:</b> Give AI useful direction, protect information, check what it produces, and use your own judgment before anything becomes real-world work.</div>
+<button class="narrateBtn" style="margin-top:10px;background:#ffffff18;color:#fff;border-color:#ffffff55" onclick="narrate('intro')">🔊 Listen to the welcome</button>
+</div></header>
+
+<main><div class="w">
+<div class="rosie" id="rosieIntro">
+  <div class="rosieHead"><div class="rosieMark">R</div><div><b>Rosie • Your BOOST connection</b><div id="careerLine" class="sub" style="margin-top:3px">I’ll connect this activity to what you have already learned in BOOST.</div></div></div>
+  <div class="rosieText" id="rosieIntroText" style="margin-top:10px">AI literacy is useful across careers because the skill is not “letting AI decide.” The skill is knowing how to direct it, check it, and decide what is safe and useful.</div>
+  <div class="actions"><button class="btn teal" id="askCareerBtn" onclick="askRosieCareer()">Ask Rosie how AI connects to my career</button></div>
+  <div class="rosieResponse" id="rosieCareerResponse"></div>
+</div>
+
+<div class="content">
+<section class="p">
+<div class="step">1 • Learn It</div><h2>AI is a tool. You are still the decision-maker.</h2>
+<button class="narrateBtn" onclick="narrate('learn')">🔊 Listen to this introduction</button>
+<div class="grid4">
+<div class="card"><span class="ico">🧠</span><b>AI generates</b>It can draft, summarize, organize, brainstorm, compare, and explain.</div>
+<div class="card"><span class="ico">⚠️</span><b>AI can be wrong</b>Confident-looking answers can contain mistakes or invented information.</div>
+<div class="card"><span class="ico">🔒</span><b>Protect information</b>Don't enter private, confidential, or employer-protected information unless authorized.</div>
+<div class="card"><span class="ico">👤</span><b>You own the result</b>You remain responsible for reviewing what you use or submit.</div>
+</div>
+<h3>Quick check: Which task is AI best suited to help with?</h3>
+<div class="answers" id="learn">
+<button class="ans" onclick="quiz(this,false)">Make a final medical diagnosis.</button>
+<button class="ans" onclick="quiz(this,false)">Decide whether an employee should be fired.</button>
+<button class="ans" onclick="quiz(this,true)">Draft three customer follow-up emails for you to review.</button>
+<button class="ans" onclick="quiz(this,false)">Guarantee every fact in a report is accurate.</button>
+</div><div class="fb" id="learnFb"></div>
+</section>
+
+<section class="p">
+<div class="step">2 • See It</div><h2>Same AI. Better direction. Better result.</h2>
+<button class="narrateBtn" onclick="narrate('see')">🔊 Listen to this introduction</button>
+<div class="compare">
+<div class="box"><b>VAGUE:</b><h3>“Help me write a résumé.”</h3><p class="sub">AI can respond, but it knows almost nothing about the job, your experience, or what you need.</p></div>
+<div class="box"><b>BETTER DIRECTION:</b><p><strong>“I'm applying for a Medical Assistant position. I have two years of customer service experience and recently completed MA training. Draft three résumé bullets emphasizing transferable customer-service skills relevant to patient care. Don't invent experience.”</strong></p></div>
+</div>
+<div class="clear">
+<button type="button" class="ci" onclick="showClear('c',this)"><b>C</b>CONTEXT</button>
+<button type="button" class="ci" onclick="showClear('l',this)"><b>L</b>LEAD WITH TASK</button>
+<button type="button" class="ci" onclick="showClear('e',this)"><b>E</b>EVIDENCE</button>
+<button type="button" class="ci" onclick="showClear('a',this)"><b>A</b>AUDIENCE / AIM</button>
+<button type="button" class="ci" onclick="showClear('r',this)"><b>R</b>REVIEW</button>
+</div>
+<div class="clearExplain" id="clearExplain"><h3 id="clearTitle" style="margin-top:0"></h3><p class="sub" id="clearWhy"></p><div class="clearCompare"><div class="exampleCard bad"><b>NOT CLEAR</b><span id="clearBad"></span></div><div class="exampleCard good"><b>CLEARER</b><span id="clearGood"></span></div></div></div>
+</section>
+
+<section class="p">
+<div class="step">3 • Try It</div><h2>AI Practice Lab</h2>
+<button class="narrateBtn" onclick="narrate('try')">🔊 Listen to this introduction</button>
+<p class="sub">Choose a workplace scenario. If BOOST already knows your career direction, I’ll recommend the closest match—but you can choose any scenario.</p>
+<img class="scenarioArt" src="https://pinalworkforce1-del.github.io/AI_Literacy/assets/images/boost_m5_workplace_scenario_selector.png" alt="Graphic novel workplace examples in health services, advanced manufacturing, skilled trades, and customer service">
+<div class="grid6" id="sectorGrid">
+<button class="sector" data-sector="health" onclick="pick('health',this)"><span class="ico">🏥</span><b>Health Services</b>Patient communication</button>
+<button class="sector" data-sector="mfg" onclick="pick('mfg',this)"><span class="ico">⚙️</span><b>Advanced Manufacturing</b>Shift handoff</button>
+<button class="sector" data-sector="trades" onclick="pick('trades',this)"><span class="ico">🦺</span><b>Skilled Trades</b>Project update</button>
+<button class="sector" data-sector="retail" onclick="pick('retail',this)"><span class="ico">🛍️</span><b>Customer Service / Retail</b>Customer follow-up</button>
+<button class="sector" data-sector="it" onclick="pick('it',this)"><span class="ico">💻</span><b>Information Technology</b>User-support troubleshooting</button>
+<button class="sector" data-sector="transport" onclick="pick('transport',this)"><span class="ico">🚚</span><b>Transportation & Logistics</b>Delivery status update</button>
+</div>
+
+<div class="lab" id="lab">
+<div class="scenario" id="sc"></div>
+<button class="narrateBtn" onclick="narrateScenario()">🔊 Hear this workplace scenario</button>
+<h3>Write the prompt you would give AI</h3>
+<textarea id="prompt" placeholder="Give AI context, a clear task, important facts, the audience/aim, and a review boundary such as 'do not invent missing information.'"></textarea>
+<div class="privacy">🔒 <b>Practice rule:</b> These scenarios are fictional. In real life, stop before entering private, confidential, patient, customer, employee, login, or employer-protected information into an AI tool.</div>
+<div class="actions"><button class="btn" onclick="scorePrompt()">1 • CHECK MY PROMPT</button><button class="btn gold" onclick="examplePrompt()">2 • LOAD A STRONG EXAMPLE</button></div>
+<div class="score" id="ps"><h3>Your C.L.E.A.R. Prompt Check</h3><div id="rows"></div><div class="pilotNote"><b>Structured check:</b> This first check is deterministic. It looks for the five C.L.E.A.R. ingredients; it does not pretend to be a certification or a complete measure of AI skill.</div>
+<div class="actions"><button class="btn gold" id="sampleResponseBtn" onclick="showSample()">3 • SHOW SAMPLE AI RESPONSE</button><button class="btn teal" id="rosiePromptBtn" onclick="askRosiePrompt()">Ask Rosie to review my practice prompt</button></div>
+<div class="rosieResponse" id="rosiePromptResponse"></div>
+</div>
+<div class="fb" id="aiBox" style="margin-top:12px"><b>SAMPLE AI RESPONSE FOR THIS SCENARIO</b><p id="ait"></p><h3>Would you use this response as written?</h3><div class="answers"><button class="ans" onclick="judge(this,'use')">USE IT</button><button class="ans" onclick="judge(this,'edit')">EDIT IT</button><button class="ans" onclick="judge(this,'reject')">REJECT IT</button></div><div class="fb" id="judgeFb"></div></div>
+</div>
+</section>
+
+<section class="p">
+<div class="step">4 • Use It</div><h2>The AI Workplace Challenge</h2>
+<button class="narrateBtn" onclick="narrate('use')">🔊 Listen to this introduction</button>
+<p class="sub">Three visual rounds put the skills together. The goal is judgment, not a test score.</p>
+<div class="challengeIntro"><b>DIRECT IT → CHECK IT → DECIDE.</b> First give AI useful direction. Then check what AI produced. Finally decide whether the output is safe and appropriate to use.</div>
+<div class="challengeProgress"><div class="challengeStage active" id="cp1"><b>1 • DIRECT IT</b>Build the Prompt</div><div class="challengeStage" id="cp2"><b>2 • CHECK IT</b>Check the AI</div><div class="challengeStage" id="cp3"><b>3 • DECIDE</b>Make the Call</div></div>
+
+<div class="challengeRound active" id="round1"><img class="challengeArt" src="https://pinalworkforce1-del.github.io/AI_Literacy/assets/images/boost_m5_round1_build_prompt.png" alt="Round 1 Build the Prompt workplace scenario with choices A through D"><div class="challengeInstruction">Which prompt would you choose?</div><div class="letterAnswers" id="r1"><button class="letterAns" onclick="challengeAnswer(1,'A',this)">A</button><button class="letterAns" onclick="challengeAnswer(1,'B',this)">B</button><button class="letterAns" onclick="challengeAnswer(1,'C',this)">C</button><button class="letterAns" onclick="challengeAnswer(1,'D',this)">D</button></div><div class="roundFeedback" id="cf1"></div><div class="roundContinue" id="cc1"><button class="btn gold" onclick="nextChallenge(2)">CONTINUE TO ROUND 2 →</button></div></div>
+<div class="challengeRound" id="round2"><img class="challengeArt" src="https://pinalworkforce1-del.github.io/AI_Literacy/assets/images/boost_m5_round2_check_ai.png" alt="Round 2 Check the AI workplace scenario with choices A through D"><div class="challengeInstruction">Which answer best identifies the problem?</div><div class="letterAnswers" id="r2"><button class="letterAns" onclick="challengeAnswer(2,'A',this)">A</button><button class="letterAns" onclick="challengeAnswer(2,'B',this)">B</button><button class="letterAns" onclick="challengeAnswer(2,'C',this)">C</button><button class="letterAns" onclick="challengeAnswer(2,'D',this)">D</button></div><div class="roundFeedback" id="cf2"></div><div class="roundContinue" id="cc2"><button class="btn gold" onclick="nextChallenge(3)">CONTINUE TO ROUND 3 →</button></div></div>
+<div class="challengeRound" id="round3"><img class="challengeArt" src="https://pinalworkforce1-del.github.io/AI_Literacy/assets/images/boost_m5_round3_make_call.png" alt="Round 3 Make the Call workplace privacy scenario with choices A through D"><div class="challengeInstruction">What would you do?</div><div class="letterAnswers" id="r3"><button class="letterAns" onclick="challengeAnswer(3,'A',this)">A</button><button class="letterAns" onclick="challengeAnswer(3,'B',this)">B</button><button class="letterAns" onclick="challengeAnswer(3,'C',this)">C</button><button class="letterAns" onclick="challengeAnswer(3,'D',this)">D</button></div><div class="roundFeedback" id="cf3"></div><div class="roundContinue" id="cc3"><div class="reflection"><h3 style="margin-top:0">Your work connection</h3><p class="sub">In one sentence, name a responsible way you could use AI in this kind of work.</p><textarea id="reflection" style="min-height:80px" placeholder="Example: I could use AI to draft a first version of a customer update, then check the facts and edit it before sending."></textarea></div><button class="btn gold" onclick="finish()">BUILD MY AI PRACTICE SNAPSHOT</button></div></div>
+</section>
+</div>
+
+<section class="p result" id="result">
+<div class="step">AI & You • Practice Snapshot</div>
+<div class="rh"><div>AI PRACTICE SNAPSHOT</div><h2 id="snapshotTitle">Practice complete</h2><div id="snapshotCareer"></div></div>
+<div class="snapshotGrid" id="snapshotGrid"></div>
+<h3>Badges earned</h3><div id="badges"></div>
+<div class="box" style="margin-top:12px"><h3>BOOST Takeaway</h3><p id="take"></p><p><b>Remember:</b> Give AI useful direction. Protect information. Check what it produces. Use human judgment before acting.</p></div>
+<div class="rosie" style="margin-top:14px"><div class="rosieHead"><div class="rosieMark">R</div><div><b>Rosie • Connect this to what comes next</b><div class="sub">I can use your BOOST direction and this practice snapshot to explain what you just demonstrated—without treating this activity like a certification.</div></div></div><div class="actions"><button class="btn teal" onclick="askRosieWrap()">Ask Rosie to connect my snapshot to my next steps</button></div><div class="rosieResponse" id="rosieWrapResponse"></div></div>
+<div class="saveStatus" id="saveStatus">Saving your AI & You practice evidence to your BOOST journey…</div>
+<div class="actions"><button class="btn gold" onclick="window.print()">PRINT / SAVE MY PRACTICE SNAPSHOT</button><button class="btn light" onclick="location.reload()">TRY AGAIN</button></div>
+</section>
+</div></main>
+
+<div class="narratorDock" id="narratorDock" aria-live="polite">
+<div class="narratorTop"><div><div class="narratorTitle">BOOST Audio Guide</div><div class="narratorNow" id="narratorNow">Ready</div></div><button class="nClose" onclick="closeNarrator()" aria-label="Close audio guide">✕</button></div>
+<div class="narratorControls"><button class="nPlay" id="pauseNarration" onclick="toggleNarration()">⏸ Pause</button><button class="nDark" onclick="replayNarration()">↻ Replay</button><button class="nDark" onclick="stopNarration()">■ Stop</button></div><div class="narratorStatus" id="narratorStatus">Narration is optional and participant-controlled.</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const JOURNEY_KEY='northern_ai_you_embedded_draft_only_v1';
+function participantName(){
+ const j=readJourney(),p=j.participant||{};
+ return p.fullName||p.name||[p.firstName,p.lastName].filter(Boolean).join(' ')||p.first_name||'BOOST Participant';
+}
+function completionDateLabel(iso=new Date().toISOString()){try{return new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric'}).format(new Date(iso))}catch(_){return''}}
+
+let st={sector:null,promptHits:[false,false,false,false,false],sampleJudgment:null,challenge:{1:null,2:null,3:null},learn:null,saved:false};
+let pinalLaunch=false, integrationPromise=null, currentAudio=null,lastAudioKey=null;
+
+const AUDIO_FILES={intro:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_00_welcome.mp3",learn:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_01_learn_it.mp3",see:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_02_see_it.mp3",try:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_03_try_it.mp3",use:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_08_use_it.mp3",health:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_04_health_scenario.mp3",mfg:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_05_manufacturing_scenario.mp3",trades:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_06_trades_scenario.mp3",retail:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_07_retail_scenario.mp3",it:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_09_it_scenario.mp3",transport:"https://pinalworkforce1-del.github.io/AI_Literacy/assets/audio/boost_m5_10_transport_scenario.mp3"};
+const AUDIO_TITLES={intro:"Welcome to AI & YOU",learn:"Learn It",see:"See It",try:"Try It",use:"Use It",health:"Health Services scenario",mfg:"Advanced Manufacturing scenario",trades:"Skilled Trades scenario",retail:"Customer Service scenario",it:"Information Technology scenario",transport:"Transportation & Logistics scenario"};
+
+const CLEAR_EXAMPLES={
+c:{title:"C — Context",why:"Context tells AI what is happening. Without it, AI has to guess.",bad:"“Write a message.”",good:"“I work at a clinic front desk and a patient is calling about an upcoming follow-up appointment.”"},
+l:{title:"L — Lead with the Task",why:"State the action you want AI to take. A clear task keeps the response focused.",bad:"“Help me with this.”",good:"“Draft a short, friendly message explaining the check-in instructions.”"},
+e:{title:"E — Evidence / Details",why:"Give AI the facts it should use. This reduces guessing and unsupported claims.",bad:"“Tell them what they need to know.”",good:"“Include that they should arrive 15 minutes early, check in at reception, and bring a photo ID.”"},
+a:{title:"A — Audience / Aim",why:"Tell AI who the response is for and what the response should accomplish.",bad:"“Make it sound good.”",good:"“Write this for a patient. Keep the tone clear, friendly, and easy to understand.”"},
+r:{title:"R — Review",why:"Build review into the task. Tell AI not to invent missing facts, then check privacy, accuracy, tone, and usefulness yourself.",bad:"“AI wrote it, so I can send it.”",good:"“Use only the facts provided. Flag anything uncertain. I will verify the response before using it.”"}
+};
+
+const S={
+health:{label:"Health Services",text:"A patient needs directions for a follow-up appointment. Draft a friendly message: check in at reception, arrive 15 minutes early, bring photo ID. Do not include or invent medical information.",keys:[["patient","clinic","appointment"],["draft","write","message"],["15","photo id","reception"],["patient","friendly","clear"],["do not","don't","not invent","only the facts","flag"]],ai:"Hello! For your follow-up appointment, please check in at reception, arrive about 15 minutes early, and bring a photo ID. Contact the clinic if you need current directions."},
+mfg:{label:"Advanced Manufacturing",text:"Line 2 had two sensor faults. Maintenance reset the sensor twice and production resumed. Draft a concise handoff for the incoming team. Do not invent a cause or claim the issue is fixed.",keys:[["line 2","sensor","maintenance"],["draft","write","handoff"],["twice","resumed","monitor"],["incoming","next shift","team"],["do not","don't","not fixed","not invent","flag"]],ai:"Shift handoff: Line 2 had two sensor faults. Maintenance reset the sensor twice and production resumed. Please monitor it next shift and follow normal escalation if the fault returns. Cause is not confirmed."},
+trades:{label:"Skilled Trades",text:"Material delivery is delayed until 2 PM. The crew moved to approved preparation work that can be done safely. Draft a short update for the site lead. Do not blame the supplier or claim the schedule changed.",keys:[["delivery","material","crew"],["draft","write","update"],["2 pm","approved","prep","safely"],["site lead","supervisor","lead"],["do not","don't","no blame","not changed","flag"]],ai:"Project update: Today's material delivery is expected at 2 PM. The crew has moved to approved preparation work that can be completed safely. No overall schedule change has been confirmed."},
+retail:{label:"Customer Service / Retail",text:"A pickup order is delayed because an item is transferring from another store and is expected tomorrow. Draft a professional customer follow-up. Apologize, explain the expectation, and do not promise an exact pickup time.",keys:[["customer","pickup","order"],["draft","write","follow"],["tomorrow","transfer","delay","apolog"],["customer","professional","friendly"],["do not","don't","not promise","no exact","flag"]],ai:"We apologize for the delay with your pickup order. The item is being transferred from another store and is currently expected tomorrow. We'll update you when it is ready rather than promising an exact pickup time."},
+it:{label:"Information Technology",text:"A user still cannot sign in after a password reset. The ticket says the reset was completed at 9:15 AM, the account is not locked, and the user still receives an invalid-credentials message. Draft a short troubleshooting reply with safe next steps. Do not ask for the user's password, invent system access, or claim the issue is resolved.",keys:[["user","sign in","password","invalid"],["draft","write","reply","troubleshoot"],["9:15","not locked","reset"],["user","support","clear","next step"],["do not","don't","password","not resolved","not invent","flag"]],ai:"Thanks for the update. Since the password reset is complete and the account is not locked, please confirm you are using the updated password and the correct username, then try signing in again. If the invalid-credentials message continues, reply with the exact error text or follow your organization's normal escalation process. Do not send your password."},
+transport:{label:"Transportation & Logistics",text:"A delivery route is running about 35 minutes late because of a road closure confirmed by dispatch. A revised customer arrival time has not been confirmed. Draft a brief customer status update. Do not promise an exact arrival time or blame the driver.",keys:[["delivery","route","dispatch","road closure"],["draft","write","update"],["35","late","arrival","not confirmed"],["customer","brief","professional"],["do not","don't","no exact","not promise","no blame","flag"]],ai:"Your delivery is currently running about 35 minutes behind due to a road closure confirmed by dispatch. We do not yet have a confirmed revised arrival time, but we will provide an update when one is available. Thank you for your patience."}
+};
+
+const EXAMPLES={
+health:"Draft a clear, friendly message to a clinic patient: check in at reception, arrive 15 minutes early, and bring photo ID. Use only these facts; do not include or invent medical information. Flag anything that would need verification before sending.",
+mfg:"Draft a concise shift-handoff note for the incoming team. Line 2 had two sensor faults; maintenance reset it twice and production resumed. Ask the next shift to monitor it. Do not invent a cause or claim it is fixed. Flag anything uncertain.",
+trades:"Draft a concise professional update to the site lead: material delivery is delayed until 2 PM and the crew moved to approved preparation work that can be done safely. Do not blame the supplier or claim the schedule changed. Use only the facts provided.",
+retail:"Draft a brief professional customer follow-up apologizing that a pickup order is delayed because an item is transferring from another store and is expected tomorrow. Do not promise an exact pickup time. Use only the facts provided.",
+it:"Draft a concise support reply to a user who still gets an invalid-credentials message after a password reset completed at 9:15 AM; the account is not locked. Give safe next troubleshooting steps. Do not ask for the password, invent system access, or claim the issue is resolved. Flag anything that needs escalation.",
+transport:"Draft a brief professional customer update: a delivery route is about 35 minutes late because dispatch confirmed a road closure, and a revised arrival time is not yet confirmed. Do not promise an exact arrival time or blame the driver. Use only the confirmed facts."
+};
+
+const CHALLENGE_KEYS={1:'A',2:'B',3:'B'};
+const CHALLENGE_FEEDBACK={
+1:{right:"<b>✓ Strong choice.</b> This prompt gives AI the situation, the task, key facts, the audience, and useful boundaries.",wrong:"<b>Not quite.</b> The strongest prompt gives AI clear facts, a specific task, an audience, and useful boundaries."},
+2:{right:"<b>✓ Exactly.</b> The actual notes never identify overheating as the cause and never say the issue was permanently fixed. AI added unsupported information.",wrong:"<b>Look closely at the evidence.</b> Compare every factual claim in the AI response with the actual notes."},
+3:{right:"<b>✓ Correct — Reject / Rework.</b> An accurate, professional response can still be unsafe. Remove protected information and reconsider whether it should have been entered into the AI tool at all.",wrong:"<b>Not the safest choice.</b> Accuracy and professional tone do not override privacy."}
+};
+
+function readJourney(){try{return JSON.parse(localStorage.getItem(JOURNEY_KEY)||'{}')||{}}catch(_){return{}}}
+function getCareer(){
+ const j=readJourney(),m4=j?.modules?.module4||{};
+ const soc=String(m4.selectedSoc||m4.career?.soc||m4.careerTarget?.soc||'');
+ const title=m4.careerTitle||m4.career?.title||m4.careerTarget?.title||'';
+ const route=String(m4.route||m4.participantDirection||m4.decision?.code||'').toUpperCase();
+ return soc||title?{soc,title:title||soc,route}:null;
+}
+function scenarioForCareer(c){
+ if(!c)return null;const p=String(c.soc||'').slice(0,2),t=String(c.title||'').toLowerCase();
+ if(p==='15'||/computer|software|cyber|network|information technology|user support|help desk|technical support/.test(t))return'it';
+ if(['29','31'].includes(p)||/nurs|medical|health|clinical|patient|pharmacy|dental/.test(t))return'health';
+ if(p==='51'||/manufactur|production|cnc|machinist|fabricat/.test(t))return'mfg';
+ if(['47','49'].includes(p)||/electric|plumb|hvac|weld|construction|carpent|maintenance|repair|solar/.test(t))return'trades';
+ if(p==='53'||/truck|cdl|transport|logistic|warehouse|delivery/.test(t))return'transport';
+ if(/retail|customer service|sales|cashier/.test(t))return'retail';
+ return null;
+}
+function detectLaunch(){
+ const q=new URLSearchParams(location.search),ret=q.get('boost_return')||'';
+ pinalLaunch=/BOOST_Pathway-Portal/i.test(ret);
+ const c=getCareer(),rec=scenarioForCareer(c);
+ if(c){$('careerLine').innerHTML=`Your current BOOST direction: <span class="careerChip">${escapeHtml(c.title)}${c.route?' • '+escapeHtml(c.route):''}</span>`;$('rosieIntroText').textContent=`You have already built career evidence around ${c.title}. AI & You will now practice a transferable workplace skill in that context: directing AI, checking its work, protecting information, and deciding what should actually be used.`}
+ if(rec){const b=document.querySelector(`[data-sector="${rec}"]`);if(b)b.classList.add('recommended')}
+ if(!pinalLaunch){$('askCareerBtn').style.display='none';$('rosieIntroText').textContent+=(c?' ':' ')+'Rosie coaching is available when this module is launched from Pinal BOOST.'}
+ if(pinalLaunch)ensurePinalIntegration();
+}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
+function ensurePinalIntegration(){
+ if(!pinalLaunch)return Promise.resolve(false);
+ if(integrationPromise)return integrationPromise;
+ integrationPromise=(async()=>{try{
+   if(!window.supabase)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+   window.BOOST_CONFIG={cloudEnabled:true,supabaseUrl:'https://dxcajwarqojvmbteroco.supabase.co',supabaseAnonKey:'sb_publishable_ehUKOOksq5SlkTNb-wQ8ZA_Zh8XlWDF',region:'Pinal County'};
+   if(!window.PinalBOOSTCloud)await loadScript('https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/js/boost-cloud.js?v=20260916aiyou1');
+   return true;
+ }catch(e){console.warn('Pinal BOOST integration unavailable',e);return false}})();
+ return integrationPromise;
+}
+
+async function askRosie(question,targetId,btn){
+ const out=$(targetId);out.classList.add('show');out.textContent='Rosie is looking at your BOOST context…';if(btn)btn.disabled=true;
+ try{
+   const ok=await ensurePinalIntegration();if(!ok||!window.PinalBOOSTCloud)throw new Error('Pinal BOOST connection is not available.');
+   const c=window.PinalBOOSTCloud.getClient();const session=(await c.auth.getSession()).data.session;if(!session)throw new Error('Sign in to Pinal BOOST to use Rosie here.');
+   const career=getCareer(),body={question,journey:readJourney(),page:'AI & You',occupations:career?[{soc:career.soc,title:career.title}]:[],focusOccupation:career||null,history:[]};
+   const r=await c.functions.invoke('boost-ask-rosie',{body});if(r.error)throw r.error;
+   out.textContent=r.data?.answer||'Rosie could not complete that response.';
+ }catch(e){out.textContent='Rosie is unavailable in this view right now. '+String(e?.message||e)}
+ finally{if(btn)btn.disabled=false}
+}
+function askRosieCareer(){const c=getCareer(),q=c?`I am in AI & You. My current BOOST direction is ${c.title}${c.route?' with a '+c.route+' result':''}. In plain language, how could AI literacy matter in this kind of work, and what should I be careful not to hand over to AI?`:'I am in AI & You. How can practical AI literacy help me at work without replacing my judgment?';askRosie(q,'rosieCareerResponse',$('askCareerBtn'))}
+function askRosiePrompt(){if(!st.sector)return;const p=$('prompt').value.trim();if(!p)return alert('Write a practice prompt first.');const c=getCareer(),q=`Review this fictional AI & You practice prompt for the ${S[st.sector].label} scenario. Use the C.L.E.A.R. framework: Context, Lead with the task, Evidence, Audience/Aim, Review. Tell me one thing I did well and one specific improvement. Do not treat this as a certification. Practice prompt: ${p}${c?` My BOOST career direction is ${c.title}.`:''}`;askRosie(q,'rosiePromptResponse',$('rosiePromptBtn'))}
+function askRosieWrap(){const c=getCareer(),snap=buildSnapshot(),q=`I completed AI & You. My practice snapshot is: ${Object.entries(snap.statuses).map(([k,v])=>`${k}: ${v}`).join('; ')}. My chosen scenario was ${S[st.sector]?.label}. My reflection was: "${$('reflection').value.trim()}". ${c?`My BOOST career direction is ${c.title}${c.route?' with a '+c.route+' result':''}.`:''} Connect this to my BOOST journey in a short practical way. Do not call this a certification or proof of technical competence.`;askRosie(q,'rosieWrapResponse',document.querySelector('#result .rosie .btn'))}
+
+function showClear(k,b){const x=CLEAR_EXAMPLES[k];document.querySelectorAll('.ci').forEach(n=>n.classList.remove('active'));b.classList.add('active');$('clearTitle').textContent=x.title;$('clearWhy').textContent=x.why;$('clearBad').textContent=x.bad;$('clearGood').textContent=x.good;$('clearExplain').classList.add('show')}
+function quiz(b,ok){if(st.learn!==null)return;st.learn=ok;[...b.parentElement.children].forEach(x=>x.disabled=true);b.style.outline=ok?'3px solid #4c9a67':'3px solid #b95050';$('learnFb').className='fb show';$('learnFb').innerHTML=ok?'<b>Correct.</b> Strong AI literacy keeps a human responsible for direction, verification, and appropriate use.':'<b>Look again.</b> AI can support work, but it should not be treated as the final authority for high-stakes decisions or guaranteed facts.'}
+function pick(k,b){st.sector=k;document.querySelectorAll('.sector').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');$('lab').classList.add('show');$('sc').innerHTML=`<b>${S[k].label} scenario</b><br>${S[k].text}`;$('prompt').value='';$('ps').classList.remove('show');$('aiBox').classList.remove('show');$('rosiePromptResponse').classList.remove('show');$('lab').scrollIntoView({behavior:'smooth',block:'start'})}
+function scorePrompt(){if(!st.sector)return alert('Choose a workplace scenario first.');const t=$('prompt').value.toLowerCase().trim();if(!t)return alert('Write a prompt first.');st.promptHits=S[st.sector].keys.map(a=>a.some(x=>t.includes(x)));const labs=['Context','Lead with the task','Evidence / details','Audience / aim','Review / boundary'];$('rows').innerHTML=labs.map((x,i)=>`<div class="row"><span>${x}</span><div class="bar"><span style="width:${st.promptHits[i]?100:18}%"></span></div><b class="${st.promptHits[i]?'statusGood':'statusPractice'}">${st.promptHits[i]?'Present':'Strengthen'}</b></div>`).join('');$('ps').classList.add('show')}
+function examplePrompt(){if(!st.sector)return alert('Choose a workplace scenario first.');$('prompt').value=EXAMPLES[st.sector];scorePrompt()}
+function showSample(){if(!st.sector)return;$('ait').textContent=S[st.sector].ai;$('aiBox').classList.add('show')}
+function judge(b,v){if(st.sampleJudgment!==null)return;st.sampleJudgment=v;document.querySelectorAll('#aiBox .answers .ans').forEach(x=>x.disabled=true);const ok=v==='use';b.style.outline=ok?'3px solid #4c9a67':'3px solid #b95050';$('judgeFb').className='fb show';$('judgeFb').innerHTML=ok?'<b>Strong judgment.</b> The practice response stays within the provided facts and boundaries. You still review it before use.':'<b>Editing is always allowed.</b> In this specific fictional example, the response stays within the facts and boundaries. The skill is recognizing whether an output is supported, safe, and appropriate—not automatically accepting or rejecting AI.'}
+function challengeAnswer(round,letter,btn){if(st.challenge[round]!==null)return;const ok=letter===CHALLENGE_KEYS[round];st.challenge[round]=ok;document.querySelectorAll('#r'+round+' .letterAns').forEach(x=>x.disabled=true);btn.classList.add(ok?'correct':'wrong');const correctIndex=['A','B','C','D'].indexOf(CHALLENGE_KEYS[round]),buttons=[...document.querySelectorAll('#r'+round+' .letterAns')];if(buttons[correctIndex])buttons[correctIndex].classList.add('correct');$('cf'+round).className='roundFeedback show';$('cf'+round).innerHTML=ok?CHALLENGE_FEEDBACK[round].right:CHALLENGE_FEEDBACK[round].wrong;$('cc'+round).classList.add('show');$('cp'+round).classList.remove('active');$('cp'+round).classList.add('done')}
+function nextChallenge(round){document.querySelectorAll('.challengeRound').forEach(x=>x.classList.remove('active'));$('round'+round).classList.add('active');document.querySelectorAll('.challengeStage').forEach(x=>x.classList.remove('active'));$('cp'+round).classList.add('active');$('round'+round).scrollIntoView({behavior:'smooth',block:'start'})}
+function statusFrom(ok,strong=false){return ok?(strong?'Demonstrated in practice':'Practiced'):'Keep practicing'}
+function buildSnapshot(){
+ const hit=st.promptHits.filter(Boolean).length;
+ return {statuses:{
+  'Directing AI':hit>=4?'Demonstrated in practice':hit>=2?'Practiced':'Keep practicing',
+  'Protecting information':statusFrom(st.challenge[3]===true,true),
+  'Checking AI output':(st.challenge[2]===true&&st.sampleJudgment==='use')?'Demonstrated in practice':(st.challenge[2]===true||st.sampleJudgment!==null)?'Practiced':'Keep practicing',
+  'Human judgment':(st.challenge[1]===true&&st.challenge[2]===true&&st.challenge[3]===true)?'Demonstrated in practice':'Practiced'
+ },clearElements:hit}
+}
+async function saveJourney(snapshot,badges){
+ const j=readJourney(),c=getCareer(),ref=$('reflection').value.trim();
+ j.schema_version=j.schema_version||2;j.region=j.region||'Pinal County';j.modules=j.modules||{};j.progress=j.progress||{};
+ const completedAt=new Date().toISOString(),certName=participantName();
+ j.modules.ai={version:'ai-you-v2-20260927-celebration',module:'ai',completed_at:completedAt,career_context:c,scenario:{id:st.sector,label:S[st.sector].label,recommended:scenarioForCareer(c)===st.sector},clear_prompt:{elements_present:snapshot.clearElements,status:snapshot.statuses['Directing AI']},judgment:{sample_response:st.sampleJudgment,challenge_direct:st.challenge[1],challenge_check:st.challenge[2],challenge_privacy:st.challenge[3]},snapshot:snapshot.statuses,reflection:ref,badges,pathway_completion:{eligible:true,participant_name:certName,completed_at:completedAt,trigger:'ai_complete'}};
+ j.progress.ai='complete';
+ j.updated_at=new Date().toISOString();localStorage.setItem(JOURNEY_KEY,JSON.stringify(j));
+ if(pinalLaunch){await ensurePinalIntegration();if(window.PinalBOOSTCloud){const ok=await window.PinalBOOSTCloud.saveNow();$('saveStatus').textContent=ok?'Saved to your Pinal BOOST journey.':'Saved on this device. BOOST will sync it when your signed-in connection is available.'}else $('saveStatus').textContent='Saved on this device.'}
+ else $('saveStatus').textContent='Practice snapshot saved in this browser. When launched from Pinal BOOST, it also carries into the Pinal journey record.';
+}
+async function finish(){
+ if(!st.sector)return alert('Complete the Practice Lab first.');
+ if([1,2,3].some(n=>st.challenge[n]===null))return alert('Complete all three Workplace Challenge rounds.');
+ const ref=$('reflection').value.trim();if(ref.length<8)return alert('Add a short work connection before building your snapshot.');
+ const snap=buildSnapshot(),c=getCareer();
+ $('snapshotCareer').textContent=c?`Career context: ${c.title}${c.route?' • '+c.route:''} • Practice scenario: ${S[st.sector].label}`:`Practice scenario: ${S[st.sector].label}`;
+ $('snapshotGrid').innerHTML=Object.entries(snap.statuses).map(([k,v])=>`<div class="snap"><b>${k}</b><span class="${v==='Demonstrated in practice'?'statusGood':'statusPractice'}">${v}</span></div>`).join('');
+ const badges=[];if(snap.clearElements>=4)badges.push('🧭 Clear Director');if(st.challenge[3]===true)badges.push('🔒 Privacy Protector');if(st.challenge[2]===true)badges.push('🔎 AI Fact Checker');if(st.sampleJudgment==='use')badges.push('🧠 Human in the Loop');
+ $('badges').innerHTML=(badges.length?badges:['🎯 Practice Completed']).map(x=>`<span class="badge">${x}</span>`).join('');
+ $('take').textContent='This snapshot describes what you practiced in this activity. It is not a certification or an employer assessment. The useful evidence is how you directed AI, protected information, checked an output, and explained how you would use AI responsibly at work.';
+ $('result').classList.add('show');
+ await saveJourney(snap,badges);boostOfferCompletion('ai',$('result'));$('result').scrollIntoView({behavior:'smooth',block:'start'})
+}
+function boostOfferCompletion(moduleId,mount){
+ const p=new URLSearchParams(location.search),returnUrl=p.get('boost_return'),requested=p.get('boost_module'),nonce=p.get('boost_nonce');if(!returnUrl||requested!==moduleId||!nonce||!mount)return;
+ let target;try{target=new URL(returnUrl,location.href);if(target.origin!==location.origin)return}catch(_){return}
+ let box=$('boostCompletionReturn');if(!box){box=document.createElement('div');box.id='boostCompletionReturn';box.style.cssText='margin:20px 0;padding:20px;border:3px solid #16835b;border-radius:16px;background:#effff7;text-align:center';mount.appendChild(box)}
+ box.innerHTML='<h3 style="margin:0 0 8px">Activity Complete</h3><p style="margin:0 0 14px">Return to BOOST Pathways to save this completion and unlock your next step.</p><button type="button" id="boostSaveReturn" style="padding:13px 20px;border:0;border-radius:10px;background:#0d6248;color:#fff;font-weight:900;cursor:pointer">Save Completion & Return to BOOST</button>';
+ $('boostSaveReturn').onclick=function(){target.searchParams.set('boost_complete',moduleId);target.searchParams.set('boost_nonce',nonce);location.assign(target.toString())}
+}
+
+function playAudioKey(key){
+ stopSpeech();if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}
+ lastAudioKey=key;$('narratorDock').classList.add('show');$('narratorNow').textContent=AUDIO_TITLES[key]||'BOOST Narration';
+ if(AUDIO_FILES[key]){currentAudio=new Audio(AUDIO_FILES[key]);$('narratorStatus').textContent='Playing BOOST narration.';$('pauseNarration').textContent='⏸ Pause';currentAudio.onended=()=>{$('narratorStatus').textContent='Finished. Replay or close the audio guide.';$('pauseNarration').textContent='▶ Replay'};currentAudio.play().catch(()=>{$('narratorStatus').textContent='Press Replay to start narration.'})}
+ else if(S[key]){const u=new SpeechSynthesisUtterance(S[key].text);window.speechSynthesis.speak(u);$('narratorStatus').textContent='Using your device narration for this newer workplace scenario.';$('pauseNarration').textContent='■ Stop'}
+}
+function narrate(key){playAudioKey(key)}
+function narrateScenario(){if(!st.sector)return alert('Choose a workplace first.');playAudioKey(st.sector)}
+function stopSpeech(){try{window.speechSynthesis.cancel()}catch(_){}}
+function toggleNarration(){if(currentAudio){if(currentAudio.ended){currentAudio.currentTime=0;currentAudio.play();$('pauseNarration').textContent='⏸ Pause'}else if(currentAudio.paused){currentAudio.play();$('pauseNarration').textContent='⏸ Pause'}else{currentAudio.pause();$('pauseNarration').textContent='▶ Resume'}}else stopSpeech()}
+function replayNarration(){if(lastAudioKey)playAudioKey(lastAudioKey)}
+function stopNarration(){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0}stopSpeech();$('pauseNarration').textContent='▶ Play';$('narratorStatus').textContent='Stopped.'}
+function closeNarrator(){stopNarration();$('narratorDock').classList.remove('show')}
+
+document.addEventListener('DOMContentLoaded',detectLaunch);
+</script>
+</body>
+</html>
