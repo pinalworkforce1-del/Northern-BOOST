@@ -33,6 +33,53 @@ function getClient(){
  client=window.supabase.createClient(c.supabaseUrl,c.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  return client;
 }
+const SHARED_KEY='northern_boost_career_exploration_v1';
+const HYDRATED_OWNER_KEY='boost_naz_local_cloud_owner_v1';
+function hydrateNorthernLocalFromCloud(cloud){
+  // The original Northern modules read browser evidence before saving. After
+  // switching GitHub Pages -> custom domain, browser storage is a fresh origin.
+  // Preload only the signed-in participant's authoritative Northern record.
+  if(!user?.id||!cloud||typeof cloud!=='object'||!Object.keys(cloud).length)return;
+  const owner=localStorage.getItem(HYDRATED_OWNER_KEY)||'';
+  const prior=localJourney();
+  const differentOwner=(owner&&owner!==user.id)||
+    (!owner&&prior?.participant?.email&&user.email&&
+      String(prior.participant.email).toLowerCase()!==String(user.email).toLowerCase());
+  if(differentOwner){
+    // Never upload or show one participant's cached journey under another login.
+    [JOURNEY_KEY,SHARED_KEY,PATH_KEY,PORTAL_KEY].forEach(k=>localStorage.removeItem(k));
+  }
+  const current=differentOwner?{}:prior;
+  const stamp=o=>Date.parse(o?.updatedAt||o?.updated_at||o?.tracking?.lastActivityAt||'')||0;
+  const useCloud=!Object.keys(current).length||stamp(cloud)>=stamp(current);
+  if(useCloud){
+    localStorage.setItem(JOURNEY_KEY,JSON.stringify(cloud));
+    // The older module controllers also read this shared store for career
+    // selections/interest scores. Only seed it from cloud; never invent results.
+    const shared={
+      region:'Northern Arizona',
+      module1:{...(cloud.module1||cloud.modules?.module1||{}),
+        selected:cloud.module1?.selected||cloud.module1?.careers||cloud.modules?.module1?.selected||[],
+        scores:cloud.module1?.riasec||cloud.module1?.scores||cloud.modules?.module1?.scores||{}},
+      module2:cloud.module2||cloud.modules?.module2||{},
+      module3:cloud.module3||cloud.modules?.module3||{},
+      module4:cloud.module4||cloud.modules?.module4||{},
+      updatedAt:cloud.updatedAt||cloud.updated_at||new Date().toISOString()
+    };
+    const oldShared=read(SHARED_KEY);
+    if(differentOwner||!Object.keys(oldShared).length||stamp(shared)>=stamp(oldShared)){
+      localStorage.setItem(SHARED_KEY,JSON.stringify(shared));
+    }
+  }
+  localStorage.setItem(HYDRATED_OWNER_KEY,user.id);
+  // Browser-specific pathway selection does not survive a domain change.
+  const remembered=validPath(cloud.selectedPathway)||validPath(cloud.pathway?.selected);
+  const progress=cloud.progress||{};
+  const evidenceCareer=['module2','module3','module4'].some(k=>progress[k]==='complete'||!!cloud[k]?.completedAt);
+  const evidenceRapid=['skillmobility','jobsearch'].some(k=>progress[k]==='complete');
+  const inferred=remembered||(evidenceCareer&&!evidenceRapid?'career':evidenceRapid&&!evidenceCareer?'rapid':null);
+  if(!validPath(localStorage.getItem(PATH_KEY))&&inferred)localStorage.setItem(PATH_KEY,inferred);
+}
 function localJourney(){return read(JOURNEY_KEY)}
 function cloudOrLocal(){return journey||{}}
 function done(id){
@@ -212,6 +259,7 @@ async function loadJourney(){
   const c=getClient(),{data,error}=await c.rpc('boost_load_my_journey_for_region',{p_region:'Northern Arizona'});
   if(error)throw error;
   journey=(data&&typeof data==='object')?data:{};
+  hydrateNorthernLocalFromCloud(journey);
   lastCloudMessage=Object.keys(journey).length?'Your saved Northern BOOST journey is ready.':'No saved Northern BOOST journey was found yet.';
  }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
  render();
