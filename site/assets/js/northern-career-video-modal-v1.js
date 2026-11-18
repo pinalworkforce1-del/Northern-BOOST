@@ -33,7 +33,8 @@ function make(){
  const links=document.createElement('div');links.className='nv-links';
  const status=document.createElement('span');status.className='nv-status';status.textContent='Source: U.S. Department of Labor CareerOneStop';
  const link=document.createElement('a');link.target='_blank';link.rel='noopener noreferrer';link.textContent='Explore this career on CareerOneStop ↗';
- links.append(status,link);dialog.append(closeButton,top,h,info,player,fallback,links);overlay.append(dialog);document.body.append(overlay);
+ const library=document.createElement('a');library.href='https://www.careeronestop.org/Videos/video-library.aspx';library.target='_blank';library.rel='noopener noreferrer';library.textContent='Browse CareerOneStop Video Library ↗';
+ links.append(status,link,library);dialog.append(closeButton,top,h,info,player,fallback,links);overlay.append(dialog);document.body.append(overlay);
  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
  document.addEventListener('keydown',e=>{
   if(overlay.hidden)return;
