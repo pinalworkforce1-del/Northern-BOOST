@@ -2,7 +2,7 @@
 'use strict';
 if(window.__NorthernStagedProfilerEntryV1)return;
 window.__NorthernStagedProfilerEntryV1=true;
-// Only the isolated 2.0 staging Discover copy includes this helper.
+// Northern 2.0 Discover uses this helper to preserve verified cloud-save returns.
 // Keep Northern's normal Module 1 listeners, saves, and completion rules untouched.
 const focusProfiler=()=>{
  const section=document.getElementById('onet');
@@ -26,11 +26,11 @@ document.addEventListener('click',event=>{
  focusProfiler();
 },true);
 
-// These two links belong exclusively to the staged Discover page, not legacy Northern.
+// These two links belong to Northern 2.0 Discover and return to the live dashboard.
 // Navigation after completion waits for the existing cloud save and verifies the
 // authenticated Northern journey before returning to the new dashboard.
 const RETURN_MARKER='boost_naz_preview_return_v1';
-const TARGET=new URL('preview-v2/index.html',document.baseURI).toString();
+const TARGET=new URL('index.html',document.baseURI).toString();
 const statusNode=()=>document.getElementById('saveStatus');
 const clearMarker=()=>sessionStorage.removeItem(RETURN_MARKER);
 const readLocal=()=>{try{return JSON.parse(localStorage.getItem('boost_naz_journey_v1')||'{}')}catch(_){return{}}};
@@ -64,7 +64,7 @@ async function returnDashboard(fromCompleted){
   if(status)status.textContent='Cloud confirmation needed: '+(err?.message||'Unable to confirm save')+' Your saved browser results have not been reset. Please try again.';
   if(anchor){anchor.textContent=fromCompleted?'Retry confirmed return →':original;anchor.removeAttribute('aria-disabled')}
   // Only the completed-return must stay for validation. An ordinary Back link
-  // may still be used directly through its visible staging URL.
+  // does not delete any saved participant evidence.
  }finally{navigating=false}
 }
 for(const [id,completed] of [['boostV2DiscoverBack',false],['boostV2DiscoverComplete',true]]){
