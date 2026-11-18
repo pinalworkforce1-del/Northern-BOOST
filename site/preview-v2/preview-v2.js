@@ -3,6 +3,65 @@
 if(window.__NorthernBoostV2Preview)return;window.__NorthernBoostV2Preview=true;
 const JOURNEY_KEY='boost_naz_journey_v1',PORTAL_KEY='boost_naz_portal_progress_v1',PATH_KEY='boost_naz_pathway_v1',PICK_KEY='northern_boost_v2_preview_pathway',AREA_KEY='boost_naz_service_area_v1',NONCE_PREFIX='boost_naz_completion_nonce:';
 const RETURN_KEY='boost_naz_preview_return_v1',RETURN_NOTICE_KEY='boost_naz_preview_return_notice_v1';
+const NAV_RETURN_KEY='boost_naz_v2_pathway_navigation_v1';
+const NAV_RETURN_WINDOW_MS=2*60*60*1000;
+const STEP_BRANCH={module2:'career',module3:'career',module4:'career',industry:'career',skillmobility:'rapid',jobsearch:'rapid'};
+let returnFocusHandled=false;
+function markReturnNavigation(moduleId){
+ if(!user)return;
+ sessionStorage.setItem(NAV_RETURN_KEY,JSON.stringify({module:moduleId,path:selected,userId:user.id,startedAt:Date.now()}));
+}
+function sameOriginModuleReferrer(){
+ try{
+  const ref=new URL(document.referrer);
+  if(ref.origin!==location.origin)return null;
+  const last=ref.pathname.split('/').pop().toLowerCase();
+  if(last==='discover.html')return'module1';
+  if(last==='coach-appointment-prep.html')return'coachAppointmentPrep';
+  if(last.includes('module2_'))return'module2';
+  if(last.includes('module3_'))return'module3';
+  if(last.includes('module4_'))return'module4';
+  if(last==='rapid-employment.html'||last==='rapid-skill-mobility.html')return'skillmobility';
+  if(last==='48-hour-job-search.html')return'jobsearch';
+  if(last==='financial-habits.html')return'financial';
+  if(last==='ai-you.html')return'ai';
+  if(/connected_test_/.test(last))return'industry';
+ }catch(_){}
+ return null;
+}
+function pendingPathwayReturn(){
+ if(!user||returnFocusHandled)return null;
+ const query=new URLSearchParams(location.search);
+ const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+ const step=hash.get('step');
+ const from=query.get('boost2_from');
+ const requestedPath=validPath(query.get('boost2_path'));
+ const explicitStep=Object.hasOwn(details,step)?step:null;
+ const refStep=sameOriginModuleReferrer();
+ let marker=null;
+ try{marker=JSON.parse(sessionStorage.getItem(NAV_RETURN_KEY)||'null')}catch(_){}
+ const fresh=marker?.userId===user.id&&Number.isFinite(marker.startedAt)&&
+    Date.now()-marker.startedAt>=0&&Date.now()-marker.startedAt<NAV_RETURN_WINDOW_MS;
+ if(!fresh&&marker)sessionStorage.removeItem(NAV_RETURN_KEY);
+ if(!fresh&&!explicitStep&&!requestedPath&&!refStep&&!Object.hasOwn(details,from))return null;
+ const path=STEP_BRANCH[explicitStep]||requestedPath||
+   (fresh?validPath(marker.path):null)||
+   STEP_BRANCH[refStep]||STEP_BRANCH[from]||
+   validPath(sessionStorage.getItem(PICK_KEY))||validPath(localStorage.getItem(PATH_KEY));
+ return {path,module:explicitStep||(fresh?marker.module:null)||refStep||from||null,fresh};
+}
+function focusSelectedPathwayAfterReturn(intent){
+ if(!intent||returnFocusHandled)return;
+ returnFocusHandled=true;
+ if(intent.fresh)sessionStorage.removeItem(NAV_RETURN_KEY);
+ const target=done('module1')&&selected&&!$('journeySection').hidden
+   ?$('journeySection'):done('module1')?$('pathwaySection'):$('discoverStarter');
+ if(!target)return;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   target.scrollIntoView({behavior:'auto',block:'start'});
+   if(target.id==='journeySection')target.classList.add('returned-to-pathway');
+ }));
+}
 const AREA_FORMS={
  agn:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNE1NN1o0RUNFMUI1OENHSUlTTVJKUURMTi4u',
  coconino:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=B5g44f9pukus8ui6NzWh9oMizKqrSvNIoO8HO9ayO39UNFFNVjFYS0dRNEU5UFRBR1JERVEyQkJNTi4u'
@@ -232,7 +291,7 @@ function launch(id){
  if(id==='industry'){const key=recommendedIndustry();if(!key||!industryMap[key]){explainStep(id);return}target=industryMap[key].url;}
  if(!target)return;
  // Coach preparation saves its own atomic cloud record; no legacy completion-return marker.
- if(id==='coachAppointmentPrep'){sessionStorage.removeItem(RETURN_KEY);window.location.assign(new URL(target,document.baseURI).toString());return;}
+ if(id==='coachAppointmentPrep'){markReturnNavigation(id);sessionStorage.removeItem(RETURN_KEY);window.location.assign(new URL(target,document.baseURI).toString());return;}
  // Preserve existing Northern progression keys only when intentionally entering a test activity.
  if(selected) localStorage.setItem(PATH_KEY,selected);
  const url=new URL(target,document.baseURI);
@@ -251,6 +310,7 @@ function launch(id){
  sessionStorage.setItem(RETURN_KEY,JSON.stringify({
    version:1,module:id,startedAt:Date.now(),expectedNonce:receipt||null
  }));
+ markReturnNavigation(id);
  window.location.assign(url.toString());
 }
 // Only accept a completed activity when the same Northern browser session
@@ -314,6 +374,8 @@ async function loadJourney(){
   hydrateNorthernLocalFromCloud(journey);
   lastCloudMessage=Object.keys(journey).length?'Your saved Northern BOOST journey is ready.':'No saved Northern BOOST journey was found yet.';
  }catch(err){journey={};lastCloudMessage='Cloud load unavailable. Progress cannot be confirmed until connection is restored. '+(err.message||'');}
+ const pathwayReturn=pendingPathwayReturn();
+ if(pathwayReturn?.path)sessionStorage.setItem(PICK_KEY,pathwayReturn.path);
  render();
  if(completionNotice)$('progressMessage').textContent=completionNotice;
  const noticeRaw=sessionStorage.getItem(RETURN_NOTICE_KEY);
@@ -327,6 +389,10 @@ async function loadJourney(){
      }
    }catch(_){}
  }
+ // On a verified return, resume at the selected pathway rather than the
+ // orientation, progress and pathway-selection sections. Keep any cloud-save
+ // error visible instead of scrolling past it.
+ if(!completionNotice)focusSelectedPathwayAfterReturn(pathwayReturn);
 }
 async function refresh(){
  if(!user)return;const b=$('refreshProgress');if(b)b.disabled=true;
