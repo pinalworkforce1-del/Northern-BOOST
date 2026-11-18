@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b243b">
+<meta name="description" content="Northern BOOST helps you explore career pathways, prepare for your next step, and build work-ready skills with your career coach.">
+<title>Northern BOOST 2.0 | Career Pathways</title>
+<base href="./">
+<link rel="stylesheet" href="preview-v2/preview-v2.css?v=production-20261117-2">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="preview-v2/preview-config.js?v=1" defer></script>
+<script src="preview-v2/preview-v2.js?v=production-20261117-3" defer></script>
+<script src="preview-v2/rosie-guide-v2.js?v=production-20261117-2" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="Northern BOOST home"><span class="brand-mark">B</span><span><strong>BOOST</strong><small>NORTHERN ARIZONA</small></span></a>
+  <div class="top-actions"><span id="identity" class="identity">Checking secure sign-in…</span><button id="signOut" type="button" class="ghost" hidden>Sign out</button><a class="ghost" href="staff-login.html">Coach sign-in</a></div>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">ARIZONA@WORK · NORTHERN ARIZONA</div>
+    <h1>Build your next move.</h1>
+    <p>Explore careers, test what works in the real world, and prepare for your next step with evidence you and your Career Coach can use.</p>
+    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button><button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie · Pathway Introductions</button></div>
+  </div>
+  <div class="hero-figure"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp" alt="Rosie, your BOOST career guide" onerror="this.onerror=null;this.src='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp'"></div>
+</section>
+<section class="app-shell" id="appShell" hidden>
+  <div class="section-heading"><div><span class="overline">YOUR BOOST JOURNEY</span><h2>Your progress, all in one place.</h2></div><div class="progress-total"><strong id="progressPercent">0%</strong><small id="progressCaption">Getting started</small></div></div>
+  <div class="progress-track" role="progressbar" aria-label="BOOST pathway completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><div id="progressFill"></div></div>
+  <p class="progress-message" id="progressMessage" role="status" aria-live="polite"></p>
+  <div class="getting-started">
+    <div class="section-heading tight"><div><span class="overline">START HERE</span><h2>Get ready for your pathway.</h2></div><span class="subtle">Both Northern pathways begin with Discover</span></div>
+    <div class="starter-grid">
+      <article class="starter-card"><div class="starter-num">01</div><div><h3>Orientation &amp; Interest Form</h3><p>Start with your local area, orientation video, and interest questions.</p><button id="chooseArea" type="button" class="inline-btn">Choose my service area →</button><span id="startAreaState" class="micro-status"></span></div></article>
+      <article class="starter-card"><div class="starter-num">02</div><div><h3>Arizona Job Connection</h3><p>Set up or access your account before working with your Career Coach.</p><a id="ajcLink" class="inline-btn" href="https://www.azjobconnection.gov/" target="_blank" rel="noopener noreferrer">Open Arizona Job Connection ↗</a><span id="ajcState" class="micro-status"></span></div></article>
+      <article class="starter-card featured art-discover"><div class="starter-num">03</div><div><h3>Module 1 — Discover</h3><p>Explore your interests and work drivers with the new embedded 30-activity Mini Interest Profiler.</p><button id="discoverBtn" type="button" class="inline-btn">Open Discover →</button><span id="discoverState" class="micro-status"></span></div></article>
+    </div>
+  </div>
+  <section class="coach-bridge" id="coachBridge" aria-label="Coach appointment preparation">
+    <div class="coach-bridge-icon" id="coachPrepIcon" aria-hidden="true">04</div>
+    <div class="coach-bridge-media" aria-hidden="true"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/coach-preparation.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+    <div class="coach-bridge-content"><span class="overline">AFTER DISCOVER · BEFORE ENROLLMENT</span><h3>Coach Appointment Prep</h3><p>Bring your saved interests, career choices, and questions to your Career Coach. The Northern team determines enrollment and next services.</p><span id="coachPrepState" class="coach-prep-state">Complete Discover to prepare</span></div>
+    <button id="coachPrepButton" class="btn primary" type="button" disabled>Open Coach Prep →</button>
+  </section>
+  <div class="pathway-section" id="pathwaySection">
+    <div class="section-heading"><div><span class="overline">PICK YOUR ROUTE</span><h2>Two pathways. One stronger next step.</h2></div><p class="heading-copy">Your path branches after Discover. Changing routes doesn't erase completed work.</p></div>
+    <div class="pathway-grid">
+      <button class="pathway-choice" type="button" data-path-choice="career"><div class="path-visual career">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/discover.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/validate.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/decide.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">EXPLORE YOUR OPTIONS</span>
+  <span class="path-art-caption" aria-hidden="true">DISCOVER · COMPARE · DECIDE</span>
+</div><div class="path-card-body"><small>PATHWAY 01</small><h3>Career Exploration &amp; Development</h3><p>Test your career ideas, compare opportunities and mobility, decide on a direction, and experience the work.</p><span class="choice-action">View career pathway →</span></div><span class="selection-pill" data-path-tag="career"></span></button>
+      <button class="pathway-choice" type="button" data-path-choice="rapid"><div class="path-visual rapid">
+  <div class="path-art-mosaic" aria-hidden="true">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/career-mobility.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/48-hour-job-search.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/financial-habits.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+  </div>
+  <span class="visual-pill">MOVE TOWARD WORK</span>
+  <span class="path-art-caption" aria-hidden="true">SKILLS · JOB SEARCH · NEXT STEPS</span>
+</div><div class="path-card-body"><small>PATHWAY 02</small><h3>Rapid Employment</h3><p>Discover your transferable skills, make a focused job-search plan, and prepare for your conversation with a coach.</p><span class="choice-action">View rapid pathway →</span></div><span class="selection-pill" data-path-tag="rapid"></span></button>
+    </div>
+  </div>
+  <section id="journeySection" class="journey-section" aria-label="Selected BOOST pathway" hidden>
+    <div class="section-heading"><div><span class="overline" id="selectedEyebrow">YOUR PATHWAY</span><h2 id="journeyTitle">Your next steps</h2></div><button id="switchPathway" type="button" class="ghost dark">Switch pathway</button></div>
+    <div class="next-step" id="nextStep" role="status"></div>
+    <div class="step-list" id="stepList"></div>
+  </section>
+  <section id="ready2workSection" class="r2w-section" aria-labelledby="r2wHeading">
+    <div class="section-heading">
+      <div><span class="overline">YOUR NEXT STEP · WORK READINESS</span><h2 id="r2wHeading">Ready 2 Work</h2></div>
+      <p class="heading-copy">Three experiences to strengthen your skills, résumé, and interview confidence.</p>
+    </div>
+    <div class="r2w-intro">
+      <div class="r2w-intro-copy">
+        <span class="overline">SOFT SKILLS · RÉSUMÉ · INTERVIEW</span>
+        <h3>Put your career plan into practice.</h3>
+        <p>Explore real-world workplace decisions, build an employer-ready résumé, and practice interviewing with AI-enhanced support.</p>
+        <p class="r2w-status" id="r2wAccessStatus" role="status" aria-live="polite">Ready to take the next step? Your career coach can help you get started with Ready 2 Work.</p>
+        <a class="btn primary" id="r2wLaunch" href="preview-v2/ready2work/index.html">Enter Ready 2 Work →</a>
+        <p class="r2w-safe-note">Your work is saved along the way, so you can return and keep building your skills.</p>
+      </div>
+      <img class="r2w-feature-art" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-pathway-map.webp" alt="Ready 2 Work illustrated journey featuring Soft Skills Base Camp, Resume Retreat, and Interview Landing" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    </div>
+    <div class="r2w-stages" aria-label="Ready 2 Work experiences">
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-base-camp-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>01 · WORKPLACE JUDGMENT</span><h3>Soft Skills Base Camp</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-soft-skills-base-camp">Open stage →</a><p>Explore decisions involving communication, teamwork, professionalism, and problem-solving.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-resume-retreat-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>02 · EMPLOYER-READY EVIDENCE</span><h3>Resume Retreat</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-resume-retreat">Open stage →</a><p>Build and refine your résumé with AI-enhanced guidance.</p></div></article>
+      <article class="r2w-stage"><div class="r2w-stage-icon"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/ready-2-work-qa/assests/r2w-interview-landing-home.webp" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div><span>03 · INTERVIEW PRACTICE</span><h3>Interview Landing</h3><a class="r2w-stage-link" href="preview-v2/ready2work/index.html#stage-interview-landing">Open stage →</a><p>Practice presenting your experience and learn from interview feedback.</p></div></article>
+    </div>
+  </section>
+  <div class="bottom-note"><strong>Keep your work.</strong> Your Northern BOOST modules and saved career evidence continue to use the existing Northern progression system. <span id="syncStatus">Checking cloud status…</span></div>
+</section>
+<section class="gate" id="authGate" aria-label="Sign in to Northern BOOST">
+  <div class="gate-copy"><div class="overline">SECURE ACCESS</div><h2>Sign in to Northern BOOST</h2><p>Use your email to securely continue your career journey. Your saved activities and progress will be available after sign-in.</p></div>
+  <form id="authForm" class="auth-form"><label for="email">Email address</label><input type="email" id="email" autocomplete="email" required placeholder="you@example.com"><button type="submit" class="btn primary" id="emailSend">Send secure sign-in email</button><div class="code-row" id="codeRow" hidden><label for="code">Verification code</label><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter your code"><button type="button" class="btn secondary" id="verifyCode">Verify code</button></div><p id="authStatus" role="status" aria-live="polite"></p></form>
+</section>
+</main>
+<footer>BOOST · Northern Arizona · Career exploration and work readiness. <a href="staff-login.html">Coach access</a></footer>
+<div class="overlay" id="areaDialog" hidden role="dialog" aria-modal="true" aria-labelledby="areaTitle"><div class="dialog"><button class="close" type="button" data-close="areaDialog" aria-label="Close">×</button><div class="overline">GET STARTED</div><h2 id="areaTitle">Choose your Northern Arizona service area</h2><p>Each form includes your orientation video and interest questions.</p><div class="dialog-options"><button type="button" data-area="coconino"><strong>Coconino County</strong><span>Open the local BOOST Priority of Service Application</span></button><button type="button" data-area="agn"><strong>Apache, Gila &amp; Navajo Counties</strong><span>Open the northeastern Arizona BOOST Priority of Service Application</span></button></div></div></div>
+
+<div class="overlay" id="rosieDialog" hidden role="presentation">
+ <section class="dialog video-dialog rosie-video-dialog" role="dialog" aria-modal="true" aria-labelledby="rosieTitle" aria-describedby="rosieContext">
+  <button class="close" type="button" data-close="rosieDialog" aria-label="Close Rosie introduction">×</button>
+  <div class="rosie-video-heading">
+   <img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, your BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'">
+   <div><div class="overline">YOUR NORTHERN BOOST GUIDE</div><h2 id="rosieTitle">Meet Rosie</h2><p>Discover your pathway with Rosie’s updated BOOST 2.0 introductions and recorded narration.</p></div>
+  </div>
+  <p id="rosieContext" class="rosie-local-note"><strong>Northern Arizona:</strong> Begin with Module 1 — Discover, prepare for your initial Career Coach / enrollment review, and then work through your assigned pathway. Your coach confirms appointments and enrollment.</p>
+  <div class="rosie-intro-choices" role="group" aria-label="Choose a pathway introduction">
+    <button id="rosieCareerIntro" type="button" data-rosie-intro="career" aria-pressed="false"><strong>Career Exploration &amp; Development</strong><span>Explore careers and test the evidence</span></button>
+    <button id="rosieRapidIntro" type="button" data-rosie-intro="rapid" aria-pressed="false"><strong>Rapid Employment</strong><span>Build on existing skills and move toward work</span></button>
+  </div>
+  <div id="rosieVideoStage" class="rosie-video-stage" hidden>
+    <h3 id="rosieVideoTitle">Pathway introduction</h3>
+    <video id="rosieVideo" controls playsinline preload="metadata" poster="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp"></video>
+    <p class="rosie-intro-status" id="rosieVideoStatus" role="status" aria-live="polite">Choose Play to hear Rosie introduce this pathway.</p>
+    <a id="rosieVideoFallback" href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/video/rosie-boost2-career-exploration.mp4" target="_blank" rel="noopener noreferrer" hidden>Open recording in a new tab ↗</a>
+  </div>
+  <details id="rosieOverview" class="rosie-overview">
+    <summary><span>Listen to Rosie explain both BOOST pathways</span><small>Optional recorded overview · about 1½ minutes</small></summary>
+    <div class="rosie-overview-body">
+      <p>Before selecting a route, hear how Rapid Employment and Career Exploration both support employment. Your Northern Arizona journey begins with Discover and an initial Career Coach conversation. This recorded overview explains the two pathways you may follow.</p>
+      <audio id="rosieOverviewAudio" controls preload="none" src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/audio/boost-pathways.mp3" aria-label="Rosie explaining the two BOOST pathways"></audio>
+      <p class="source-note"><a href="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/captions/boost-pathways-en-US.vtt" target="_blank" rel="noopener noreferrer">Read the recorded narration captions ↗</a></p>
+    </div>
+  </details>
+  <div class="rosie-modal-actions"><button class="btn secondary" type="button" data-close="rosieDialog">Continue to my BOOST journey →</button></div>
+ </section>
+</div>
+<div class="overlay" id="stepDialog" hidden role="dialog" aria-modal="true" aria-labelledby="stepTitle"><div class="dialog"><button class="close" type="button" data-close="stepDialog" aria-label="Close">×</button><div class="rosie-dialog-head"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp" alt="Rosie, BOOST guide" onerror="this.onerror=null;this.src='assets/images/rosie-master.webp'"><div><div class="overline">ROSIE EXPLAINS</div><h2 id="stepTitle">Your next step</h2></div></div><p id="stepDescription"></p><p id="stepRequirement" class="requirement"></p><audio id="stepAudio" preload="none"></audio><div class="dialog-actions"><button class="btn secondary" id="playStepAudio" type="button">▶ Watch Rosie Introduce the Pathway</button><button class="btn secondary" id="askStepRosie" type="button">Ask Rosie a question</button><button class="btn primary" id="openStep" type="button" hidden>Open this step →</button></div><p id="audioStatus" class="subtle"></p></div></div>
+<script>document.documentElement.classList.add('js');</script>
+</body>
+</html>
