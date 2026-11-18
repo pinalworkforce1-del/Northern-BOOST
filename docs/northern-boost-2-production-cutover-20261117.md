@@ -31,5 +31,15 @@
 ## Rollback
 If a major regression occurs, repoint `site/index.html` to the content archived in `site/northern-boost-legacy-20261117.html`, via a reviewed GitHub commit. Keep the original archive and all participant/cloud data intact. Do not overwrite or clear Northern/Pinal Supabase progress as a rollback step.
 
+## Progression integrity audit — November 17, 2026
+- Production homepage now hydrates signed-in Northern cloud evidence to the legacy local journey and career evidence stores. It does not reset finished modules, and avoids overwriting newer local progress.
+- 48-Hour Job Search now has a Northern-only copy at `site/48-hour-job-search.html`, with the region-specific prefill at `site/assets/js/northern-48-hour-prefill.js`.
+- Financial Habits now has a Northern-only copy at `site/financial-habits.html`. Both modules run on the Northern origin, avoiding cross-domain completion handoff failures and leaving Pinal repos untouched.
+- The Northern homepage validates the same-tab nonce and actual saved module evidence, then saves the completed step through the Northern authenticated cloud RPC before unlocking the next stage.
+- The homepage JS cache has been incremented to `production-20261117-3`.
+- Static GitHub checks confirm that all relevant files exist and inline scripts parse. A successful new participant completion save and return through each pathway remains to be live-tested. Do not mark this audit fully complete until those manual checks pass.
+- Specific smoke tests: (1) Discover and Coach Prep, (2) Reality Check to Mobility to Decide, (3) Northern Skill Mobility, (4) 48-Hour Job Search, (5) Financial Habits, (6) AI & You, (7) Ready 2 Work and coach interview report. Verify the next step unlocks after a save and remains unlocked after refreshing.
+- Rollback: if the 2.0 progression path fails, the old homepage remains at `site/northern-boost-legacy-20261117.html`. Do not clear participant cloud records.
+
 ## Caveat
 GitHub code commits are verified; GitHub Pages deployment completion, custom-domain DNS, HTTPS and external-login callbacks require independent live checks. A successful commit alone does not prove the new domain is available.
