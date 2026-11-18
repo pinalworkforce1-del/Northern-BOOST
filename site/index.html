@@ -25,7 +25,7 @@
     <div class="eyebrow">ARIZONA@WORK · NORTHERN ARIZONA</div>
     <h1>Build your next move.</h1>
     <p>Explore careers, test what works in the real world, and prepare for your next step with evidence you and your Career Coach can use.</p>
-    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button><button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie · Pathway Introductions</button></div>
+    <div class="hero-actions"><button id="resumeBtn" class="btn primary" type="button">Continue My Journey <span aria-hidden="true">→</span></button></div>
   </div>
   <div class="hero-figure"><img src="https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-cutout.webp" alt="Rosie, your BOOST career guide" onerror="this.onerror=null;this.src='https://pinalworkforce1-del.github.io/BOOST_Pathway-Portal/assets/images/rosie-guide-panel.webp'"></div>
 </section>
@@ -69,10 +69,18 @@
   <span class="path-art-caption" aria-hidden="true">SKILLS · JOB SEARCH · NEXT STEPS</span>
 </div><div class="path-card-body"><small>PATHWAY 02</small><h3>Rapid Employment</h3><p>Discover your transferable skills, make a focused job-search plan, and prepare for your conversation with a coach.</p><span class="choice-action">View rapid pathway →</span></div><span class="selection-pill" data-path-tag="rapid"></span></button>
     </div>
+    <div class="pathway-introduction" style="display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:20px 0 3px;padding:16px 20px;border:1px solid #779eb3;border-radius:16px;background:rgba(8,31,50,.58)">
+      <button id="meetRosie" class="btn secondary" type="button">▶ Meet Rosie · Pathway Introductions</button>
+      <span style="font-size:13px;color:#d3e6f0">Watch Rosie introduce Career Exploration or Rapid Employment before choosing your route.</span>
+    </div>
   </div>
   <section id="journeySection" class="journey-section" aria-label="Selected BOOST pathway" hidden>
     <div class="section-heading"><div><span class="overline" id="selectedEyebrow">YOUR PATHWAY</span><h2 id="journeyTitle">Your next steps</h2></div><button id="switchPathway" type="button" class="ghost dark">Switch pathway</button></div>
     <div class="next-step" id="nextStep" role="status"></div>
+    <div id="appliedSkipNotice" hidden role="status" style="margin:0 0 18px;padding:13px 17px;border:1px solid #92c7db;border-radius:12px;background:#eaf5f9;color:#17445b;font-size:13px;line-height:1.5">
+      <strong>Applied Career Experience — not required for this occupation.</strong>
+      There is no aligned Northern industry skills module for your career selected in Decide. You can continue directly to Financial Habits. Your completed career research and decisions remain saved.
+    </div>
     <div class="step-list" id="stepList"></div>
   </section>
   <section id="ready2workSection" class="r2w-section" aria-labelledby="r2wHeading">
