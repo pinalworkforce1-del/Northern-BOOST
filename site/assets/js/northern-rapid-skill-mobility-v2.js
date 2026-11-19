@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const STORE='northern_boost_rapid_skill_mobility_v2',COMP='northern_boost_comprehensive_skills_v1',JOURNEY='boost_naz_journey_v1',SHARED='northern_boost_career_exploration_v1',PORTAL='boost_naz_portal_progress_v1';
+const STORE='northern_boost_rapid_skill_mobility_v2',DRAFT='northern_boost_rapid_skill_mobility_draft_v1',COMP='northern_boost_comprehensive_skills_v1',JOURNEY='boost_naz_journey_v1',SHARED='northern_boost_career_exploration_v1',PORTAL='boost_naz_portal_progress_v1';
 const SKILLS=[
 {id:'customer',label:'Customer communication',words:['customer','client','patient','guest','service','support','resolve','complaint','return']},
 {id:'problem',label:'Problem solving / troubleshooting',words:['troubleshoot','problem','resolve','diagnos','issue','solution','repair','correct']},
@@ -174,6 +174,7 @@ async function generatePlan(){
    currentWage:Number($('currentWage').value)||null,minimumWage:Number($('minimumWage').value)||null,
    confirmedSkills:checked().map(id=>({id,label:skillLabel(id)})),
    comprehensiveSkills:inventoryPayload(),
+   evidenceSignature:evidenceSignature(),
    selectedCareers:cards.map(c=>({
      soc:c.o.soc,title:c.o.title,
      regional:{jobs:rowJobs(c.o),annualOpenings:rowOpen(c.o),growth:rowGrowth(c.o),p25:rowP25(c.o),median:rowMedian(c.o)},
@@ -186,6 +187,7 @@ async function generatePlan(){
   // Render first: an incomplete saved draft must not falsely mark progress complete.
   renderPlan(cards,plan);
   write(STORE,plan);
+  try{localStorage.removeItem(DRAFT)}catch(_e){}
   const j=read(JOURNEY);
   j.region='Northern Arizona';
   j.modules=j.modules||{};
@@ -201,7 +203,7 @@ async function generatePlan(){
   j.updatedAt=plan.updatedAt;
   write(JOURNEY,j);
   status.textContent='✓ Your Mobility Plan is ready and saved on this device. Select Save Completion & Return to BOOST to continue.';
-  $('returnBox').hidden=!validReturnTarget();
+  updateSaveReturnButton();
   $('snapshot').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){
   console.error('Northern Rapid Employment Mobility Plan generation failed',err);
@@ -213,11 +215,77 @@ async function generatePlan(){
  }
 }
 function renderPlan(cards,plan){$('snapshot').innerHTML=cards.map(c=>{const req=c.req.row,etpl=c.etpl.slice(0,3),market=plan.comprehensiveSkills.marketNow.map(x=>x.label);return`<section class="planCard"><div class="planHead"><div><small>Rapid Employment target • SOC ${esc(c.o.soc||'')}</small><h3>${esc(c.o.title)}</h3><div class="badges"><span class="badge green">${esc(opportunityLabel(c.o))}</span><span class="badge">${esc(interestLabel(c.o))}</span></div></div><div class="direction ${c.dir.cls}"><small>EVIDENCE-INFORMED DIRECTION</small><b>${esc(c.dir.label)}</b></div></div><div class="planMetrics"><div><small>Regional jobs</small><b>${num(rowJobs(c.o))}</b></div><div><small>Annual openings</small><b>${num(rowOpen(c.o))}</b></div><div><small>Point-of-entry</small><b>${money(rowP25(c.o))}/hr</b></div><div><small>Median</small><b>${money(rowMedian(c.o))}/hr</b></div></div><div class="evidenceBlock"><h4>Skill Mobility</h4><p><b>Broad skill-area overlap:</b> ${c.d.need.length?Math.round(c.d.transfer.length/c.d.need.length*100):0}%</p><p><b>Transferable strengths:</b> ${esc(c.d.transfer.map(skillLabel).join(', ')||'BOOST has not found evidence yet.')}</p><p><b>Potential gaps:</b> ${esc(c.d.gaps.map(skillLabel).join(', ')||'No broad gap surfaced.')}</p></div><div class="evidenceBlock"><h4>Employer evidence</h4>${c.rows.map(r=>`<p><b>${esc(r.title)}</b> • ${esc(r.pay)} • ${esc(r.requirementType)}: ${esc(r.requirement)} • You reported: ${esc(r.have)} • ${esc(r.source)}</p>`).join('')}</div>${req?`<div class="evidenceBlock"><h4>Requirement signal</h4><p>${esc(req.requirement)} is marked <b>${esc(req.requirementType)}</b> in this researched posting. You reported <b>${esc(req.have)}</b>. This is employer-specific evidence, not an occupation-wide rule.</p></div>`:''}${req&&req.requirementType==='Required'&&req.have==='No'?`<div class="evidenceBlock"><h4>Training alignment snapshot</h4>${etpl.length?`<p><b>${etpl.length} current state-approved match${etpl.length===1?'':'es'} surfaced.</b> State approval is program evidence only; it is not eligibility or funding authorization.</p>${etpl.map(p=>`<div class="etplCard"><b>${esc(p.program_name||'Training program')}</b><br>${esc(p.provider_name||'')} ${p.training_weeks?`• ${esc(p.training_weeks)} weeks`:''} ${p.in_state_program_cost?`• Listed cost: $${esc(p.in_state_program_cost)}`:''}</div>`).join('')}`:'<p>BOOST did not find a current state-approved ETPL match for this SOC. Do not assume training is unavailable; review the exact employer requirement with your Career Coach.</p>'}</div>`:''}</section>`}).join('')+`<section class="planCard compact"><h3>Comprehensive Skills Inventory</h3><div class="grid2"><div><h4>How I work</h4><p>${esc(plan.confirmedSkills.map(x=>x.label).join(', ')||'No broad strengths confirmed.')}</p></div><div><h4>What I can do / use</h4><p>${esc(plan.comprehensiveSkills.technical.filter(x=>x.confirmed).map(x=>x.label).join(', ')||'No technical/workplace skills confirmed.')}</p></div><div><h4>Credentials / licenses I hold</h4><p>${esc(plan.comprehensiveSkills.credentials.filter(x=>x.status==='held').map(x=>x.label).join(', ')||'None confirmed as held.')}</p></div><div><h4>Skills to market now</h4><p>${esc(market.join(', ')||'No Market Now skills selected yet.')}</p></div></div></section><section class="planCard compact"><h3>Experience used to identify transferable skills</h3><p><b>Current / most recent occupation used for skill evidence:</b> ${esc(currentOccupation?.title||'Not entered')}</p><p>This section explains where BOOST found evidence of your existing skills. It is not another Rapid Employment target. Only careers you moved into employer research are evaluated as targets above.</p></section>`}
-function params(){const q=new URLSearchParams(location.search);return{returnUrl:q.get('boost_return'),module:q.get('boost_module'),nonce:q.get('boost_nonce')}}function validReturnTarget(){const p=params();if(p.module!=='skillmobility'||!p.returnUrl||!p.nonce)return null;try{const u=new URL(p.returnUrl,location.href);if(u.origin!==location.origin)return null;return u}catch{return null}}
-function returnToMap(){const p=params(),u=validReturnTarget();if(!u)return;u.searchParams.set('boost_complete','skillmobility');u.searchParams.set('boost_nonce',p.nonce);location.assign(u.toString())}
+function params(){const q=new URLSearchParams(location.search);return{returnUrl:q.get('boost_return'),module:q.get('boost_module'),nonce:q.get('boost_nonce')}}
+function validReturnTarget(){const p=params();if(p.module!=='skillmobility'||!p.returnUrl||!p.nonce)return null;try{const u=new URL(p.returnUrl,location.href);return u.origin===location.origin?u:null}catch{return null}}
+function evidenceSignature(){
+ return JSON.stringify({selected:[...selectedSocs].sort(),
+  occupation:currentOccupation?{soc:String(currentOccupation.soc||''),title:currentOccupation.title||''}:null,
+  wage:$('currentWage').value,minimum:$('minimumWage').value,
+  skills:checked().sort(),research:collectResearch().sort((a,b)=>String(a.soc).localeCompare(String(b.soc))),
+  inventory:inventoryPayload(),lab:$('labComplete').checked,reinforced:labIds().sort()});
+}
+function hasCurrentPlan(){
+ try{
+  const p=read(STORE,null),j=read(JOURNEY,{});
+  return readiness().ready&&!!p?.updatedAt&&p?.selectedCareers?.length>0&&
+   !!j.modules?.skillmobility?.completedAt&&!!p.evidenceSignature&&p.evidenceSignature===evidenceSignature();
+ }catch(_){return false}
+}
+function updateSaveReturnButton(){
+ const button=$('saveReturnBtn'),message=$('saveReturnHelper');if(!button||!message)return;
+ const complete=hasCurrentPlan();
+ button.textContent=complete?'✓ Save Completion & Return to BOOST':'Save Progress & Return to BOOST →';
+ message.textContent=complete
+   ?'Mobility Plan generated. Returning to BOOST will confirm completion and open the next step.'
+   :'Your work will be saved on this device. Generate your Mobility Plan to complete this step.';
+}
+function saveDraft(){
+ write(DRAFT,{version:1,updatedAt:new Date().toISOString(),
+  occupation:currentOccupation?{soc:currentOccupation.soc,title:currentOccupation.title}:null,
+  currentRole:$('currentRole').value,currentWage:$('currentWage').value,
+  minimumWage:$('minimumWage').value,skills:checked(),selected:[...selectedSocs],
+  research:collectResearch(),lab:$('labComplete').checked,
+  labSkills:labIds(),comprehensive:comp});
+}
+function restoreDraft(){
+ const d=read(DRAFT,null),p=read(STORE,null);
+ if(!d||d.version!==1||(Date.parse(d.updatedAt||'')||0)<=(Date.parse(p?.updatedAt||'')||0))return;
+ if(d.occupation?.title){currentOccupation=occs.find(o=>String(o.soc)===String(d.occupation.soc))||d.occupation;occupationSkillIds=new Set(skillsForOccupation(currentOccupation))}
+ if(d.currentRole)$('currentRole').value=d.currentRole;
+ $('currentWage').value=d.currentWage||'';$('minimumWage').value=d.minimumWage||'';
+ confirmedSkills=new Set(d.skills||[]);selectedSocs=new Set((d.selected||[]).map(String));
+ if(d.comprehensive){comp=d.comprehensive;comp.technical=comp.technical||{};comp.credentials=comp.credentials||{};comp.marketNow=comp.marketNow||[]}
+ const older=read(STORE,{});older.research=d.research||[];write(STORE,older);
+ renderSkills();renderComprehensive();renderResearch();
+ $('labComplete').checked=!!d.lab;
+ for(const id of d.labSkills||[])if($('lab_'+id))$('lab_'+id).checked=true;
+}
+function saveAndReturn(){
+ const button=$('saveReturnBtn'),message=$('saveReturnHelper');if(!button||button.disabled)return;
+ const complete=hasCurrentPlan();
+ button.disabled=true;button.textContent='Saving…';
+ try{
+  if(!complete)saveDraft();
+  const p=params(),returnTarget=validReturnTarget();
+  const url=returnTarget||new URL('index.html',location.href);
+  if(complete&&returnTarget){
+   url.searchParams.set('boost_complete','skillmobility');
+   url.searchParams.set('boost_nonce',p.nonce);
+  }else{
+   url.searchParams.delete('boost_complete');url.searchParams.delete('boost_nonce');
+  }
+  url.searchParams.set('boost2_path','rapid');
+  url.searchParams.set('boost2_from','skillmobility');
+  location.assign(url.toString());
+ }catch(e){
+  console.error('Northern Rapid Employment Save & Return failed',e);
+  button.disabled=false;updateSaveReturnButton();
+  message.textContent='Could not save work on this device. Please retry before leaving. '+(e?.message||'');
+ }
+}
 function restore(){const d=read(STORE,null);if(!d?.version)return;if(d.currentOccupation?.title){currentOccupation=occs.find(o=>String(o.soc)===String(d.currentOccupation.soc))||d.currentOccupation;$('currentRole').value=d.currentOccupation.title;occupationSkillIds=new Set(skillsForOccupation(currentOccupation))}if(d.currentWage)$('currentWage').value=d.currentWage;if(d.minimumWage)$('minimumWage').value=d.minimumWage;confirmedSkills=new Set((d.confirmedSkills||[]).map(x=>x.id));selectedSocs=new Set((d.selectedCareers||[]).map(x=>String(x.soc)));renderSkills();renderComprehensive();renderResearch();if(d.selectedCareers?.length&&d.comprehensiveSkills&&Array.isArray(d.comprehensiveSkills.marketNow)){const cards=d.selectedCareers.map(x=>{const o=targets.find(t=>String(t.soc)===String(x.soc))||x,rows=d.research?.filter(r=>String(r.soc)===String(x.soc))||[];return{o,rows,d:compareData(o),req:requirementClass(rows),dir:{cls:x.direction?.includes('COMPARE')?'compare':x.direction?.includes('MOVE NOW')&&!x.direction?.includes('VERIFY')?'go':'verify',label:x.direction||'VERIFY BEFORE MOVING'},etpl:[]}});try{renderPlan(cards,d)}catch(e){console.warn('Saved Northern Mobility Plan preview could not be restored',e);$('saveStatus').textContent='Your saved research is available. Select Generate My Mobility Plan to refresh the plan.'}}}
 function install(){
- $('currentRole').oninput=showPicker;document.addEventListener('pointerdown',e=>{if(!e.target.closest('.occWrap'))$('occupationPicker').hidden=true});$('clearOccupation').onclick=clearOccupation;$('extractBtn').onclick=extractResume;$('skipResume').onclick=()=>{$('resumeStatus').textContent='Continuing without a résumé. Confirm only the occupation-based or manually added skills that are accurate.';$('skillsPanel').scrollIntoView({behavior:'smooth'})};$('addTechnicalBtn').onclick=addCustomTech;$('addCredentialBtn').onclick=addCustomCred;$('matchBtn').onclick=compareCareers;$('continueLab').onclick=()=>$('labPanel').scrollIntoView({behavior:'smooth'});$('continuePlan').onclick=()=>$('planPanel').scrollIntoView({behavior:'smooth'});$('labComplete').onchange=()=>{$('continuePlan').textContent=$('labComplete').checked?'Continue to Mobility Plan ↓':'Skip Optional Lab → Mobility Plan'};$('printBtn').onclick=()=>window.print();$('returnBtn').onclick=returnToMap;['currentWage','minimumWage'].forEach(id=>$(id).oninput=updateReadiness)}
+ $('currentRole').oninput=showPicker;document.addEventListener('pointerdown',e=>{if(!e.target.closest('.occWrap'))$('occupationPicker').hidden=true});$('clearOccupation').onclick=clearOccupation;$('extractBtn').onclick=extractResume;$('skipResume').onclick=()=>{$('resumeStatus').textContent='Continuing without a résumé. Confirm only the occupation-based or manually added skills that are accurate.';$('skillsPanel').scrollIntoView({behavior:'smooth'})};$('addTechnicalBtn').onclick=addCustomTech;$('addCredentialBtn').onclick=addCustomCred;$('matchBtn').onclick=compareCareers;$('continueLab').onclick=()=>$('labPanel').scrollIntoView({behavior:'smooth'});$('continuePlan').onclick=()=>$('planPanel').scrollIntoView({behavior:'smooth'});$('labComplete').onchange=()=>{$('continuePlan').textContent=$('labComplete').checked?'Continue to Mobility Plan ↓':'Skip Optional Lab → Mobility Plan'};$('printBtn').onclick=()=>window.print();$('saveReturnBtn').onclick=saveAndReturn;['currentWage','minimumWage'].forEach(id=>$(id).oninput=updateReadiness)}
 async function init(){
  // Install handlers before loading remote occupation records or restoring drafts.
  // A restore exception must never leave an enabled button with no click action.
@@ -226,8 +294,8 @@ async function init(){
   renderSkills();renderComprehensive();updateReadiness();
   await loadOccs();
   loadDiscover();
-  try{restore()}catch(e){console.warn('Northern Mobility Plan draft restore failed',e);$('saveStatus').textContent='Previous draft data could not be displayed. Your earlier work has not been deleted.'}
-  updateReadiness();
+  try{restore();restoreDraft()}catch(e){console.warn('Northern Mobility Plan draft restore failed',e);$('saveStatus').textContent='Previous draft data could not be displayed. Your earlier work has not been deleted.'}
+  updateReadiness();updateSaveReturnButton();
  }catch(e){
   console.error('Northern Rapid Employment initialization error',e);
   $('saveStatus').textContent='Career evidence could not finish loading. Refresh the module and try again. Your previously saved work remains on this device.';
@@ -242,5 +310,7 @@ document.addEventListener('click',event=>{
  event.preventDefault();
  generatePlan();
 });
+document.addEventListener('input',e=>{if(e.target?.closest?.('main'))updateSaveReturnButton()});
+document.addEventListener('change',e=>{if(e.target?.closest?.('main'))updateSaveReturnButton()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
