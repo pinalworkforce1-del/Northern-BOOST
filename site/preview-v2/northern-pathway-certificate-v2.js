@@ -32,11 +32,27 @@ function completeDate(j){
  const m=aiEvidence(j);
  return m.completedAt||m.completed_at||j.completion?.completedAt||j.boostCompletedAt||null;
 }
-function region(j,area){
- const val=String(area||j.serviceArea||j.portal?.serviceArea||'').toLowerCase();
- if(/coconino/.test(val))return 'ARIZONA@WORK Coconino County';
- if(/agn|neaz|northeastern/.test(val))return 'ARIZONA@WORK Northeastern Arizona';
- return 'ARIZONA@WORK Northern Arizona';
+const CERTIFICATE_BRANDS={
+ coconino:{
+   name:'ARIZONA@WORK Coconino County',
+   logo:new URL('preview-v2/ready2work/northern-azwork-logo.png',document.baseURI).href
+ },
+ agn:{
+   name:'ARIZONA@WORK Northeastern Arizona',
+   logo:new URL('preview-v2/ready2work/northern-neaz-logo-clean.png',document.baseURI).href
+ }
+};
+const CERTIFICATE_AREA_KEY='boost_naz_pathway_certificate_area_v1:';
+function regionKey(j,area){
+ // Prefer the participant's explicit certificate-area selection when present,
+ // otherwise use the same Northern service-area code as Ready 2 Work.
+ let explicit='';
+ try{explicit=localStorage.getItem(CERTIFICATE_AREA_KEY+(context?.userId||''))||''}catch(_){}
+ const candidate=String(explicit||area||j.serviceArea||j.portal?.serviceArea||
+   j.participant?.serviceArea||j.participant?.service_area||'').trim().toLowerCase();
+ if(/coconino|^coco$/.test(candidate))return 'coconino';
+ if(/agn|neaz|north.?eastern/.test(candidate))return 'agn';
+ return '';
 }
 function close(){
  if(!dialog)return;
@@ -83,24 +99,67 @@ function showModal(){
  document.addEventListener('keydown',keyClose);later.focus();celebrate();
 }
 function certificateHtml(){
- const d=context,j=d.journey||{},name=who(j),path=PATHS[d.path]||'Northern BOOST Pathway',area=region(j,d.serviceArea),date=dateLabel(completeDate(j));
+ const d=context,j=d.journey||{},name=who(j),path=PATHS[d.path]||'Northern BOOST Pathway';
+ const area=regionKey(j,d.serviceArea),brand=CERTIFICATE_BRANDS[area]||null;
+ const date=dateLabel(completeDate(j));
  const m=j.module4||j.modules?.module4||{},career=m.careerTarget||m.targetCareer||m.career||m.selection?.career||{};
  const careerName=String(m.careerTitle||m.title||career.title||'').trim();
  const route=String(m.route||m.participantDirection||m.decision?.code||'').toUpperCase();
  const modules=(d.requiredIds||[]).map(id=>'<span>'+esc(LABELS[id]||id)+'</span>').join('');
  const noIndustry=d.path==='career'&&!(d.requiredIds||[]).includes('industry');
+ // The popup has the same origin as Northern BOOST, but image paths must be
+ // absolute because the document itself is opened from about:blank.
+ const initialLogo=brand?esc(brand.logo):'';
+ const initialLabel=brand?esc(brand.name):'';
  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BOOST Certificate — '+esc(name)+'</title><style>'+
- '*{box-sizing:border-box}body{background:#eaf0f4;color:#133852;margin:0;font-family:Arial,sans-serif}.actions{text-align:right;max-width:1100px;margin:15px auto}.actions button{background:#123a54;color:#fff;border:0;border-radius:10px;padding:12px 20px;font-weight:900;cursor:pointer}.sheet{max-width:1100px;min-height:730px;margin:0 auto 20px;padding:58px 58px 50px;text-align:center;background:linear-gradient(175deg,#fffdf6 60%,#e7f2ef);border:16px solid #10334d;outline:5px solid #f0bb5b;outline-offset:-31px;box-shadow:0 18px 45px #0820362f;display:flex;flex-direction:column;justify-content:center}.regional{font-size:12px;font-weight:900;letter-spacing:.1em;color:#436a7c;margin:12px}.seal{margin:0 auto 10px;width:76px;height:76px;border-radius:50%;background:#113d57;border:5px double #e7bb5f;color:white;display:grid;place-items:center;font-size:13px;font-weight:bold;letter-spacing:.1em}.eyebrow{font-size:13px;letter-spacing:.2em;color:#597786;font-weight:900}.brand{font-weight:900;font-size:44px;margin-top:9px}.title{font:normal 40px Georgia,serif;color:#986318;margin:0 0 15px}.minor{font-size:16px;color:#5c737f}.name{font:700 40px Georgia,serif;border-bottom:2px solid #cfbd93;display:inline-block;margin:6px auto 18px;padding:7px 15px;color:#102d46}.path{font-size:21px;font-weight:900}.career{margin:12px auto 0;font-size:14px}.modules{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:22px auto 6px;max-width:900px}.modules span{padding:7px 11px;border-radius:99px;border:1px solid #b7d0d6;background:#f1f7f8;font-size:12px;font-weight:800}.note{font-size:12px;color:#587280;margin-top:10px}.date{margin-top:22px;font-size:16px}.foot{font-size:11px;color:#597481;max-width:800px;margin:18px auto 0;line-height:1.5}@media(max-width:750px){.sheet{min-height:610px;padding:45px 20px}.title{font-size:32px}.name{font-size:30px}.brand{font-size:36px}}@page{size:landscape;margin:.28in}@media print{body{background:white}.actions{display:none}.sheet{max-width:none;width:100%;min-height:7.2in;margin:0;box-shadow:none;break-inside:avoid}}'+
- '</style></head><body><div class="actions"><button type="button" onclick="window.print()">Print / Save PDF</button></div><main class="sheet"><div class="seal">BOOST</div><div class="regional">'+esc(area)+'</div><div class="eyebrow">WORKFORCE CAREER DEVELOPMENT</div><div class="brand">BOOST</div><h1 class="title">Certificate of Completion</h1><div class="minor">This certifies that</div><div class="name">'+esc(name)+'</div><div class="minor">completed the</div><div class="path">'+esc(path)+'</div>'+
+ '*{box-sizing:border-box}body{background:#eaf0f4;color:#133852;margin:0;font-family:Arial,sans-serif}.actions{max-width:1100px;margin:14px auto;display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap}.actions label{font-size:13px;font-weight:800}.actions select{padding:10px 12px;border-radius:9px;border:1px solid #9db8c5;background:white;color:#173c56;font-weight:700}.actions button{background:#123a54;color:#fff;border:0;border-radius:10px;padding:12px 20px;font-weight:900;cursor:pointer}.actions button:disabled{opacity:.45;cursor:not-allowed}.sheet{max-width:1100px;min-height:730px;margin:0 auto 20px;padding:36px 50px 35px;text-align:center;background:linear-gradient(175deg,#fffdf6 60%,#e7f2ef);border:16px solid #10334d;outline:5px solid #f0bb5b;outline-offset:-31px;box-shadow:0 18px 45px #0820362f;display:flex;flex-direction:column;justify-content:center}.regional-lockup{width:min(510px,80%);height:134px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;max-width:100%}.regional-lockup img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center}.regional-fallback{font-size:24px;line-height:1.35;color:#243a78;font-weight:900}.regional-prompt{font-size:14px;color:#466676;border:1px dashed #a4bbc6;border-radius:10px;padding:13px;margin:auto}.eyebrow{font-size:13px;letter-spacing:.2em;color:#597786;font-weight:900}.brand{font-weight:900;font-size:40px;margin-top:9px}.title{font:normal 38px Georgia,serif;color:#986318;margin:0 0 14px}.minor{font-size:16px;color:#5c737f}.name{font:700 39px Georgia,serif;border-bottom:2px solid #cfbd93;display:inline-block;margin:6px auto 16px;padding:6px 15px;color:#102d46}.path{font-size:21px;font-weight:900}.career{margin:10px auto 0;font-size:14px}.modules{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:19px auto 5px;max-width:900px}.modules span{padding:7px 11px;border-radius:99px;border:1px solid #b7d0d6;background:#f1f7f8;font-size:12px;font-weight:800}.note{font-size:12px;color:#587280;margin-top:9px}.date{margin-top:17px;font-size:16px}.foot{font-size:11px;color:#597481;max-width:800px;margin:15px auto 0;line-height:1.5}@media(max-width:750px){.sheet{min-height:610px;padding:27px 20px}.regional-lockup{height:100px;width:min(440px,95%)}.title{font-size:30px}.name{font-size:29px}.brand{font-size:33px}.actions{padding:0 12px}}@page{size:landscape;margin:.28in}@media print{body{background:white}.actions{display:none!important}.sheet{max-width:none;width:100%;min-height:7.2in;margin:0;box-shadow:none;break-inside:avoid}.regional-lockup{height:120px}}'+
+ '</style></head><body><div class="actions"><label for="certificateRegionSelect">Service area</label><select id="certificateRegionSelect" aria-label="Select official certificate branding"><option value="">Choose your Northern service area</option><option value="coconino"'+(area==='coconino'?' selected':'')+'>Coconino County</option><option value="agn"'+(area==='agn'?' selected':'')+'>Northeastern Arizona</option></select><button id="certificatePrintButton" type="button"'+(!brand?' disabled':'')+'>Print / Save PDF</button></div><main class="sheet"><div class="regional-lockup"><img id="certificateRegionalLogo" src="'+initialLogo+'" alt="'+initialLabel+'"'+(!brand?' hidden':'')+'><span class="regional-fallback" id="certificateRegionalFallback"'+(brand?' hidden':'')+'>'+ (brand?initialLabel:'Select your Northern service area above to display the correct ARIZONA@WORK logo')+'</span></div><div class="eyebrow">WORKFORCE CAREER DEVELOPMENT</div><div class="brand">BOOST</div><h1 class="title">Certificate of Completion</h1><div class="minor">This certifies that</div><div class="name">'+esc(name)+'</div><div class="minor">completed the</div><div class="path">'+esc(path)+'</div>'+
  (careerName?'<div class="career">Career Direction: <b>'+esc(careerName)+'</b>'+(route?' · Decision: '+esc(route):'')+'</div>':'')+
  '<div class="modules">'+modules+'</div>'+(noIndustry?'<div class="note">Applied Career Experience: Not required for the selected occupation</div>':'')+
  '<div class="date"><b>Completed:</b> '+esc(date)+'</div><p class="foot">This certificate acknowledges completion of the Northern BOOST learning pathway. It is not an occupational credential, professional license, or an employer assessment. Ready 2 Work is a separate experience.</p></main></body></html>';
+}
+function initCertificateBranding(popup){
+ // No changes to Supabase or participant progress. Allow an explicit regional
+ // choice when the service area was not saved in the older participant flow.
+ const doc=popup.document,select=doc.getElementById('certificateRegionSelect');
+ const image=doc.getElementById('certificateRegionalLogo');
+ const fallback=doc.getElementById('certificateRegionalFallback');
+ const printButton=doc.getElementById('certificatePrintButton');
+ if(!select||!image||!fallback||!printButton)return;
+ function useArea(key){
+   const brand=CERTIFICATE_BRANDS[key]||null;
+   printButton.disabled=!brand;
+   if(!brand){
+     image.hidden=true;image.removeAttribute('src');
+     fallback.hidden=false;fallback.textContent='Select your Northern service area above to display the correct ARIZONA@WORK logo';
+     return;
+   }
+   fallback.textContent=brand.name;
+   fallback.hidden=true;
+   image.alt=brand.name;
+   image.onload=()=>{image.hidden=false;fallback.hidden=true};
+   image.onerror=()=>{image.hidden=true;fallback.hidden=false};
+   image.hidden=true;
+   image.src=brand.logo;
+   if(image.complete&&image.naturalWidth>0){image.hidden=false;fallback.hidden=true}
+ }
+ select.addEventListener('change',()=>{
+   const chosen=select.value;
+   if(CERTIFICATE_BRANDS[chosen]&&context?.userId){
+     try{localStorage.setItem(CERTIFICATE_AREA_KEY+context.userId,chosen)}catch(_){}
+   }
+   useArea(chosen);
+ });
+ printButton.onclick=()=>{if(CERTIFICATE_BRANDS[select.value])popup.print()};
+ useArea(select.value);
 }
 function openCertificate(){
  if(!context?.eligible)return;
  const popup=window.open('','_blank');
  if(!popup){window.alert('Please allow pop-ups for Northern BOOST to open your certificate.');return}
- popup.document.open();popup.document.write(certificateHtml());popup.document.close();popup.focus();
+ popup.document.open();popup.document.write(certificateHtml());popup.document.close();
+ initCertificateBranding(popup);
+ popup.focus();
 }
 function sync(info){
  context=info?.eligible&&info?.userId&&['career','rapid'].includes(info.path)&&info.journey&&Array.isArray(info.requiredIds)
