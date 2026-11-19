@@ -17,7 +17,9 @@
 <script>
 (()=>{'use strict';
 const JK='boost_naz_journey_v1',PK='boost_naz_portal_progress_v1',PATH='boost_naz_pathway_v1';
-const URL_BASE='https://pinalworkforce1-del.github.io/AI_Literacy/ai-you-v2.html';
+// Serve a Northern-scoped copy on the SAME origin. The Pinal-hosted iframe
+// cannot expose its DOM or JS bridge to Northern because of browser origin rules.
+const URL_BASE=new URL('assets/ai-you/ai-you-v2-northern.html',document.baseURI).href;
 const SUPABASE_URL='https://dxcajwarqojvmbteroco.supabase.co';
 const SUPABASE_ANON='sb_publishable_ehUKOOksq5SlkTNb-wQ8ZA_Zh8XlWDF';
 const ENDPOINT='boost-ask-rosie-northern-v171';
@@ -40,12 +42,64 @@ function frameState(){const w=frame.contentWindow,d=frame.contentDocument;let s=
 async function persistCheckpoint(){const j=journey(),now=new Date().toISOString(),completed=j.module5||j.modules?.module5||null;j.region='Northern Arizona';j.modules=j.modules||{};j.modules.module5_checkpoint={version:'ai-you-v2-checkpoint-20260916',status:(completed?.completedAt||completed?.completed_at)?'complete':'in_progress',...frameState(),career_context:career()};j.updatedAt=now;j.updated_at=now;localStorage.setItem(JK,JSON.stringify(j));return cloudSave(j)}
 function restoreCheckpoint(){const cp=journey()?.modules?.module5_checkpoint;if(!cp||cp.status==='complete')return;const w=frame.contentWindow,d=frame.contentDocument,s=cp.state||{};if(!w||!d)return;if(s.sector){const sector=d.querySelector('[data-sector="'+s.sector+'"]');try{if(sector)w.pick(s.sector,sector)}catch(_){}try{w.eval('st = '+JSON.stringify(s))}catch(_){}if(d.getElementById('prompt'))d.getElementById('prompt').value=cp.prompt||'';if((s.promptHits||[]).some(Boolean)&&cp.prompt){try{w.scorePrompt()}catch(_){}}if(s.sampleJudgment){const x=[...(d.querySelectorAll('#aiBox .ans')||[])].find(b=>(b.getAttribute('onclick')||'').includes("'"+s.sampleJudgment+"'"));try{if(x)w.judge(x,s.sampleJudgment)}catch(_){} }}for(let r=1;r<=3;r++){if(s.challenge?.[r]===null||s.challenge?.[r]===undefined)continue;const wanted=s.challenge[r]===true?({1:'A',2:'B',3:'B'}[r]):({1:'B',2:'A',3:'A'}[r]);const rb=[...(d.querySelectorAll('#r'+r+' .letterAns')||[])].find(b=>b.textContent.trim()===wanted);try{if(rb)w.challengeAnswer(r,wanted,rb)}catch(_){}}const round=Number(String(cp.activeRound||'round1').replace(/\D/g,''))||1;if(round>1){try{w.nextChallenge(round)}catch(_){}}const reflection=d.getElementById('reflection');if(reflection)reflection.value=cp.reflection||'';saveState.textContent='Progress restored'}
 function targetReturn(){const q=new URLSearchParams(location.search),raw=q.get('boost_return');if(raw){try{const u=new URL(raw,location.href);if(u.origin===location.origin)return u}catch(_){}}return new URL('index.html',location.href)}
-async function saveAndReturn(completed=false){saveReturn.disabled=true;saveReturn.textContent=completed?'Saving completion…':'Saving progress…';saveState.textContent='Saving…';const saved=await persistCheckpoint();saveState.textContent=saved?'Saved':'Saved on device';const target=targetReturn();if(completed){const q=new URLSearchParams(location.search),nonce=q.get('boost_nonce');if(nonce){target.searchParams.set('boost_complete','ai');target.searchParams.set('boost_nonce',nonce)}}setTimeout(()=>location.assign(target.toString()),220)}
+async function saveAndReturn(requestCompletion=false){
+ if(saveReturn.disabled)return;
+ saveReturn.disabled=true;
+ const record=journey().module5||journey().modules?.module5;
+ const evidenceComplete=!!(record?.completedAt||record?.completed_at)&&!!record?.snapshot;
+ const q=new URLSearchParams(location.search);
+ const nonce=q.get('boost_nonce'),verifiedLaunch=q.get('boost_module')==='ai'&&!!nonce;
+ const completed=(requestCompletion||evidenceComplete)&&verifiedLaunch&&evidenceComplete;
+ saveReturn.textContent=completed?'Saving completion…':'Saving progress…';
+ saveState.textContent='Saving to Northern BOOST…';
+ let saved=false;
+ try{saved=await persistCheckpoint()}catch(e){console.warn('Northern AI & You final checkpoint failed',e)}
+ if(!saved){
+  saveState.textContent='Cloud save not confirmed';
+  saveReturn.disabled=false;
+  saveReturn.textContent='Retry Save & Return';
+  alert('Your AI & You work is kept on this device, but Northern BOOST could not confirm its cloud save. Check that you are signed in and online, then select Retry Save & Return. This page will remain open.');
+  return;
+ }
+ saveState.textContent='Saved to Northern BOOST';
+ const target=targetReturn();
+ if(completed){
+   target.searchParams.set('boost_complete','ai');
+   target.searchParams.set('boost_nonce',nonce);
+ }
+ // Without completion evidence, return as a checkpoint only; never fabricate
+ // an unlock. The map alone verifies saved completion evidence and nonce.
+ location.assign(target.toString());
+}
 function northernCompletion(moduleId,mount){const q=new URLSearchParams(location.search),requested=q.get('boost_module'),nonce=q.get('boost_nonce');if(requested!==moduleId||!nonce||!mount)return;let box=frame.contentDocument?.getElementById('boostCompletionReturn');if(!box){box=frame.contentDocument.createElement('div');box.id='boostCompletionReturn';box.style.cssText='margin:20px 0;padding:20px;border:3px solid #16835b;border-radius:16px;background:#effff7;text-align:center';mount.appendChild(box)}box.innerHTML='<h3 style="margin:0 0 8px">Activity Complete</h3><p style="margin:0 0 14px">Your completed AI & You evidence has been saved. Return to Northern BOOST to unlock your next step.</p><button type="button" id="boostSaveReturn" style="padding:13px 20px;border:0;border-radius:10px;background:#0d6248;color:#fff;font-weight:900;cursor:pointer">Save Completion & Return to Northern BOOST</button>';frame.contentDocument.getElementById('boostSaveReturn').onclick=()=>saveAndReturn(true)}
 function applyNorthernContext(){const w=frame.contentWindow,d=frame.contentDocument;if(!w||!d)return false;w.readJourney=journey;w.getCareer=career;w.askRosie=northernAsk;w.saveJourney=northernSave;w.boostOfferCompletion=northernCompletion;const c=career();d.querySelectorAll('.sector.recommended').forEach(el=>el.classList.remove('recommended'));const careerLine=d.getElementById('careerLine'),intro=d.getElementById('rosieIntroText'),ask=d.getElementById('askCareerBtn');if(ask)ask.style.display='';if(c){if(careerLine)careerLine.innerHTML='Your current Northern BOOST direction: <span class="careerChip">'+escapeHtml(c.title)+(c.route?' • '+escapeHtml(c.route):'')+'</span>';if(intro)intro.textContent='You have already built Northern BOOST career evidence around '+c.title+'. AI & You will practice a transferable workplace skill in that context: directing AI, checking its work, protecting information, and deciding what should actually be used.';const rec=scenarioFor(c),b=rec?d.querySelector('[data-sector="'+rec+'"]'):null;if(b)b.classList.add('recommended')}else{if(careerLine)careerLine.textContent='I’ll connect this activity to what you have already learned in Northern BOOST.';if(intro)intro.textContent='AI literacy is useful across careers because the skill is not letting AI decide. The skill is knowing how to direct it, check it, and decide what is safe and useful.'}return true}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function buildFrameUrl(){const u=new URL(URL_BASE);u.searchParams.set('boost_region','northern');return u.toString()}
-saveReturn.addEventListener('click',()=>saveAndReturn(false));frame.addEventListener('load',()=>{try{applyNorthernContext();restoreCheckpoint();loading.classList.add('hidden')}catch(e){console.error(e);loading.querySelector('span').textContent='AI & You loaded, but the Northern BOOST adapter could not finish connecting. Refresh the page to try again.'}});frame.src=buildFrameUrl();
+function buildFrameUrl(){
+ const u=new URL(URL_BASE),request=new URLSearchParams(location.search);
+ u.searchParams.set('boost_region','northern');
+ // The embedded finish() invokes our scoped completion hook only when these
+ // values are present. Never send the cross-origin Pinal return target.
+ const nonce=request.get('boost_nonce');
+ if(request.get('boost_module')==='ai'&&nonce){
+   u.searchParams.set('boost_module','ai');
+   u.searchParams.set('boost_nonce',nonce);
+ }
+ return u.toString();
+}
+saveReturn.addEventListener('click',()=>saveAndReturn(false));
+frame.addEventListener('load',()=>{
+ try{
+   if(!frame.contentDocument||frame.contentWindow.location.origin!==location.origin)throw new Error('Northern AI & You requires a same-origin module');
+   if(!applyNorthernContext())throw new Error('Northern adapter could not attach');
+   restoreCheckpoint();
+   loading.classList.add('hidden');
+   saveState.textContent='Northern connected';
+ }catch(e){
+   console.error('Northern AI & You adapter error',e);
+   loading.querySelector('span').textContent='Northern BOOST could not connect to the module. Your existing progress has not been reset. Refresh the page to retry.';
+ }
+});
+frame.src=buildFrameUrl();
 })();
 </script>
 </body>
