@@ -238,6 +238,14 @@ function render(){
  $('progressPercent').textContent=percent+'%';
  $('progressCaption').textContent=completed+' of '+total+' completed';
  $('progressFill').style.width=percent+'%';$('progressTrack').setAttribute('aria-valuenow',String(percent));
+ // The certificate renderer is read-only and receives only confirmed Northern
+ // cloud journey evidence. The matched-industry rule follows pathwayOrder().
+ const certEligible=!!selected&&all.length>0&&completed===total;
+ window.NorthernBOOSTPathwayCertificate?.sync({
+   eligible:certEligible,userId:user.id,path:selected,
+   requiredIds:all,journey:cloudOrLocal(),
+   serviceArea:localStorage.getItem(AREA_KEY+':'+user.id)||localStorage.getItem(AREA_KEY)||portal.serviceArea||''
+ });
  const pendingCoach=done('module1')&&!done('coachAppointmentPrep');
  $('progressMessage').textContent=pendingCoach?'Coach Appointment Prep is ready before enrollment. This recommended step does not block Northern pathway activities.':(!selected?'Complete Discover, then choose a pathway to see your next steps.':(completed===total?'All required steps in this pathway are marked complete.':'Your next required step is '+labelFor(nextId()||'module1')+'.'));
 
